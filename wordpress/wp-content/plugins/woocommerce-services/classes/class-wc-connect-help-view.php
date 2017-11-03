@@ -524,11 +524,14 @@ if ( ! class_exists( 'WC_Connect_Help_View' ) ) {
 				foreach ( $fieldset[ 'items' ] as $fieldsetitem ) {
 
 					if ( 'indicators' === $fieldsetitem->type ) {
+						$indicator_schema = $this->get_indicator_schema();
+
 						$form_properties[ $fieldsetitem->key ] = array(
-							'title' => $fieldsetitem->title,
-							'type' => 'object',
+							'title'      => $fieldsetitem->title,
+							'type'       => 'object',
 							'definition' => $fieldsetitem->key . '_definitions',
-							'items' => $this->get_indicator_schema()
+							'items'      => $indicator_schema,
+							'properties' => $indicator_schema->properties,
 						);
 
 						if ( property_exists( $fieldsetitem, 'subtitle' ) ) {
@@ -640,7 +643,7 @@ if ( ! class_exists( 'WC_Connect_Help_View' ) ) {
 			foreach ( $this->fieldsets as $fieldset ) {
 				foreach ( $fieldset[ 'items' ] as $fieldsetitem ) {
 					if ( 'indicators' === $fieldsetitem->type ) {
-						$form_data[ $fieldsetitem->key ] = $fieldsetitem->items;
+						$form_data[ $fieldsetitem->key ] = reset( $fieldsetitem->items );
 					} else {
 						$form_data[ $fieldsetitem->key ] = $fieldsetitem->value;
 					}
@@ -692,18 +695,13 @@ if ( ! class_exists( 'WC_Connect_Help_View' ) ) {
 				'formSchema'         => $this->get_form_schema(),
 				'formLayout'         => $this->get_form_layout(),
 				'formData'           => $this->get_form_data(),
-				'methodId'           => 'self_help',
-				'instanceId'         => 'self_help',
-				'nonce'              => wp_create_nonce( 'wp_rest' ),
-				'callbackURL'        => get_rest_url( null, '/wc/v1/connect/self-help' ),
+				'formType'           => 'self-help',
 				'noticeDismissed'    => true,
 			) );
 
 			do_action( 'enqueue_wc_connect_script', 'wc-connect-admin-test-print', array(
 				'storeOptions'       => $this->service_settings_store->get_store_options(),
 				'paperSize'          => $this->service_settings_store->get_preferred_paper_size(),
-				'nonce'              => wp_create_nonce( 'wp_rest' ),
-				'labelsPreviewURL'   => get_rest_url( null, '/wc/v1/connect/label/preview' ),
 			) );
 		}
 

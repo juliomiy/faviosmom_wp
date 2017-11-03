@@ -20,6 +20,7 @@
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
+//define('DB_NAME', 'wordpress_production');
 define('DB_NAME', 'wordpress');
 
 /** MySQL database username */
@@ -80,9 +81,11 @@ $table_prefix  = 'wp_';
  */
 define('WP_DEBUG', true);
 
-/* define('WP_HOME',$_SERVER['SERVER_ADDR']);
-define('WP_SITEURL',$_SERVER['SERVER_ADDR']);
-*/
+#define('WP_HOME',$_SERVER['SERVER_ADDR']);
+#define('WP_SITEURL',$_SERVER['SERVER_ADDR']);
+
+define( 'WP_SITEURL', 'http://faviosmom.com'); 
+define( 'WP_HOME', 'http://faviosmom.com');
 /* That's all, stop editing! Happy blogging. */
 
 /** Absolute path to the WordPress directory. */

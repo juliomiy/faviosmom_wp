@@ -1,13 +1,13 @@
 <?php
 /**
  * Plugin Name: WooCommerce Services
- * Plugin URI: http://woocommerce.com/
- * Description: WooCommerce Services: Hosted services for WooCommerce, including free real-time USPS and Canada Post rates and discounted USPS shipping labels.
+ * Plugin URI: https://woocommerce.com/
+ * Description: Hosted services for WooCommerce: automated tax calculation, live shipping rates, shipping label printing, and smoother payment setup.
  * Author: Automattic
- * Author URI: http://woocommerce.com/
+ * Author URI: https://woocommerce.com/
  * Text Domain: woocommerce-services
  * Domain Path: /i18n/languages/
- * Version: 1.7.0
+ * Version: 1.8.1
  *
  * Copyright (c) 2017 Automattic
  *
@@ -23,6 +23,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * WooCommerce Services incorporates code from WooCommerce Sales Tax Plugin by TaxJar, Copyright 2014-2017 TaxJar.
+ * WooCommerce Sales Tax Plugin by TaxJar is distributed under the terms of the GNU GPL, Version 2 (or later).
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -157,6 +160,11 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 		 * @var WC_Connect_TaxJar_Integration
 		 */
 		protected $taxjar;
+
+		/**
+		 * @var WC_Connect_Stripe
+		 */
+		protected $stripe;
 
 		/**
 		 * @var WC_REST_Connect_Tos_Controller
@@ -351,6 +359,10 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			$this->taxjar = $taxjar;
 		}
 
+		public function set_stripe( WC_Connect_Stripe $stripe ) {
+			$this->stripe = $stripe;
+		}
+
 		/**
 		 * Load our textdomain
 		 *
@@ -368,6 +380,19 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 		public function pre_wc_init() {
 			$this->load_dependencies();
 
+			$tos_accepted = WC_Connect_Options::get_option( 'tos_accepted' );
+
+			// Prevent presenting users with TOS they've already
+			// accepted in the core WC Setup Wizard or on WP.com
+			if ( ! $tos_accepted &&
+				( get_option( 'woocommerce_setup_jetpack_opted_in' ) || WC_Connect_Jetpack::is_atomic_site() )
+			) {
+				WC_Connect_Options::update_option( 'tos_accepted', true );
+				delete_option( 'woocommerce_setup_jetpack_opted_in' );
+
+				$tos_accepted = true;
+			}
+
 			add_action( 'admin_init', array( $this, 'admin_enqueue_scripts' ) );
 			add_action( 'admin_init', array( $this->nux, 'set_up_nux_notices' ) );
 
@@ -375,7 +400,7 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			$jetpack_status = $this->nux->get_jetpack_install_status();
 			$is_jetpack_connected = WC_Connect_Nux::JETPACK_CONNECTED === $jetpack_status;
 			$is_jetpack_dev_mode = WC_Connect_Nux::JETPACK_DEV === $jetpack_status;
-			$tos_accepted = WC_Connect_Options::get_option( 'tos_accepted' );
+
 			if (  ! $is_jetpack_connected && ! $is_jetpack_dev_mode ) {
 				return;
 			}
@@ -387,7 +412,96 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			}
 
 			add_action( 'woocommerce_init', array( $this, 'after_wc_init' ) );
-			$this->taxjar->init();
+		}
+
+		public function get_service_schema_defaults( $schema ) {
+			$defaults = array();
+
+			if ( ! property_exists( $schema, 'properties' ) ) {
+				return $defaults;
+			}
+
+			foreach ( get_object_vars( $schema->properties ) as $prop_id => $prop_schema ) {
+				if ( property_exists( $prop_schema, 'default' ) ) {
+					$defaults[ $prop_id ] = $prop_schema->default;
+				}
+
+				if (
+					property_exists( $prop_schema, 'type' ) &&
+					'object' === $prop_schema->type
+				) {
+					$defaults[ $prop_id ] = $this->get_service_schema_defaults( $prop_schema );
+				}
+			}
+
+			return $defaults;
+		}
+
+		protected function add_method_to_shipping_zone( $zone_id, $method_id ) {
+			$method      = $this->get_service_schemas_store()->get_service_schema_by_id( $method_id );
+			$zone        = WC_Shipping_Zones::get_zone( $zone_id );
+			$instance_id = $zone->add_shipping_method( $method->method_id );
+
+			$zone->save();
+
+			$instance = WC_Shipping_Zones::get_shipping_method( $instance_id );
+			$schema   = $instance->get_service_schema();
+			$defaults = (object) $this->get_service_schema_defaults( $schema->service_settings );
+
+			WC_Connect_Options::update_shipping_method_option( 'form_settings', $defaults, $method->method_id, $instance_id );
+		}
+
+		public function init_core_wizard_shipping_config() {
+			$store_country = WC()->countries->get_base_country();
+
+			if ( 'US' === $store_country ) {
+				$country_method = 'usps';
+			} elseif ( 'CA' === $store_country ) {
+				$country_method = 'canada_post';
+			} else {
+				return; // Only set up live rates for US and CA
+			}
+
+			if ( get_option( 'woocommerce_setup_intl_live_rates_zone' ) ) {
+				$this->add_method_to_shipping_zone( 0, $country_method );
+				delete_option( 'woocommerce_setup_intl_live_rates_zone' );
+			}
+
+			if ( get_option( 'woocommerce_setup_domestic_live_rates_zone' ) ) {
+				// Find the "domestic" zone (only location must be the base country)
+				foreach ( WC_Shipping_Zones::get_zones() as $zone ) {
+					if (
+						1 === count( $zone['zone_locations'] ) &&
+						'country' === $zone['zone_locations'][0]->type &&
+						$store_country === $zone['zone_locations'][0]->code
+					) {
+						$this->add_method_to_shipping_zone( $zone['id'], $country_method );
+						break;
+					}
+				}
+				delete_option( 'woocommerce_setup_domestic_live_rates_zone' );
+			}
+		}
+
+		public function init_core_wizard_payments_config() {
+			$stripe_settings = get_option( 'woocommerce_stripe_settings', false );
+			$stripe_enabled  = is_array( $stripe_settings )
+				&& ( isset( $stripe_settings['create_account'] ) && 'yes' === $stripe_settings['create_account'] )
+				&& ( isset( $stripe_settings['enabled'] ) && 'yes' === $stripe_settings['enabled'] );
+
+			if ( $stripe_enabled && is_plugin_active( 'woocommerce-gateway-stripe/woocommerce-gateway-stripe.php' ) ) {
+				unset( $stripe_settings['create_account'] );
+				update_option( 'woocommerce_stripe_settings', $stripe_settings );
+
+				$email = isset( $stripe_settings['email'] ) ? $stripe_settings['email'] : wp_get_current_user()->user_email;
+				$country = WC()->countries->get_base_country();
+				$response = $this->stripe->create_account( $email, $country );
+
+				if ( is_wp_error( $response ) ) {
+					// TODO handle case of existing account
+					$this->logger->debug( $response, __CLASS__ );
+				}
+			}
 		}
 
 		/**
@@ -419,7 +533,7 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			require_once( plugin_basename( 'classes/class-wc-connect-help-view.php' ) );
 			require_once( plugin_basename( 'classes/class-wc-connect-shipping-label.php' ) );
 			require_once( plugin_basename( 'classes/class-wc-connect-nux.php' ) );
-
+			require_once( plugin_basename( 'classes/class-wc-connect-stripe.php' ) );
 
 			$logger                = new WC_Connect_Logger( new WC_Logger() );
 			$validator             = new WC_Connect_Service_Schemas_Validator();
@@ -430,7 +544,9 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			$tracks                = new WC_Connect_Tracks( $logger, __FILE__ );
 			$shipping_label        = new WC_Connect_Shipping_Label( $api_client, $settings_store, $schemas_store, $payment_methods_store );
 			$nux                   = new WC_Connect_Nux( $tracks, $shipping_label );
-			$taxjar                = new WC_Connect_TaxJar_Integration( $api_client );
+			$taxjar                = new WC_Connect_TaxJar_Integration( $api_client, $logger );
+			$options               = new WC_Connect_Options();
+			$stripe                = new WC_Connect_Stripe( $api_client, $options, $logger );
 
 			$this->set_logger( $logger );
 			$this->set_api_client( $api_client );
@@ -442,6 +558,7 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			$this->set_shipping_label( $shipping_label );
 			$this->set_nux( $nux );
 			$this->set_taxjar( $taxjar );
+			$this->set_stripe( $stripe );
 		}
 
 		/**
@@ -478,6 +595,13 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 				add_action( 'woocommerce_shipping_zone_method_added', array( $this, 'shipping_zone_method_added' ), 10, 3 );
 				add_action( 'woocommerce_shipping_zone_method_deleted', array( $this, 'shipping_zone_method_deleted' ), 10, 3 );
 				add_action( 'woocommerce_shipping_zone_method_status_toggled', array( $this, 'shipping_zone_method_status_toggled' ), 10, 4 );
+
+				// Initialize user choices from the core setup wizard.
+				// Note: Avoid doing so from AJAX requests so we don't duplicate efforts.
+				if ( ! defined( 'DOING_AJAX' ) ) {
+					$this->init_core_wizard_shipping_config();
+					$this->init_core_wizard_payments_config();
+				}
 			}
 
 			add_action( 'rest_api_init', array( $this, 'rest_api_init' ) );
@@ -493,9 +617,12 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), array( $this, 'add_plugin_action_links' ) );
 			add_action( 'enqueue_wc_connect_script', array( $this, 'enqueue_wc_connect_script' ), 10, 2 );
 			add_action( 'admin_init', array( $this, 'load_admin_dependencies' ) );
+			add_filter( 'wc_connect_shipping_service_settings', array( $this, 'shipping_service_settings' ), 10, 3 );
 
 			$tracks = $this->get_tracks();
 			$tracks->init();
+
+			$this->taxjar->init();
 		}
 
 		public function tos_rest_init() {
@@ -587,6 +714,20 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			$this->set_rest_address_normalization_controller( $rest_address_normalization_controller );
 			$rest_address_normalization_controller->register_routes();
 
+			if ( $this->stripe->is_stripe_plugin_enabled() ) {
+				require_once( plugin_basename( 'classes/class-wc-rest-connect-stripe-account-controller.php' ) );
+				$rest_stripe_account_controller = new WC_REST_Connect_Stripe_Account_Controller( $this->stripe, $this->api_client, $settings_store, $logger );
+				$rest_stripe_account_controller->register_routes();
+	
+				require_once( plugin_basename( 'classes/class-wc-rest-connect-stripe-oauth-init-controller.php' ) );
+				$rest_stripe_settings_controller = new WC_REST_Connect_Stripe_Oauth_Init_Controller( $this->stripe, $this->api_client, $settings_store, $logger );
+				$rest_stripe_settings_controller->register_routes();
+	
+				require_once( plugin_basename( 'classes/class-wc-rest-connect-stripe-oauth-connect-controller.php' ) );
+				$rest_stripe_oauth_controller = new WC_REST_Connect_Stripe_Oauth_Connect_Controller( $this->stripe, $this->api_client, $settings_store, $logger );
+				$rest_stripe_oauth_controller->register_routes();
+			} 
+
 			add_filter( 'rest_request_before_callbacks', array( $this, 'log_rest_api_errors' ), 10, 3 );
 		}
 
@@ -617,38 +758,52 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 		}
 
 		/**
+		 * Added to the wc_connect_shipping_service_settings filter, returns service settings
+		 *
+		 * @param $settings
+		 * @param $method_id
+		 * @param $instance_id
+		 *
+		 * @return array
+		 */
+		public function shipping_service_settings( $settings, $method_id, $instance_id ) {
+			$settings_store = $this->get_service_settings_store();
+			$schemas_store = $this->get_service_schemas_store();
+			$service_schema = $schemas_store->get_service_schema_by_id_or_instance_id( $instance_id ? $instance_id : $method_id );
+			if ( ! $service_schema ) {
+				return array_merge( $settings, array(
+					'formType'   => 'services',
+					'methodId'   => $method_id,
+					'instanceId' => $instance_id,
+				) );
+			}
+
+			return array_merge( $settings, array(
+				'storeOptions'       => $settings_store->get_store_options(),
+				'formSchema'         => $service_schema->service_settings,
+				'formLayout'         => $service_schema->form_layout,
+				'formData'           => $settings_store->get_service_settings( $method_id, $instance_id ),
+				'formType'           => 'services',
+				'methodId'           => $method_id,
+				'instanceId'         => $instance_id,
+				'noticeDismissed'    => $this->nux->is_notice_dismissed( 'service_settings' ),
+			) );
+		}
+
+		/**
 		 * This function is added to the wc_connect_service_admin_options action by this class
 		 * (see attach_hooks) and then that action is fired by WC_Connect_Shipping_Method::admin_options
 		 * to get the service instance form layout and settings bundled inside wcConnectData
 		 * as the form container is emitted into the body's HTML
 		 */
-		public function localize_and_enqueue_service_script( $id, $instance = false ) {
+		public function localize_and_enqueue_service_script( $method_id, $instance_id = false ) {
 			if ( ! function_exists( 'get_rest_url' ) ) {
 				return;
 			}
 
-			$settings_store = $this->get_service_settings_store();
-			$schemas_store = $this->get_service_schemas_store();
-			$service_schema = $schemas_store->get_service_schema_by_id_or_instance_id( $instance ? $instance : $id );
-
-			if ( ! $service_schema ) {
-				return;
-			}
-
-			$path = $instance ? "/wc/v1/connect/services/{$id}/{$instance}" : "/wc/v1/connect/services/{$id}";
-
-			do_action( 'enqueue_wc_connect_script', 'wc-connect-service-settings', array(
-				'storeOptions'       => $settings_store->get_store_options(),
-				'formSchema'         => $service_schema->service_settings,
-				'formLayout'         => $service_schema->form_layout,
-				'formData'           => $settings_store->get_service_settings( $id, $instance ),
-				'methodId'           => $id,
-				'instanceId'         => $instance,
-				'callbackURL'        => get_rest_url( null, $path ),
-				'nonce'              => wp_create_nonce( 'wp_rest' ),
-				'noticeDismissed'    => $this->nux->is_notice_dismissed( 'service_settings' ),
-				'dismissURL'         => get_rest_url( null, '/wc/v1/connect/services/dismiss_notice' )
-			) );
+			do_action( 'enqueue_wc_connect_script',
+				'wc-connect-service-settings',
+				apply_filters( 'wc_connect_shipping_service_settings', array(), $method_id, $instance_id ) );
 		}
 
 		/**
