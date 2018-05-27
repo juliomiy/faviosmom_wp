@@ -10,8 +10,8 @@
  * @see  shopper_header_widget_region()
  * @see  shopper_get_sidebar()
  */
-add_action( 'shopper_before_content', 'shopper_header_widget_region', 10 );
-add_action( 'shopper_sidebar',        'shopper_get_sidebar',          10 );
+add_action( 'shopper_before_content', 'shopper_header_widget_region', 		10 );
+add_action( 'shopper_sidebar',        'shopper_get_sidebar',          		10 );
 
 /**
  * Header
@@ -37,8 +37,7 @@ add_action( 'shopper_header', 'shopper_primary_navigation_wrapper',       	65 );
 add_action( 'shopper_header', 'shopper_primary_navigation',               	70 );
 add_action( 'shopper_header', 'shopper_primary_navigation_wrapper_close', 	80 );
 
-add_action( 'shopper_top_header_left', 'shopper_secondary_navigation',   			10 );
-
+add_action( 'shopper_top_header_left', 'shopper_secondary_navigation',   	10 );
 add_action(	'shopper_top_header_right', 'shopper_social_navigation',		10 );
 
 /**
@@ -115,10 +114,10 @@ add_action( 'shopper_post_content_before', 'shopper_post_thumbnail',       10 );
  * @see  shopper_init_structured_data()
  * @see  shopper_display_comments()
  */
-add_action( 'shopper_page',       'shopper_page_header',          10 );
-add_action( 'shopper_page',       'shopper_page_content',         20 );
-add_action( 'shopper_page',       'shopper_init_structured_data', 30 );
-add_action( 'shopper_page_after', 'shopper_display_comments',     10 );
+add_action( 'shopper_page',       'shopper_page_header',          			  10 );
+add_action( 'shopper_page',       'shopper_page_content',         			  20 );
+add_action( 'shopper_page',       'shopper_init_structured_data', 			  30 );
+add_action( 'shopper_page_after', 'shopper_display_comments',     			  10 );
 
 add_action( 'shopper_content_homepage',       'shopper_homepage_header',      10 );
 add_action( 'shopper_content_homepage',       'shopper_page_content',         20 );

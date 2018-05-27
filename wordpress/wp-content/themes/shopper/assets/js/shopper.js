@@ -8,7 +8,6 @@
 			//this.slickity('.shopper-recent-products .products', '.product');
 			this.cattoggle();
 			this.scrollTop();
-			this.setheight();
 			this.searchform();
 			this.quantity();
 			this.updatedQuantity();
@@ -180,14 +179,6 @@
 				}
 			});
 		},
-		
-		setheight: function() {
-			$('.products .product').each(function(index, el) {
-				var img = jQuery(el).find('img.wp-post-image');
-				var  addCartTop = jQuery(img).height();
-				jQuery(el).find('.loop-addtocart-btn-wrapper').css('top', addCartTop);
-			});
-		},
 
 		// Flickity Slider
 		slickity: function( slideEl, cellSelector) {
@@ -295,5 +286,18 @@
 		ShopperJS.calVerticalHeight();
 
 	});
+
+
+	jQuery( window ).load(function() {
+
+			$('.products .product').each(function(index, el) {
+				var img = jQuery(el).find('img.wp-post-image');
+				var  addCartTop = jQuery(img).height();
+				jQuery(el).find('.loop-addtocart-btn-wrapper').css('top', addCartTop);
+			});
+	});
+
+
+
 
 })(jQuery);

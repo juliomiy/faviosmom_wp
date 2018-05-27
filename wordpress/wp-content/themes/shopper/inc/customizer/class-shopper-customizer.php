@@ -27,7 +27,7 @@ if ( ! class_exists( 'Shopper_Customizer' ) ) :
 		 */
 		public function __construct() {
 			add_action( 'customize_register',              array( $this, 'customize_register' ), 10 );
-			add_filter( 'body_class',                      array( $this, 'layout_class' ) );
+			add_filter( 'body_class',                      array( $this, 'layout_class' ), 40 );
 			add_action( 'wp_enqueue_scripts',              array( $this, 'add_customizer_css' ), 130 );
 			add_action( 'after_setup_theme',               array( $this, 'custom_header_setup' ) );
 			add_action( 'customize_controls_print_styles', array( $this, 'customizer_custom_control_css' ) );
@@ -534,6 +534,26 @@ if ( ! class_exists( 'Shopper_Customizer' ) ) :
 					'priority' 			=> 1,
 				) ) );
 			}
+
+			// Remove control hooks
+			$this->_remove_controls( $wp_customize );
+		}
+
+		/**
+		 * Hook to remove some controls
+		 * 
+		 * @param  WP_Customize
+		 * @return void
+		 */
+		private function _remove_controls( $wp_customize ) {
+
+			$controls = apply_filters('shopper_remove_customize_control', array() );
+
+			foreach ($controls as $control ) {
+
+				$wp_customize->remove_control($control);
+
+			}
 		}
 
 		/**
@@ -660,7 +680,10 @@ if ( ! class_exists( 'Shopper_Customizer' ) ) :
 			.site-main nav.navigation .nav-previous a, .widget_nav_menu ul.menu li.current-menu-item > a, .widget ul li.current-cat-ancestor > a, .widget_nav_menu ul.menu li.current-menu-ancestor > a, .site-main nav.navigation .nav-next a, .widget ul li.current-cat > a, .widget ul li.current-cat-parent > a, a  {
 				color: ' . $shopper_theme_mods['accent_color'] . ';
 			}			
-			button, input[type="button"], input[type="reset"], input[type="submit"], .button, .widget a.button, .site-header-cart .widget_shopping_cart a.button, .back-to-top, .page-numbers li .page-numbers:hover {
+			button, input[type="button"], input[type="reset"], input[type="submit"], .button, .widget a.button, .site-header-cart .widget_shopping_cart a.button, .back-to-top, .page-numbers li .page-numbers:hover,
+				.shopper-hero-box .hero-box-wrap.owl-carousel .owl-controls .owl-next,
+				.shopper-hero-box .hero-box-wrap.owl-carousel .owl-controls .owl-prev
+			 {
 				background-color: ' . $shopper_theme_mods['button_background_color'] . ';
 				border-color: ' . $shopper_theme_mods['button_background_color'] . ';
 				color: ' . $shopper_theme_mods['button_text_color'] . ';
@@ -1046,9 +1069,15 @@ if ( ! class_exists( 'Shopper_Customizer' ) ) :
 			}
 
 			$options = get_theme_mod( 'shopper_homepage_control' );
+
+
+			// Use pro options if it is available 
+			if ( function_exists ('shopper_pro_get_homepage_hooks') ) {
+
+				$options = shopper_pro_get_homepage_hooks();
+			}
+
 			$components = array();
-
-
 
 			if ( isset( $options ) && '' != $options ) {
 			

@@ -242,6 +242,15 @@
 			@include span(last 3 of 12);
 		}
 	}
+	.shop-sidebar-right {
+		.content-area-shop {
+			@include span(9 of 12);
+		}
+
+		.widget-area-shop {
+			@include span(last 3 of 12);
+		}
+	}
 
 	.left-sidebar {
 		.content-area {
@@ -253,11 +262,30 @@
 		}
 	}
 
-	.none-sidebar {
+	.shop-sidebar-left {
+		.content-area-shop {
+			@include span(last 9 of 12);
+		}
+
+		.widget-area-shop {
+			@include span(3 of 12);
+		}
+	}
+
+	.none-sidebar{
 		.content-area {
 			@include span(12);
 		}
 		.widget-area {
+			display: none;
+		}
+	}
+
+	.shop-sidebar-none {
+		.content-area-shop {
+			@include span(12);
+		}
+		.widget-area-shop {
 			display: none;
 		}
 	}
@@ -899,6 +927,85 @@
 	}
 }
 
+@include susy-media ( max-width $desktop ) {
+
+	.woocommerce {
+
+			ul.products {
+
+				li.product {
+
+					&:hover {
+
+						.add-to-wishlist-custom {
+							right: 5% !important;
+						}
+					}
+
+					.loop-addtocart-btn-wrapper {
+
+						.button {
+
+							margin-top: -28px;
+							left: 0;
+							opacity: 1;
+							height: 30px;
+							text-align: center;
+							line-height: 30px;
+							font-size: 12px;
+						}
+
+					}
+
+					.add-to-wishlist-custom {
+						width: 20px;
+						height: 20px;
+						line-height: 20px;
+						border-radius: 20px;
+						text-align: center;
+						opacity: 1;
+						right: 5%;
+						top: 5%;
+
+						.yith-wcwl-wishlistexistsbrowse.show {
+							font-size: 0;
+							padding: 0;
+
+							&::before {
+
+								font-family: 'FontAwesome';
+								content: "\f004";
+								font-size: 8px;
+								opacity: .3;
+
+							}
+						}
+
+						.yith-wcwl-wishlistaddedbrowse.show {
+							font-size: 0;
+						}
+
+						a {
+							font-size: 0;
+							padding: 0;
+
+							&::before {
+								font-size: 8px;
+								margin-right: 0;
+							}
+						}
+					}
+
+
+					} 
+
+			}
+
+
+		} 
+
+}
+
 @include susy-media (max-width $container-width) {
 	.col-full {
 		margin-left: ms(5);
@@ -1329,6 +1436,54 @@
 			}
 		}
 	}
+
+
+	.woocommerce {
+
+		ul.products {
+
+			li.product {
+
+				.add-to-wishlist-custom {
+					width: 30px;
+					height: 30px;
+					line-height: 30px;
+					border-radius: 30px;
+					right: 15% !important;
+
+					a {
+
+						&::before {
+							font-size: 14px;
+						}
+
+					}
+
+					.yith-wcwl-wishlistexistsbrowse.show {
+						line-height: 30px;
+
+						&::before {
+							font-size: 14px;
+						}
+					}
+
+				}
+
+				&:hover {
+
+					.add-to-wishlist-custom {
+						right: 15% !important;
+					}
+				}
+
+			}
+
+		}
+
+
+		}
+
+
 
 	.site-footer {
 

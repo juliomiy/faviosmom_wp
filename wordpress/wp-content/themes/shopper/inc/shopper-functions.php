@@ -14,6 +14,15 @@ if ( ! function_exists( 'shopper_is_woocommerce_activated' ) ) {
 	}
 }
 
+if ( ! function_exists( 'shopper_pro_is_activated' ) ) {
+
+	function shopper_pro_is_activated() {
+
+		return class_exists( 'Shopper_Pro' ) ? true : false;
+	}
+
+}
+
 /**
  * Checks if the current page is a product archive
  *
@@ -251,7 +260,6 @@ function shopper_homepage_control_format_defaults () {
 		}
 
 		return $defaults;
-		//return join( ',', $defaults );
 }
 
 /**

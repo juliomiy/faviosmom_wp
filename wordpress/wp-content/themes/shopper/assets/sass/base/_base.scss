@@ -1123,6 +1123,9 @@ table {
 
 	.hentry {
 
+		margin: 0 0 ms(3);
+		list-style: none;
+
 		.entry-content {
 
 			.align-center {
@@ -1160,16 +1163,33 @@ table {
 
 		}
 }
+.entry-header {
 
+	.entry-title {
+		text-align: center;
+		margin-bottom: 15px;				
+	}
 
-.hentry {
-	margin: 0 0 ms(3);
-	list-style: none;
+}
+
+.thumbnail-blog {
 
 	.wp-post-image {
 		margin-bottom: ms(1);
 		margin-left: auto;
 		margin-right: auto;
+	}
+
+}
+
+.hentry.type-post {	
+
+	.wp-post-image {
+
+		margin-bottom: ms(1);
+		margin-left: auto;
+		margin-right: auto;
+
 	}
 
 	.entry-header {
@@ -1210,6 +1230,16 @@ table {
 		}
 	}
 }
+
+.hentry {
+	&.type-page {
+		.entry-header {
+			border-bottom: 0;
+			margin-bottom: 0;
+		}
+	}
+}
+
 
 .byline,
 .updated:not(.published) {

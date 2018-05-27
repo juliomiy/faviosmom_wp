@@ -16,8 +16,6 @@
 
 	<?php do_action( 'shopper_before_footer' ); ?>
 
-	<?php do_action( 'shopper_before_footer' ); ?>
-
 	<footer id="colophon" class="site-footer" role="contentinfo">
 		<div class="col-full">
 

@@ -509,6 +509,9 @@ if ( ! function_exists( 'shopper_post_content' ) ) {
 		<div class="entry-content">
 		<?php
 
+		$size = apply_filters('shopper_thunmbnail_size', 'large');
+		$shopper_display_excerpt = apply_filters('shopper_display_excerpt', true);
+
 		/**
 		 * Functions hooked in to shopper_post_content_before action.
 		 *
@@ -516,17 +519,22 @@ if ( ! function_exists( 'shopper_post_content' ) ) {
 		 */
 		do_action( 'shopper_post_content_before' );
 
-		if ( is_search() ) {
+
+
+		if ( ($shopper_display_excerpt) && ( is_search() || is_archive() || is_front_page() || is_home() )  ) {
 
 			the_excerpt();
 
-			//echo apply_filters('shopper_excerpt_more_link', '<a href="'. esc_url( get_permalink() ) .'"  title="'. get_the_title() .'" class="more-link">'. __( 'Continue Reading ...', 'shopper' ) .'</a>');
 
 		} else {
 
-			the_content();
+			the_content( sprintf(
+				/* translators: %s: Name of current post. */
+				wp_kses( __( 'Continue Reading %s <span class="meta-nav">&rarr;</span>', 'shopper' ), array( 'span' => array( 'class' => array() ) ) ),
+				the_title( '<span class="screen-reader-text">"', '"</span>', false )
 
-		}		
+			) );
+		}
 
 		do_action( 'shopper_post_content_after' );
 
@@ -547,6 +555,9 @@ if ( ! function_exists( 'shopper_footer_meta' ) ) {
 	 * @since 1.0.0
 	 */
 	function shopper_footer_meta() {
+
+		if ( 'post' == get_post_type() ) : 
+
 		?>
 		<div class="entry-footer">
 
@@ -555,9 +566,11 @@ if ( ! function_exists( 'shopper_footer_meta' ) ) {
 			if ( is_single() ) {
 
 				shopper_posted_on();
+
 			} else {
 
 				if ( 'post' == get_post_type() ) {
+
 					shopper_posted_on();
 				}
 			}
@@ -574,6 +587,10 @@ if ( ! function_exists( 'shopper_footer_meta' ) ) {
 		</div>
 
 	<?php
+
+	endif; 
+
+
 	}
 }
 
@@ -723,7 +740,13 @@ if ( ! function_exists( 'shopper_get_sidebar' ) ) {
 	 * @since 1.0.0
 	 */
 	function shopper_get_sidebar() {
-		get_sidebar();
+
+		$enable_sidebar = apply_filters( 'shopper_enable_sidebar', true);
+
+		if ( $enable_sidebar ) {
+
+			get_sidebar();
+		}
 	}
 }
 
@@ -749,7 +772,7 @@ if ( ! function_exists( 'shopper_post_thumbnail' ) ) {
 
 			</div>
 
-				<?php
+			<?php
 
 		}
 	}

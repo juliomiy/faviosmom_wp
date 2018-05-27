@@ -32,6 +32,7 @@ if ( ! class_exists( 'Shopper' ) ) :
 
 			// After WooCommerce.
 			add_filter( 'body_class',                 array( $this, 'body_classes' ) );
+			
 			add_filter( 'the_content_more_link', 	  array( $this, 'modify_read_more_link' ) );
 
 			//add_filter( 'wp_page_menu_args',          array( $this, 'page_menu_args' ) );
