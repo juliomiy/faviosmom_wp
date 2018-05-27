@@ -64,6 +64,9 @@ class Jetpack_Top_Posts_Widget extends WP_Widget {
 	function form( $instance ) {
 		$instance = wp_parse_args( (array) $instance, $this->defaults() );
 
+		if ( false === $instance['title'] ) {
+			$instance['title'] = $this->default_title;
+		}
 		$title = stripslashes( $instance['title'] );
 
 		$count = isset( $instance['count'] ) ? (int) $instance['count'] : 10;
@@ -300,10 +303,15 @@ class Jetpack_Top_Posts_Widget extends WP_Widget {
 			echo $args['before_title'] . $title . $args['after_title'];
 
 		if ( ! $posts ) {
+			$link = 'https://jetpack.com/support/getting-more-views-and-traffic/';
+			if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
+				$link = 'http://en.support.wordpress.com/getting-more-site-traffic/';
+			}
+
 			if ( current_user_can( 'edit_theme_options' ) ) {
 				echo '<p>' . sprintf(
 					__( 'There are no posts to display. <a href="%s" target="_blank">Want more traffic?</a>', 'jetpack' ),
-					'https://jetpack.com/support/getting-more-views-and-traffic/'
+					esc_url( $link )
 				) . '</p>';
 			}
 
@@ -333,6 +341,8 @@ class Jetpack_Top_Posts_Widget extends WP_Widget {
 					$post['post_id'],
 					array(
 						'fallback_to_avatars' => true,
+						'width'               => (int) $width,
+						'height'              => (int) $height,
 						'avatar_size'         => (int) $get_image_options['avatar_size'],
 					)
 				);

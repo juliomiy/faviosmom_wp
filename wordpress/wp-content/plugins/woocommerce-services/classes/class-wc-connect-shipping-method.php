@@ -49,7 +49,7 @@ if ( ! class_exists( 'WC_Connect_Shipping_Method' ) ) {
 			do_action( 'wc_connect_service_init', $this, $id_or_instance_id );
 
 			if ( ! $this->service_schema ) {
-				$this->debug(
+				$this->log_error(
 					'Error. A WC_Connect_Shipping_Method was constructed without an id or instance_id',
 					__FUNCTION__
 				);
@@ -138,19 +138,19 @@ if ( ! class_exists( 'WC_Connect_Shipping_Method' ) ) {
 		 * @param string|WP_Error $message
 		 * @param string $context
 		 */
-		protected function debug( $message, $context = '' ) {
+		protected function log( $message, $context = '' ) {
 
 			$logger = $this->get_logger();
 
 			if ( is_a( $logger, 'WC_Connect_Logger' ) ) {
 
-				$logger->debug( $message, $context );
+				$logger->log( $message, $context );
 
 			}
 
 		}
 
-		protected function error( $message, $context = '' ) {
+		protected function log_error( $message, $context = '' ) {
 			$logger = $this->get_logger();
 			if ( is_a( $logger, 'WC_Connect_Logger' ) ) {
 				$logger->error( $message, $context );
@@ -209,11 +209,13 @@ if ( ! class_exists( 'WC_Connect_Shipping_Method' ) ) {
 
 			// Ensure that Country is specified
 			if ( empty( $country ) ) {
+				$this->debug( 'Skipping rate calculation - missing country', 'error' );
 				return false;
 			}
 
 			// Validate Postcode
 			if ( ! WC_Validation::is_postcode( $postcode, $country ) ) {
+				$this->debug( 'Skipping rate calculation - invalid postcode', 'error' );
 				return false;
 			}
 
@@ -221,6 +223,7 @@ if ( ! class_exists( 'WC_Connect_Shipping_Method' ) ) {
 			$valid_states = WC()->countries->get_states( $country );
 
 			if ( $valid_states && ! array_key_exists( $state, $valid_states ) ) {
+				$this->debug( 'Skipping rate calculation - invalid/unsupported state', 'error' );
 				return false;
 			}
 
@@ -230,7 +233,7 @@ if ( ! class_exists( 'WC_Connect_Shipping_Method' ) ) {
 
 		private function lookup_product( $package, $product_id ) {
 			foreach ( $package[ 'contents' ] as $item ) {
-				if ( $item[ 'product_id' ] === $product_id ) {
+				if ( $item[ 'product_id' ] === $product_id || $item[ 'variation_id' ] === $product_id ) {
 					return $item[ 'data' ];
 				}
 			}
@@ -242,10 +245,47 @@ if ( ! class_exists( 'WC_Connect_Shipping_Method' ) ) {
 			return is_string( $preset_id );
 		}
 
+		private function check_and_handle_response_error( $response_body, $service_settings ) {
+			if ( is_wp_error( $response_body ) ) {
+				$this->debug(
+					sprintf(
+						'Request failed: %s',
+						$response_body->get_error_message()
+					),
+					'error'
+				);
+				$this->log_error(
+					sprintf(
+						'Error. Unable to get shipping rate(s) for %s instance id %d.',
+						$this->id,
+						$this->instance_id
+					),
+					__FUNCTION__
+				);
+
+				$this->set_last_request_failed();
+
+				$this->log_error( $response_body, __FUNCTION__ );
+				$this->add_fallback_rate( $service_settings );
+				return true;
+			}
+
+			if ( ! property_exists( $response_body, 'rates' ) ) {
+				$this->debug( 'Response is missing `rates` property', 'error' );
+				$this->set_last_request_failed();
+				$this->add_fallback_rate( $service_settings );
+				return true;
+			}
+
+			return false;
+		}
+
 		private function add_fallback_rate( $service_settings ) {
 			if ( ! property_exists( $service_settings, 'fallback_rate' ) || 0 >= $service_settings->fallback_rate ) {
 				return;
 			}
+
+			$this->debug( 'No rates found, adding fallback.', 'error' );
 
 			$rate_to_add = array(
 				'id'        => self::format_rate_id( 'fallback', $this->id, 0 ),
@@ -257,6 +297,14 @@ if ( ! class_exists( 'WC_Connect_Shipping_Method' ) ) {
 		}
 
 		public function calculate_shipping( $package = array() ) {
+			if ( ! WC_Connect_Functions::should_send_cart_api_request() ) {
+				return;
+			}
+
+			$this->debug( sprintf(
+				'WooCommerce Services debug mode is on - to hide these messages, turn debug mode off in the <a href="%s" style="text-decoration: underline;">settings</a>.',
+				admin_url( 'admin.php?page=wc-status&tab=connect' )
+			) );
 
 			if ( ! $this->is_valid_package_destination( $package ) ) {
 				return;
@@ -266,7 +314,7 @@ if ( ! class_exists( 'WC_Connect_Shipping_Method' ) ) {
 			$settings_keys    = get_object_vars( $service_settings );
 
 			if ( empty( $settings_keys ) ) {
-				$this->debug(
+				$this->log(
 					sprintf(
 						'Service settings empty. Skipping %s rate request (instance id %d).',
 						$this->id,
@@ -291,36 +339,27 @@ if ( ! class_exists( 'WC_Connect_Shipping_Method' ) ) {
 			$predefined_boxes = $this->service_settings_store->get_predefined_packages_for_service( $this->service_schema->id );
 			$predefined_boxes = array_values( array_filter( $predefined_boxes, array( $this, 'filter_preset_boxes' ) ) );
 
-			$response_body = $this->api_client->get_shipping_rates( $services, $package, $custom_boxes, $predefined_boxes );
-
-			if ( is_wp_error( $response_body ) ) {
-				$this->error(
-					sprintf(
-						'Error. Unable to get shipping rate(s) for %s instance id %d.',
-						$this->id,
-						$this->instance_id
-					),
-					__FUNCTION__
-				);
-
-				$this->set_last_request_failed();
-
-				$this->error( $response_body, __FUNCTION__ );
-				$this->add_fallback_rate( $service_settings );
-				return;
-			}
-
-			if ( ! property_exists( $response_body, 'rates' ) ) {
-				$this->set_last_request_failed();
-				$this->add_fallback_rate( $service_settings );
-				return;
+			$cache_key = sprintf(
+				'wcs_rates_%s',
+				md5( serialize( array( $services, $package, $custom_boxes, $predefined_boxes ) ) )
+			);
+			$debug_mode = 'yes' === get_option( 'woocommerce_shipping_debug_mode', 'no' );
+			$response_body = wp_cache_get( $cache_key );
+			if ( ! $debug_mode && false !== $response_body ) {
+				$this->debug( 'Rates response retrieved from cache' );
+			} else {
+				$response_body = $this->api_client->get_shipping_rates( $services, $package, $custom_boxes, $predefined_boxes );
+				if ( $this->check_and_handle_response_error( $response_body, $service_settings ) ) {
+					return;
+				}
+				wp_cache_set( $cache_key, $response_body, '', 3600 );
 			}
 
 			$instances = $response_body->rates;
 
 			foreach ( (array) $instances as $instance ) {
 				if ( property_exists( $instance, 'error' ) ) {
-					$this->error( $instance->error, __FUNCTION__ );
+					$this->log_error( $instance->error, __FUNCTION__ );
 					$this->set_last_request_failed();
 				}
 
@@ -331,35 +370,71 @@ if ( ! class_exists( 'WC_Connect_Shipping_Method' ) ) {
 				$packaging_lookup = $this->service_settings_store->get_package_lookup();
 
 				foreach ( (array) $instance->rates as $rate_idx => $rate ) {
-					$package_names = array();
-					foreach ( $rate->packages as $rate_package ) {
-						$package_format = '';
-						$items = array();
+					$package_summaries = array();
+					$service_ids       = array();
 
+					$dimension_unit      = get_option( 'woocommerce_dimension_unit' );
+					$weight_unit         = get_option( 'woocommerce_weight_unit' );
+					$measurements_format = '(%s x %s x %s ' . $dimension_unit . ', %s ' . $weight_unit . ')';
+
+					foreach ( $rate->packages as $rate_package ) {
+						$service_ids[]  = $rate_package->service_id;
+
+						$item_product_ids = array();
+						$item_by_product  = array();
 						foreach ( $rate_package->items as $package_item ) {
+							$item_product_ids[] = $package_item->product_id;
+							$item_by_product[ $package_item->product_id ] = $package_item;
+						}
+
+						$product_summaries = array();
+						$product_counts = array_count_values( $item_product_ids );
+						foreach ( $product_counts as $product_id => $count ) {
 							/** @var WC_Product $product */
-							$product = $this->lookup_product( $package, $package_item->product_id );
+							$product = $this->lookup_product( $package, $product_id );
 							if ( $product ) {
-								$items[] = $product->get_title();
+								$item_name = WC_Connect_Compatibility::instance()->get_product_name( $product );
+								$item = $item_by_product[ $product_id ];
+								$item_measurements = sprintf( $measurements_format, $item->length, $item->width, $item->height, $item->weight );
+								$product_summaries[] =
+									( $count > 1 ? sprintf( '<em>%s x</em> ', $count ) : '' ) .
+									sprintf( '<strong>%s</strong> %s', $item_name, $item_measurements );
 							}
 						}
 
+						$package_measurements = '';
+
 						if ( ! property_exists( $rate_package, 'box_id' ) ) {
-							$package_format = __( 'Unknown package (%s)', 'woocommerce-services' );
+							$package_name = __( 'Unknown package 📦', 'woocommerce-services' );
 						} else if ( 'individual' === $rate_package->box_id ) {
-							$package_format = __( 'Individual packaging (%s)', 'woocommerce-services' );
-						} else if ( isset( $packaging_lookup[ $rate_package->box_id ] )
-							&& isset( $packaging_lookup[ $rate_package->box_id ][ 'name' ] ) ) {
-							$package_format = $packaging_lookup[ $rate_package->box_id ][ 'name' ] . ' (%s)';
+							$package_name = __( 'Individual packaging 📦', 'woocommerce-services' );
+						} else if (
+							isset( $packaging_lookup[ $rate_package->box_id ] ) &&
+							isset( $packaging_lookup[ $rate_package->box_id ]['name'] )
+						) {
+							$is_letter = isset( $packaging_lookup[ $rate_package->box_id ]['is_letter'] ) && $packaging_lookup[ $rate_package->box_id ]['is_letter'];
+							$icon = $is_letter ? '✉️' : '📦';
+							$package_name = $packaging_lookup[ $rate_package->box_id ]['name'] . ' ' . $icon;
+							$package_measurements = sprintf(
+								$measurements_format,
+								$rate_package->length,
+								$rate_package->width,
+								$rate_package->height,
+								$rate_package->weight
+							);
 						}
 
-						$package_names[] = sprintf( $package_format, implode( ', ', $items ) );
+						$package_summaries[] = sprintf( '<strong>%s</strong> %s', $package_name, $package_measurements )
+							. '<ul><li>' . implode( '</li><li>', $product_summaries ) . '</li></ul>';
 					}
 
-					$packaging_info = implode( ', ', $package_names );
+					$packaging_info = implode( ', ', $package_summaries );
+					$services_list  = implode( '-', array_unique( $service_ids ) );
 
 					$rate_to_add = array(
-						'id'        => self::format_rate_id( $instance->id, $instance->instance, $rate_idx ),
+						// Make sure the rate ID is identifiable for extensions like Conditional Shipping and Payments.
+						// The new format looks like: `wc_services_usps:1:pri_medium_flat_box_top`.
+						'id'        => self::format_rate_id( $this->id, $instance->instance, $services_list ),
 						'label'     => self::format_rate_title( $rate->title ),
 						'cost'      => $rate->rate,
 						'meta_data' => array(
@@ -367,6 +442,23 @@ if ( ! class_exists( 'WC_Connect_Shipping_Method' ) ) {
 							__( 'Packaging', 'woocommerce-services' ) => $packaging_info
 						),
 					);
+
+					if ( $this->logger->is_debug_enabled() ) {
+						if ( 'fallback' === $services_list ) {
+							// Notify the merchant when the fallback rate is added by the WCS server.
+							$this->debug( 'No rates found, adding fallback.', 'error' );
+						} else {
+							$this->debug(
+								sprintf(
+									'Received rate: <strong>%s</strong> (%s)<br/><ul><li>%s</li></ul>',
+									$rate_to_add['label'],
+									wc_price( $rate->rate ),
+									implode( '</li><li>', $package_summaries )
+								),
+								'success'
+							);
+						}
+					}
 
 					$this->add_rate( $rate_to_add );
 				}
@@ -405,8 +497,15 @@ if ( ! class_exists( 'WC_Connect_Shipping_Method' ) ) {
 			do_action( 'wc_connect_service_admin_options', $this->id, $this->instance_id );
 		}
 
-		public static function format_rate_id( $method_id, $instance, $rate_idx ) {
-			return sprintf( '%s:%d:%d', $method_id, $instance, $rate_idx );
+		/**
+		 * @param string $method_id
+		 * @param int $instance_id
+		 * @param string $service_ids
+		 *
+		 * @return string
+		 */
+		public static function format_rate_id( $method_id, $instance_id, $service_ids ) {
+			return sprintf( '%s:%d:%s', $method_id, $instance_id, $service_ids );
 		}
 
 		public static function format_rate_title( $rate_title ) {
@@ -423,6 +522,20 @@ if ( ! class_exists( 'WC_Connect_Shipping_Method' ) ) {
 			);
 
 			return $formatted_title;
+		}
+
+		/**
+		 * Log debug by printing it as notice.
+		 *
+		 * @param string $message Debug message.
+		 * @param string $type    Notice type.
+		 */
+		public function debug( $message, $type = 'notice' ) {
+			if ( is_cart() || is_checkout() || isset( $_POST['update_cart'] ) ) {
+				$debug_message = sprintf( '%s (%s:%d)', $message, esc_html( $this->title ), $this->instance_id );
+
+				$this->logger->debug( $debug_message, $type );
+			}
 		}
 
 	}

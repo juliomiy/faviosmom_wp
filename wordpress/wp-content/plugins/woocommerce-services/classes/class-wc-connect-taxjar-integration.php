@@ -12,8 +12,26 @@ class WC_Connect_TaxJar_Integration {
 	 */
 	public $logger;
 
+	private $expected_options = array(
+		// If automated taxes are enabled and user disables taxes we re-enable them
+		'woocommerce_calc_taxes' => 'yes',
+		// Users can set either billing or shipping address for tax rates but not shop
+		'woocommerce_tax_based_on' => 'shipping',
+		// Rate calculations assume tax not included
+		'woocommerce_prices_include_tax' => 'no',
+		// Use no special handling on shipping taxes, our API handles that
+		'woocommerce_shipping_tax_class' => '',
+		// API handles rounding precision
+		'woocommerce_tax_round_at_subtotal' => 'no',
+		// Rates are calculated in the cart assuming tax not included
+		'woocommerce_tax_display_shop' => 'excl',
+		// TaxJar returns one total amount, not line item amounts
+		'woocommerce_tax_display_cart' => 'excl',
+		// TaxJar returns one total amount, not line item amounts
+		'woocommerce_tax_total_display' => 'single',
+	);
+
 	const PROXY_PATH               = 'taxjar/v2';
-	const ENV_SETUP_FLAG           = 'needs_tax_environment_setup';
 	const OPTION_NAME              = 'wc_connect_taxes_enabled';
 	const SETUP_WIZARD_OPTION_NAME = 'woocommerce_setup_automated_taxes';
 
@@ -42,15 +60,26 @@ class WC_Connect_TaxJar_Integration {
 		// Add toggle for automated taxes to the core settings page
 		add_filter( 'woocommerce_tax_settings', array( $this, 'add_tax_settings' ) );
 
+		// Settings values filter to handle the hardcoded settings
+		add_filter( 'woocommerce_admin_settings_sanitize_option', array( $this, 'sanitize_tax_option' ), 10, 2 );
+
+		// Settings Page
+		add_action( 'woocommerce_sections_tax', array( $this, 'output_sections_before' ),  9 );
+		add_action( 'woocommerce_sections_tax', array( $this, 'output_sections_after' ),  11 );
+
 		// Bow out if we're not wanted
 		if ( ! $this->is_enabled() ) {
 			return;
 		}
 
-		$this->setup_environment();
+		$this->configure_tax_settings();
 
 		// Calculate Taxes at Cart / Checkout
-		add_action( 'woocommerce_calculate_totals', array( $this, 'calculate_totals' ), 20 );
+		if ( class_exists( 'WC_Cart_Totals' ) ) { // Woo 3.2+
+			add_action( 'woocommerce_after_calculate_totals', array( $this, 'maybe_calculate_totals' ), 20 );
+		} else {
+			add_action( 'woocommerce_calculate_totals', array( $this, 'maybe_calculate_totals' ), 20 );
+		}
 
 		// Calculate Taxes for Backend Orders (Woo 2.6+)
 		add_action( 'woocommerce_before_save_order_items', array( $this, 'calculate_backend_totals' ), 20 );
@@ -73,7 +102,7 @@ class WC_Connect_TaxJar_Integration {
 			return true;
 		}
 
-		return ( 'yes' === get_option( self::OPTION_NAME ) );
+		return ( wc_tax_enabled() && 'yes' === get_option( self::OPTION_NAME ) );
 	}
 
 	/**
@@ -84,10 +113,13 @@ class WC_Connect_TaxJar_Integration {
 	 * @return array
 	 */
 	public function add_tax_settings( $tax_settings ) {
+		$enabled = $this->is_enabled();
+
 		$automated_taxes = array(
 			'title'    => __( 'Automated taxes', 'woocommerce-services' ),
 			'id'       => self::OPTION_NAME, // TODO: save in `wc_connect_options`?
 			'desc_tip' => __( 'Automate your sales tax calculations with WooCommerce Services, powered by Jetpack.', 'woocommerce-services' ),
+			'desc'     => $enabled ? '<p>' . __( 'Powered by WooCommerce Services ― Your tax rates and settings are automatically configured.', 'woocommerce-services' ) . '</p>' : '',
 			'default'  => 'no',
 			'type'     => 'select',
 			'class'    => 'wc-enhanced-select',
@@ -100,23 +132,88 @@ class WC_Connect_TaxJar_Integration {
 		// Insert the "automated taxes" setting at the top (under the section title)
 		array_splice( $tax_settings, 1, 0, array( $automated_taxes ) );
 
+		if ( $enabled ) {
+			// If the automated taxes are enabled, disable the settings that would be reverted in the original plugin
+			foreach ( $tax_settings as $index => $tax_setting ) {
+				if ( ! array_key_exists( $tax_setting['id'], $this->expected_options ) ) {
+					continue;
+				}
+				$tax_settings[$index]['custom_attributes'] = array( 'disabled' => true );
+			}
+		}
+
 		return $tax_settings;
 	}
 
 	/**
-	 * Put the WooCommerce tax settings in a known-good initial configuration.
+	 * When automated taxes are enabled, overwrite core tax settings that might break the API integration
+	 * This is similar to the original plugin functionality where these options were reverted on page load
+	 * See: https://github.com/taxjar/taxjar-woocommerce-plugin/blob/82bf7c58/includes/class-wc-taxjar-integration.php#L66-L91
+	 *
+	 * @param mixed $value - option value
+	 * @param array $option - option metadata
+	 * @return string new option value, based on the automated taxes state or $value
 	 */
-	public function setup_environment() {
-		$needs_setup = WC_Connect_Options::get_option( self::ENV_SETUP_FLAG, true );
-
-		if ( ! $needs_setup ) {
-			return;
+	public function sanitize_tax_option( $value, $option ) {
+		if (
+			//skip unrecognized option format
+			! is_array( $option )
+			//skip if unexpected option format
+			|| ! isset( $option['id'] )
+			//skip if not enabled or not being enabled in the current request
+			|| ! $this->is_enabled() && ( ! isset( $_POST[self::OPTION_NAME] ) || 'yes' != $_POST[self::OPTION_NAME] ) ) {
+			return $value;
 		}
 
-		$this->configure_tax_settings();
-		$this->backup_existing_tax_rates();
+		//the option is currently being enabled - backup the rates and flush the rates table
+		if ( ! $this->is_enabled() && self::OPTION_NAME === $option['id'] && 'yes' === $value ) {
+			$this->backup_existing_tax_rates();
+			return $value;
+		}
 
-		WC_Connect_Options::update_option( self::ENV_SETUP_FLAG, false );
+		//skip if unexpected option
+		if ( ! array_key_exists( $option['id'], $this->expected_options ) ) {
+			return $value;
+		}
+
+		return $this->expected_options[ $option['id'] ];
+	}
+
+	/**
+	 * Overwrite WooCommerce core tax settings if they are different than expected
+	 *
+	 * Ported from TaxJar's plugin and modified to support $this->expected_options
+	 * See: https://github.com/taxjar/taxjar-woocommerce-plugin/blob/82bf7c58/includes/class-wc-taxjar-integration.php#L66-L91
+	 */
+	public function configure_tax_settings() {
+		foreach( $this->expected_options as $option => $value ) {
+			//first check the option value - with default memory caching this should help to avoid unnecessary DB operations
+			if ( get_option( $option ) !== $value ) {
+				update_option( $option, $value );
+			}
+		}
+	}
+
+	/**
+	 * Hack to hide the tax sections for additional tax class rate tables.
+	 */
+	public function output_sections_before() {
+		if ( ! $this->is_enabled() ) {
+			return;
+		}
+		?>
+		<div style="display: none">
+		<?php
+	}
+
+	/**
+	 * Hack to hide the tax sections for additional tax class rate tables.
+	 */
+	public function output_sections_after() {
+		if ( ! $this->is_enabled() ) {
+			return;
+		}
+		?></div><?php
 	}
 
 	/**
@@ -174,19 +271,48 @@ class WC_Connect_TaxJar_Integration {
 	public function _log( $message ) {
 		$formatted_message = is_scalar( $message ) ? $message : json_encode( $message );
 
-		$this->logger->debug( $formatted_message, 'WCS Tax' );
+		$this->logger->log( $formatted_message, 'WCS Tax' );
+	}
+
+	/**
+	 * @param $message
+	 */
+	public function _error( $message ) {
+		$formatted_message = is_scalar( $message ) ? $message : json_encode( $message );
+
+		$this->logger->error( $formatted_message, 'WCS Tax' );
+	}
+
+	/**
+	 * Wrapper to avoid calling calculate_totals() for admin carts.
+	 *
+	 * @param $wc_cart_object
+	 */
+	public function maybe_calculate_totals( $wc_cart_object ) {
+		if ( ! WC_Connect_Functions::should_send_cart_api_request() ) {
+			return;
+		}
+
+		$this->calculate_totals( $wc_cart_object );
 	}
 
 	/**
 	 * Calculate tax / totals using TaxJar at checkout
 	 *
 	 * Unchanged from the TaxJar plugin.
-	 * See: https://github.com/taxjar/taxjar-woocommerce-plugin/blob/82bf7c587/includes/class-wc-taxjar-integration.php#L475
+	 * See: https://github.com/taxjar/taxjar-woocommerce-plugin/blob/9d8e725/includes/class-wc-taxjar-integration.php#L475
 	 *
 	 * @return void
 	 */
 	public function calculate_totals( $wc_cart_object ) {
 		global $woocommerce;
+
+		// Skip calculations for WC Subscription recurring totals, tax rate already available
+		if ( class_exists( 'WC_Subscriptions_Cart' ) ) {
+			if ( 'recurring_total' == WC_Subscriptions_Cart::get_calculation_type() ) {
+				return;
+			}
+		}
 
 		// Get all of the required customer params
 		$taxable_address = $woocommerce->customer->get_taxable_address(); // returns unassociated array
@@ -199,13 +325,23 @@ class WC_Connect_TaxJar_Integration {
 		$line_items = array();
 		$cart_taxes = array();
 
+		foreach ( $wc_cart_object->coupons as $coupon ) {
+			if ( method_exists( $coupon, 'get_id' ) ) { // Woo 3.0+
+				$limit_usage_qty = get_post_meta( $coupon->get_id(), 'limit_usage_to_x_items', true );
+
+				if ( $limit_usage_qty ) {
+					$coupon->set_limit_usage_to_x_items( $limit_usage_qty );
+				}
+			}
+		}
+
 		foreach ( $wc_cart_object->get_cart() as $cart_item_key => $cart_item ) {
 			$product = $cart_item['data'];
 			$id = $product->get_id();
 			$quantity = $cart_item['quantity'];
-			$unit_price = $product->get_price();
-			$line_subtotal = $cart_item['line_subtotal'];
-			$discount = $line_subtotal - $cart_item['line_total'];
+			$unit_price = wc_format_decimal( $product->get_price() );
+			$line_subtotal = wc_format_decimal( $cart_item['line_subtotal'] );
+			$discount = wc_format_decimal( $cart_item['line_subtotal'] - $cart_item['line_total'] );
 			$tax_class = explode( '-', $product->get_tax_class() );
 			$tax_code = '';
 
@@ -213,13 +349,23 @@ class WC_Connect_TaxJar_Integration {
 				$tax_code = '99999';
 			}
 
-			if ( isset( $tax_class[1] ) && is_numeric( $tax_class[1] ) ) {
-				$tax_code = $tax_class[1];
+			if ( isset( $tax_class ) && is_numeric( end( $tax_class ) ) ) {
+				$tax_code = end( $tax_class );
+			}
+
+			// Get WC Subscription sign-up fees for calculations
+			if ( class_exists( 'WC_Subscriptions_Cart' ) ) {
+				if ( 'none' == WC_Subscriptions_Cart::get_calculation_type() ) {
+					if ( class_exists( 'WC_Subscriptions_Synchroniser' ) ) {
+						WC_Subscriptions_Synchroniser::maybe_set_free_trial();
+					}
+					$unit_price = WC_Subscriptions_Cart::set_subscription_prices_for_calculation( $unit_price, $product );
+				}
 			}
 
 			if ( $unit_price && $line_subtotal ) {
 				array_push($line_items, array(
-					'id' => $id,
+					'id' => $id . '-' . $cart_item_key,
 					'quantity' => $quantity,
 					'product_tax_code' => $tax_code,
 					'unit_price' => $unit_price,
@@ -237,11 +383,17 @@ class WC_Connect_TaxJar_Integration {
 			'line_items' => $line_items,
 		) );
 
-		foreach ( $this->line_items as $product_id => $line_item ) {
-			if ( isset( $cart_taxes[ $this->rate_ids[ $product_id ] ] ) ) {
-				$cart_taxes[ $this->rate_ids[ $product_id ] ] += $line_item->tax_collectable;
+		if ( class_exists( 'WC_Cart_Totals' ) ) { // Woo 3.2+
+			do_action( 'woocommerce_cart_reset', $wc_cart_object, false );
+			do_action( 'woocommerce_before_calculate_totals', $wc_cart_object );
+			new WC_Cart_Totals( $wc_cart_object );
+		}
+
+		foreach ( $this->line_items as $line_item_key => $line_item ) {
+			if ( isset( $cart_taxes[ $this->rate_ids[ $line_item_key ] ] ) ) {
+				$cart_taxes[ $this->rate_ids[ $line_item_key ] ] += $line_item->tax_collectable;
 			} else {
-				$cart_taxes[ $this->rate_ids[ $product_id ] ] = $line_item->tax_collectable;
+				$cart_taxes[ $this->rate_ids[ $line_item_key ] ] = $line_item->tax_collectable;
 			}
 		}
 
@@ -258,8 +410,10 @@ class WC_Connect_TaxJar_Integration {
 
 		foreach ( $wc_cart_object->get_cart() as $cart_item_key => $cart_item ) {
 			$product = $cart_item['data'];
-			if ( isset( $this->line_items[ $product->get_id() ] ) ) {
-				$wc_cart_object->cart_contents[ $cart_item_key ]['line_tax'] = $this->line_items[ $product->get_id() ]->tax_collectable;
+			$line_item_key = $product->get_id() . '-' . $cart_item_key;
+
+			if ( isset( $this->line_items[ $line_item_key ] ) ) {
+				$wc_cart_object->cart_contents[ $cart_item_key ]['line_tax'] = $this->line_items[ $line_item_key ]->tax_collectable;
 			}
 		}
 	}
@@ -268,7 +422,7 @@ class WC_Connect_TaxJar_Integration {
 	 * Calculate tax / totals using TaxJar for backend orders
 	 *
 	 * Unchanged from the TaxJar plugin.
-	 * See: https://github.com/taxjar/taxjar-woocommerce-plugin/blob/82bf7c587/includes/class-wc-taxjar-integration.php#L569
+	 * See: https://github.com/taxjar/taxjar-woocommerce-plugin/blob/9d8e725/includes/class-wc-taxjar-integration.php#L569
 	 *
 	 * @return void
 	 */
@@ -286,16 +440,16 @@ class WC_Connect_TaxJar_Integration {
 			$shipping = $order->get_total_shipping(); // Woo 2.6
 		}
 
-		foreach ( $order->get_items() as $item ) {
+		foreach ( $order->get_items() as $item_key => $item ) {
 			if ( is_object( $item ) ) { // Woo 3.0+
 				$id = $item->get_product_id();
 				$quantity = $item->get_quantity();
-				$discount = floatval( wc_format_decimal( ( $item->get_subtotal() - $item->get_total() ) / $quantity ) );
+				$discount = wc_format_decimal( $item->get_subtotal() - $item->get_total() );
 				$tax_class = explode( '-', $item->get_tax_class() );
 			} else { // Woo 2.6
 				$id = $item['product_id'];
 				$quantity = $item['qty'];
-				$discount = floatval( wc_format_decimal( ( $item['line_subtotal'] - $item['line_total'] ) / $quantity ) );
+				$discount = wc_format_decimal( $item['line_subtotal'] - $item['line_total'] );
 				$tax_class = explode( '-', $item['tax_class'] );
 			}
 
@@ -313,7 +467,7 @@ class WC_Connect_TaxJar_Integration {
 
 			if ( $unit_price ) {
 				array_push($line_items, array(
-					'id' => $id,
+					'id' => $id . '-' . $item_key,
 					'quantity' => $quantity,
 					'product_tax_code' => $tax_code,
 					'unit_price' => $unit_price,
@@ -333,13 +487,15 @@ class WC_Connect_TaxJar_Integration {
 
 		// Add tax rates manually for Woo 3.0+
 		// Woo 2.6 adds the rates automatically
-		foreach ( $order->get_items() as $item ) {
+		foreach ( $order->get_items() as $item_key => $item ) {
 			if ( is_object( $item ) ) { // Woo 3.0+
 				$product_id = $item->get_product_id();
 			}
 
-			if ( isset( $this->rate_ids[ $product_id ] ) ) {
-				$rate_id = $this->rate_ids[ $product_id ];
+			$line_item_key = $product_id . '-' . $item_key;
+
+			if ( isset( $this->rate_ids[ $line_item_key ] ) ) {
+				$rate_id = $this->rate_ids[ $line_item_key ];
 
 				if ( class_exists( 'WC_Order_Item_Tax' ) ) { // Woo 3.0+
 					$item_tax = new WC_Order_Item_Tax();
@@ -389,7 +545,7 @@ class WC_Connect_TaxJar_Integration {
 	 * Calculate sales tax using SmartCalcs
 	 *
 	 * Direct from the TaxJar plugin, without Nexus check.
-	 * See: https://github.com/taxjar/taxjar-woocommerce-plugin/blob/82bf7c587/includes/class-wc-taxjar-integration.php#L256
+	 * See: https://github.com/taxjar/taxjar-woocommerce-plugin/blob/9d8e725/includes/class-wc-taxjar-integration.php#L256
 	 *
 	 *
 	 * @return void
@@ -422,7 +578,6 @@ class WC_Connect_TaxJar_Integration {
 		$this->freight_taxable      = 1;
 		$this->line_items           = array();
 		$this->has_nexus            = 0;
-		$this->tax_source           = 'origin';
 		$this->rate_ids             = array();
 
 		// Strict conditions to be met before API call can be conducted
@@ -468,7 +623,6 @@ class WC_Connect_TaxJar_Integration {
 
 			// Update Properties based on Response
 			$this->has_nexus          = (int) $taxjar_response->has_nexus;
-			$this->tax_source         = empty( $taxjar_response->tax_source ) ? 'origin' : $taxjar_response->tax_source;
 			$this->amount_to_collect  = $taxjar_response->amount_to_collect;
 			$this->tax_rate           = $taxjar_response->rate;
 			$this->freight_taxable    = (int) $taxjar_response->freight_taxable;
@@ -495,25 +649,20 @@ class WC_Connect_TaxJar_Integration {
 			$wc_cart_object->remove_taxes();
 		} elseif ( $this->has_nexus ) {
 			// Use Woo core to find matching rates for taxable address
-			$source_zip = 'destination' == $this->tax_source ? $to_zip : $from_zip;
-			$source_city = 'destination' == $this->tax_source ? $to_city : $from_city;
-
-			if ( strtoupper( $to_city ) == strtoupper( $from_city ) ) {
-				$source_city = $to_city;
-			}
-
 			$location = array(
 				'to_country' => $to_country,
 				'to_state' => $to_state,
-				'to_zip' => $source_zip,
-				'to_city' => $source_city,
+				'to_zip' => $to_zip,
+				'to_city' => $to_city,
 			);
 
 			// Add line item tax rates
-			foreach ( $this->line_items as $product_id => $line_item ) {
+			foreach ( $this->line_items as $line_item_key => $line_item ) {
+				$line_item_key_split = explode( '-', $line_item_key );
+				$product_id = $line_item_key_split[0];
 				$product = wc_get_product( $product_id );
 				$tax_class = $product->get_tax_class();
-				$this->create_or_update_tax_rate( $product_id, $location, $line_item->combined_tax_rate * 100, $tax_class );
+				$this->create_or_update_tax_rate( $line_item_key, $location, $line_item->combined_tax_rate * 100, $tax_class );
 			}
 
 			// Add shipping tax rate
@@ -525,11 +674,11 @@ class WC_Connect_TaxJar_Integration {
 	 * Add or update a native WooCommerce tax rate
 	 *
 	 * Unchanged from the TaxJar plugin.
-	 * See: https://github.com/taxjar/taxjar-woocommerce-plugin/blob/82bf7c587/includes/class-wc-taxjar-integration.php#L396
+	 * See: https://github.com/taxjar/taxjar-woocommerce-plugin/blob/9d8e725/includes/class-wc-taxjar-integration.php#L396
 	 *
 	 * @return void
 	 */
-	public function create_or_update_tax_rate( $product_id, $location, $rate, $tax_class = '' ) {
+	public function create_or_update_tax_rate( $line_item_key, $location, $rate, $tax_class = '' ) {
 		$tax_rate = array(
 			'tax_rate_country' => $location['to_country'],
 			'tax_rate_state' => $location['to_state'],
@@ -569,8 +718,8 @@ class WC_Connect_TaxJar_Integration {
 			WC_Tax::_update_tax_rate_cities( $rate_id, wc_clean( $location['to_city'] ) );
 		}
 
-		$this->_log( 'Tax Rate ID Set for ' . $product_id . ': ' . $rate_id );
-		$this->rate_ids[ $product_id ] = $rate_id;
+		$this->_log( 'Tax Rate ID Set for ' . $line_item_key . ': ' . $rate_id );
+		$this->rate_ids[ $line_item_key ] = $rate_id;
 	}
 
 	/**
@@ -622,47 +771,12 @@ class WC_Connect_TaxJar_Integration {
 		) );
 
 		if ( is_wp_error( $response ) ) {
-			return new WP_Error( 'request', __( 'There was an error retrieving the tax rates. Please check your server configuration.' ) );
+			$this->_error( 'Error retrieving the tax rates. Received (' . $response->get_error_code() . '): ' . $response->get_error_message() );
 		} elseif ( 200 == $response['response']['code'] ) {
 			return $response;
 		} else {
-			$this->_log( 'Received (' . $response['response']['code'] . '): ' . $response['body'] );
+			$this->_error( 'Error retrieving the tax rates. Received (' . $response['response']['code'] . '): ' . $response['body'] );
 		}
-	}
-
-	/**
-	 * Configure WooCommerce core tax settings for TaxJar integration.
-	 *
-	 * Ported from TaxJar's plugin.
-	 * See: https://github.com/taxjar/taxjar-woocommerce-plugin/blob/82bf7c58/includes/class-wc-taxjar-integration.php#L66-L91
-	 */
-	public function configure_tax_settings() {
-		// If TaxJar is enabled and a user disables taxes we renable them
-		update_option( 'woocommerce_calc_taxes', 'yes' );
-
-		// Users can set either billing or shipping address for tax rates but not shop
-		update_option( 'woocommerce_tax_based_on', 'shipping' );
-
-		// Rate calculations assume tax not included
-		update_option( 'woocommerce_prices_include_tax', 'no' );
-
-		// Don't ever set a default customer address
-		update_option( 'woocommerce_default_customer_address', '' );
-
-		// Use no special handling on shipping taxes, our API handles that
-		update_option( 'woocommerce_shipping_tax_class', '' );
-
-		// API handles rounding precision
-		update_option( 'woocommerce_tax_round_at_subtotal', 'no' );
-
-		// Rates are calculated in the cart assuming tax not included
-		update_option( 'woocommerce_tax_display_shop', 'excl' );
-
-		// TaxJar returns one total amount, not line item amounts
-		update_option( 'woocommerce_tax_display_cart', 'excl' );
-
-		// TaxJar returns one total amount, not line item amounts
-		update_option( 'woocommerce_tax_total_display', 'single' );
 	}
 
 	/**

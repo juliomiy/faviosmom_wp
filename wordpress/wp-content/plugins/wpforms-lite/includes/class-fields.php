@@ -59,6 +59,7 @@ class WPForms_Fields {
 			'date-time',
 			'number',
 			'page-break',
+			'rating',
 			'file-upload',
 			'payment-single',
 			'payment-multiple',
@@ -66,6 +67,11 @@ class WPForms_Fields {
 			'payment-credit-card',
 			'payment-total',
 		) );
+
+		// Include GDPR Checkbox field if GDPR enhancements are enabled.
+		if ( wpforms_setting( 'gdpr', false ) ) {
+			$fields[] = 'gdpr-checkbox';
+		}
 
 		foreach ( $fields as $field ) {
 

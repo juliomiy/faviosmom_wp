@@ -106,6 +106,26 @@ class Bar {
 
 		if( isset( $_POST['_mctb'] ) && $_POST['_mctb'] == 1 ) {
 			$this->success = $this->process();
+
+			if( ! empty( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest' ) {
+			    $data = array(
+                    'message' => $this->get_response_message(),
+                    'success' => $this->success,
+                    'redirect_url' => $this->success ? $this->options->get( 'redirect' ) : '',
+                );
+
+			    wp_send_json( $data );
+			    exit;
+            }
+
+            if( $this->success ) {
+                // should we redirect
+                $redirect_url = $this->options->get( 'redirect' );
+                if( ! empty( $redirect_url ) ) {
+                    wp_redirect( $redirect_url );
+                    exit;
+                }
+            }
 		}
 	}
 
@@ -114,7 +134,6 @@ class Bar {
 	 * @return boolean
 	 */
 	private function process() {
-
 		$options = $this->options;
 		$this->submitted = true;
 		$log = $this->get_log();
@@ -164,8 +183,16 @@ class Bar {
 
 		/** @ignore */
 		$data = apply_filters( 'mctb_merge_vars', $data );
-
 		$email_type = apply_filters( 'mctb_email_type', 'html' );
+
+        $replace_interests = true;
+
+        /**
+         * Filters whether interests should be replaced or appended to.
+         *
+         * @param bool $replace_interests
+         */
+		$replace_interests = apply_filters( 'mctb_replace_interests', $replace_interests );
 
 		$mailchimp = new MC4WP_MailChimp();
 		if( class_exists( 'MC4WP_MailChimp_Subscriber' ) ) {
@@ -189,7 +216,7 @@ class Bar {
 				 */
 				$subscriber = apply_filters( 'mctb_subscriber_data', $subscriber );
 
-				$result = $mailchimp->list_subscribe( $mailchimp_list_id, $subscriber->email_address, $subscriber->to_array(), $options->get( 'update_existing' ), true );
+				$result = $mailchimp->list_subscribe( $mailchimp_list_id, $subscriber->email_address, $subscriber->to_array(), $options->get( 'update_existing' ), $replace_interests );
 				$result = is_object( $result ) && ! empty( $result->id );
 			}
 
@@ -197,7 +224,7 @@ class Bar {
 			// for BC with MailChimp for WordPress 3.x, override $mailchimp var
 			$mailchimp = mc4wp_get_api();
 			unset( $data['EMAIL'] );
-			$result = $mailchimp->subscribe( $mailchimp_list_id, $email_address, $data, $email_type, $options->get( 'double_optin' ), $options->get( 'update_existing' ), true, $options->get( 'send_welcome' ) );
+			$result = $mailchimp->subscribe( $mailchimp_list_id, $email_address, $data, $email_type, $options->get( 'double_optin' ), $options->get( 'update_existing' ), $replace_interests, $options->get( 'send_welcome' ) );
 		}
 
 		// return true if success..
@@ -220,12 +247,6 @@ class Bar {
 			// log sign-up attempt
 			if( $log ) {
 				$log->info( sprintf( 'Top Bar > Successfully subscribed %s', $email_address ) );
-			}
-
-			// should we redirect
-			if( '' !== $options->get( 'redirect' ) ) {
-				wp_redirect( $options->get( 'redirect' ) );
-				exit;
 			}
 
 			return true;
@@ -306,8 +327,10 @@ class Bar {
 				'show' =>  ( $bottom ) ? '&#x25B2;' : '&#x25BC;'
 			),
 			'position' => $this->options->get( 'position' ),
-			'is_submitted' => $this->submitted,
-			'is_success' => $this->success
+			'state' => array(
+                'submitted' => $this->submitted,
+                'success' => $this->success,
+            ),
 		);
 
 		/**
@@ -395,9 +418,9 @@ class Bar {
 			<div class="mctb-bar" style="display: none">
 				<form method="post" <?php if( is_string( $form_action ) ) { printf( 'action="%s"', esc_attr( $form_action ) ); } ?>>
 					<?php do_action( 'mctb_before_label' ); ?>
-					<label class="mctb-label"><?php echo $this->options->get( 'text_bar' ); ?></label>
+					<label class="mctb-label" for="mailchimp-top-bar__email"><?php echo $this->options->get( 'text_bar' ); ?></label>
 					<?php do_action( 'mctb_before_email_field' ); ?>
-					<input type="email" name="email" placeholder="<?php echo esc_attr( $this->options->get( 'text_email_placeholder' ) ); ?>" class="mctb-email"  required />
+					<input type="email" name="email" placeholder="<?php echo esc_attr( $this->options->get( 'text_email_placeholder' ) ); ?>" class="mctb-email" required id="mailchimp-top-bar__email" />
 					<input type="text"  name="email_confirm" placeholder="Confirm your email" value="" autocomplete="off" tabindex="-1" class="mctb-email-confirm" />
 					<?php do_action( 'mctb_before_submit_button' ); ?>
 					<input type="submit" value="<?php echo esc_attr( $this->options->get('text_button') ); ?>" class="mctb-button" />
@@ -405,7 +428,7 @@ class Bar {
 					<input type="hidden" name="_mctb_no_js" value="1" />
 					<input type="hidden" name="_mctb_timestamp" value="<?php echo time(); ?>" />
 				</form>
-				<?php echo $this->get_response_message(); ?>
+				<?php echo $this->get_response_message_html(); ?>
 			</div>
 
 			<!-- / MailChimp Top Bar -->
@@ -432,8 +455,19 @@ class Bar {
 			$message = $this->options->get('text_error');
 		}
 
-		return sprintf( '<div class="mctb-response"><label class="mctb-response-label">%s</label></div>', $message );
+		return $message;
 	}
+
+	protected function get_response_message_html() {
+        $message = $this->get_response_message();
+        if( empty( $message ) ) {
+            return '';
+        }
+
+        return sprintf( '<div class="mctb-response"><label class="mctb-response-label">%s</label></div>', $message );
+    }
+
+
 
 	/**
 	 * @param $url

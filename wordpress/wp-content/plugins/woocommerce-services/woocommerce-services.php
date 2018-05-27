@@ -7,7 +7,9 @@
  * Author URI: https://woocommerce.com/
  * Text Domain: woocommerce-services
  * Domain Path: /i18n/languages/
- * Version: 1.8.1
+ * Version: 1.14.0
+ * WC requires at least: 3.0.0
+ * WC tested up to: 3.3.4
  *
  * Copyright (c) 2017 Automattic
  *
@@ -32,8 +34,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once( plugin_basename( 'classes/class-wc-connect-options.php' ) );
+require_once( plugin_basename( 'classes/class-wc-connect-extension-compatibility.php' ) );
+require_once( plugin_basename( 'classes/class-wc-connect-functions.php' ) );
 require_once( plugin_basename( 'classes/class-wc-connect-jetpack.php' ) );
+require_once( plugin_basename( 'classes/class-wc-connect-options.php' ) );
 
 if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 
@@ -49,6 +53,11 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 		 * @var WC_Connect_Logger
 		 */
 		protected $logger;
+
+		/**
+		 * @var WC_Connect_Logger
+		 */
+		protected $shipping_logger;
 
 		/**
 		 * @var WC_Connect_API_Client
@@ -84,12 +93,6 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 		 * @var WC_REST_Connect_Services_Controller
 		 */
 		protected $rest_services_controller;
-
-		/**
-		 * @var WC_REST_Connect_Services_Dismiss_Service_Notice_Controller
-		 */
-		protected $rest_dismiss_service_notice_controller;
-
 
 		/**
 		 * @var WC_REST_Connect_Self_Help_Controller
@@ -167,6 +170,11 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 		protected $stripe;
 
 		/**
+		 * @var WC_Connect_PayPal_EC
+		 */
+		protected $paypal_ec;
+
+		/**
 		 * @var WC_REST_Connect_Tos_Controller
 		 */
 		protected $rest_tos_controller;
@@ -185,6 +193,22 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			WC_Connect_Options::delete_all_options();
 		}
 
+		/**
+		 * Get WCS plugin version
+		 *
+		 * @return string
+		 */
+		static function get_wcs_version() {
+			$plugin_data = get_file_data( __FILE__, array( 'Version' => 'Version' ) );
+			return $plugin_data[ 'Version' ];
+		}
+
+		function wpcom_static_url($file) {
+			$i = hexdec( substr( md5( $file ), -1 ) ) % 2;
+			$url = 'http://s' . $i . '.wp.com' . $file;
+			return set_url_scheme( $url );
+		}
+
 		public function __construct() {
 			$this->wc_connect_base_url = trailingslashit( defined( 'WOOCOMMERCE_CONNECT_DEV_SERVER_URL' ) ? WOOCOMMERCE_CONNECT_DEV_SERVER_URL : plugins_url( 'dist/', __FILE__ ) );
 			add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
@@ -197,6 +221,14 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 
 		public function set_logger( WC_Connect_Logger $logger ) {
 			$this->logger = $logger;
+		}
+
+		public function get_shipping_logger() {
+			return $this->shipping_logger;
+		}
+
+		public function set_shipping_logger( WC_Connect_Logger $logger ) {
+			$this->shipping_logger = $logger;
 		}
 
 		public function get_api_client() {
@@ -261,10 +293,6 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 
 		public function set_rest_services_controller( WC_REST_Connect_Services_Controller $rest_services_controller ) {
 			$this->rest_services_controller = $rest_services_controller;
-		}
-
-		public function set_rest_dismiss_service_notice_controller( WC_REST_Connect_Services_Dismiss_Service_Notice_Controller $rest_dismiss_service_notice_controller ) {
-			$this->rest_dismiss_service_notice_controller = $rest_dismiss_service_notice_controller;
 		}
 
 		public function get_rest_self_help_controller() {
@@ -363,6 +391,14 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			$this->stripe = $stripe;
 		}
 
+		public function set_paypal_ec( WC_Connect_PayPal_EC $paypal_ec ) {
+			$this->paypal_ec = $paypal_ec;
+		}
+
+		public function set_label_reports( WC_Connect_Label_Reports $label_reports ) {
+			$this->label_reports = $label_reports;
+		}
+
 		/**
 		 * Load our textdomain
 		 *
@@ -438,36 +474,44 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 		}
 
 		protected function add_method_to_shipping_zone( $zone_id, $method_id ) {
-			$method      = $this->get_service_schemas_store()->get_service_schema_by_id( $method_id );
-			$zone        = WC_Shipping_Zones::get_zone( $zone_id );
-			$instance_id = $zone->add_shipping_method( $method->method_id );
+			$method = $this->get_service_schemas_store()->get_service_schema_by_id( $method_id );
+			if ( empty( $method ) ) {
+				return;
+			}
 
+			$zone = WC_Shipping_Zones::get_zone( $zone_id );
+			$instance_id = $zone->add_shipping_method( $method->method_id );
 			$zone->save();
 
 			$instance = WC_Shipping_Zones::get_shipping_method( $instance_id );
+			if ( empty( $instance ) ) {
+				return;
+			}
+
 			$schema   = $instance->get_service_schema();
 			$defaults = (object) $this->get_service_schema_defaults( $schema->service_settings );
-
 			WC_Connect_Options::update_shipping_method_option( 'form_settings', $defaults, $method->method_id, $instance_id );
 		}
 
 		public function init_core_wizard_shipping_config() {
-			$store_country = WC()->countries->get_base_country();
+			$store_currency = get_woocommerce_currency();
 
-			if ( 'US' === $store_country ) {
-				$country_method = 'usps';
-			} elseif ( 'CA' === $store_country ) {
-				$country_method = 'canada_post';
+			if ( 'USD' === $store_currency ) {
+				$currency_method = 'usps';
+			} elseif ( 'CAD' === $store_currency ) {
+				$currency_method = 'canada_post';
 			} else {
-				return; // Only set up live rates for US and CA
+				return; // Only set up live rates for USD and CAD
 			}
 
 			if ( get_option( 'woocommerce_setup_intl_live_rates_zone' ) ) {
-				$this->add_method_to_shipping_zone( 0, $country_method );
+				$this->add_method_to_shipping_zone( 0, $currency_method );
 				delete_option( 'woocommerce_setup_intl_live_rates_zone' );
 			}
 
 			if ( get_option( 'woocommerce_setup_domestic_live_rates_zone' ) ) {
+				$store_country = WC()->countries->get_base_country();
+
 				// Find the "domestic" zone (only location must be the base country)
 				foreach ( WC_Shipping_Zones::get_zones() as $zone ) {
 					if (
@@ -475,7 +519,7 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 						'country' === $zone['zone_locations'][0]->type &&
 						$store_country === $zone['zone_locations'][0]->code
 					) {
-						$this->add_method_to_shipping_zone( $zone['id'], $country_method );
+						$this->add_method_to_shipping_zone( $zone['id'], $currency_method );
 						break;
 					}
 				}
@@ -534,21 +578,34 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			require_once( plugin_basename( 'classes/class-wc-connect-shipping-label.php' ) );
 			require_once( plugin_basename( 'classes/class-wc-connect-nux.php' ) );
 			require_once( plugin_basename( 'classes/class-wc-connect-stripe.php' ) );
+			require_once( plugin_basename( 'classes/class-wc-connect-paypal-ec.php' ) );
+			require_once( plugin_basename( 'classes/class-wc-connect-label-reports.php' ) );
+			require_once( plugin_basename( 'classes/class-wc-connect-privacy.php' ) );
 
-			$logger                = new WC_Connect_Logger( new WC_Logger() );
+			$core_logger           = new WC_Logger();
+			$logger                = new WC_Connect_Logger( $core_logger );
+			$taxes_logger          = new WC_Connect_Logger( $core_logger, 'taxes' );
+			$payments_logger       = new WC_Connect_Logger( $core_logger, 'payments' );
+			$shipping_logger       = new WC_Connect_Logger( $core_logger, 'shipping' );
+
 			$validator             = new WC_Connect_Service_Schemas_Validator();
 			$api_client            = new WC_Connect_API_Client( $validator, $this );
 			$schemas_store         = new WC_Connect_Service_Schemas_Store( $api_client, $logger );
 			$settings_store        = new WC_Connect_Service_Settings_Store( $schemas_store, $api_client, $logger );
 			$payment_methods_store = new WC_Connect_Payment_Methods_Store( $settings_store, $api_client, $logger );
 			$tracks                = new WC_Connect_Tracks( $logger, __FILE__ );
-			$shipping_label        = new WC_Connect_Shipping_Label( $api_client, $settings_store, $schemas_store, $payment_methods_store );
+			$shipping_label        = new WC_Connect_Shipping_Label( $api_client, $settings_store, $schemas_store );
 			$nux                   = new WC_Connect_Nux( $tracks, $shipping_label );
-			$taxjar                = new WC_Connect_TaxJar_Integration( $api_client, $logger );
+			$taxjar                = new WC_Connect_TaxJar_Integration( $api_client, $taxes_logger );
 			$options               = new WC_Connect_Options();
-			$stripe                = new WC_Connect_Stripe( $api_client, $options, $logger );
+			$stripe                = new WC_Connect_Stripe( $api_client, $options, $payments_logger );
+			$paypal_ec             = new WC_Connect_PayPal_EC( $api_client, $nux );
+			$label_reports         = new WC_Connect_Label_Reports( $settings_store );
+
+			new WC_Connect_Privacy( $settings_store, $api_client );
 
 			$this->set_logger( $logger );
+			$this->set_shipping_logger( $shipping_logger );
 			$this->set_api_client( $api_client );
 			$this->set_service_schemas_validator( $validator );
 			$this->set_service_schemas_store( $schemas_store );
@@ -559,6 +616,8 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			$this->set_nux( $nux );
 			$this->set_taxjar( $taxjar );
 			$this->set_stripe( $stripe );
+			$this->set_paypal_ec( $paypal_ec );
+			$this->set_label_reports( $label_reports );
 		}
 
 		/**
@@ -569,7 +628,7 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			new WC_Connect_Debug_Tools( $this->api_client );
 
 			require_once( plugin_basename( 'classes/class-wc-connect-settings-pages.php' ) );
-			$settings_pages = new WC_Connect_Settings_Pages( $this->payment_methods_store, $this->service_settings_store, $this->service_schemas_store );
+			$settings_pages = new WC_Connect_Settings_Pages();
 			$this->set_settings_pages( $settings_pages );
 
 			$schema = $this->get_service_schemas_store();
@@ -597,8 +656,8 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 				add_action( 'woocommerce_shipping_zone_method_status_toggled', array( $this, 'shipping_zone_method_status_toggled' ), 10, 4 );
 
 				// Initialize user choices from the core setup wizard.
-				// Note: Avoid doing so from AJAX requests so we don't duplicate efforts.
-				if ( ! defined( 'DOING_AJAX' ) ) {
+				// Note: Avoid doing so on non-primary requests so we don't duplicate efforts.
+				if ( ! defined( 'DOING_AJAX' ) && is_admin() && ! isset( $_GET['noheader'] ) ) {
 					$this->init_core_wizard_shipping_config();
 					$this->init_core_wizard_payments_config();
 				}
@@ -618,11 +677,14 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			add_action( 'enqueue_wc_connect_script', array( $this, 'enqueue_wc_connect_script' ), 10, 2 );
 			add_action( 'admin_init', array( $this, 'load_admin_dependencies' ) );
 			add_filter( 'wc_connect_shipping_service_settings', array( $this, 'shipping_service_settings' ), 10, 3 );
+			add_action( 'woocommerce_email_after_order_table', array( $this, 'add_tracking_info_to_emails' ), 10, 3 );
+			add_filter( 'woocommerce_admin_reports', array( $this, 'reports_tabs' ) );
 
 			$tracks = $this->get_tracks();
 			$tracks->init();
 
 			$this->taxjar->init();
+			$this->paypal_ec->init();
 		}
 
 		public function tos_rest_init() {
@@ -669,11 +731,6 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			$this->set_rest_services_controller( $rest_services_controller );
 			$rest_services_controller->register_routes();
 
-			require_once( plugin_basename( 'classes/class-wc-rest-connect-dismiss-service-notice-controller.php' ) );
-			$rest_dismiss_service_notice_controller = new WC_REST_Connect_Services_Dismiss_Service_Notice_Controller( $this->api_client, $settings_store, $logger, $this->nux );
-			$this->set_rest_dismiss_service_notice_controller( $rest_dismiss_service_notice_controller );
-			$rest_dismiss_service_notice_controller->register_routes();
-
 			require_once( plugin_basename( 'classes/class-wc-rest-connect-self-help-controller.php' ) );
 			$rest_self_help_controller = new WC_REST_Connect_Self_Help_Controller( $this->api_client, $settings_store, $logger );
 			$this->set_rest_self_help_controller( $rest_self_help_controller );
@@ -718,15 +775,19 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 				require_once( plugin_basename( 'classes/class-wc-rest-connect-stripe-account-controller.php' ) );
 				$rest_stripe_account_controller = new WC_REST_Connect_Stripe_Account_Controller( $this->stripe, $this->api_client, $settings_store, $logger );
 				$rest_stripe_account_controller->register_routes();
-	
+
 				require_once( plugin_basename( 'classes/class-wc-rest-connect-stripe-oauth-init-controller.php' ) );
 				$rest_stripe_settings_controller = new WC_REST_Connect_Stripe_Oauth_Init_Controller( $this->stripe, $this->api_client, $settings_store, $logger );
 				$rest_stripe_settings_controller->register_routes();
-	
+
 				require_once( plugin_basename( 'classes/class-wc-rest-connect-stripe-oauth-connect-controller.php' ) );
 				$rest_stripe_oauth_controller = new WC_REST_Connect_Stripe_Oauth_Connect_Controller( $this->stripe, $this->api_client, $settings_store, $logger );
 				$rest_stripe_oauth_controller->register_routes();
-			} 
+
+				require_once( plugin_basename( 'classes/class-wc-rest-connect-stripe-deauthorize-controller.php' ) );
+				$rest_stripe_account_controller = new WC_REST_Connect_Stripe_Deauthorize_Controller( $this->stripe, $this->api_client, $settings_store, $logger );
+				$rest_stripe_account_controller->register_routes();
+			}
 
 			add_filter( 'rest_request_before_callbacks', array( $this, 'log_rest_api_errors' ), 10, 3 );
 		}
@@ -786,7 +847,6 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 				'formType'           => 'services',
 				'methodId'           => $method_id,
 				'instanceId'         => $instance_id,
-				'noticeDismissed'    => $this->nux->is_notice_dismissed( 'service_settings' ),
 			) );
 		}
 
@@ -801,9 +861,126 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 				return;
 			}
 
-			do_action( 'enqueue_wc_connect_script',
-				'wc-connect-service-settings',
-				apply_filters( 'wc_connect_shipping_service_settings', array(), $method_id, $instance_id ) );
+			do_action( 'enqueue_wc_connect_script', 'wc-connect-service-settings', array(
+				'methodId' => $method_id,
+				'instanceId' => $instance_id,
+			) );
+		}
+
+		/**
+		 * Filter function for adding the report tabs
+		 *
+		 * @param array $reports - report tabs meta
+		 * @return array report tabs with WCS tabs added
+		 */
+		public function reports_tabs( $reports ) {
+			$reports[ 'wcs_labels' ] = array(
+				'title' => __( 'Shipping Labels', 'woocommerce-services' ),
+				'reports' => array(
+					'connect_labels'     => array(
+						'title'       => __( 'Shipping Labels', 'woocommerce-services' ),
+						'description' => '',
+						'hide_title'  => true,
+						'callback'    => array( $this->label_reports, 'output_report' ),
+					),
+				),
+			);
+
+			return $reports;
+		}
+
+		/**
+		 * Add tracking info (if available) to completed emails using the woocommerce_email_after_order_table hook
+		 *
+		 * @param $order
+		 * @param $sent_to_admin
+		 * @param $plain_text
+		 */
+		public function add_tracking_info_to_emails( $order, $sent_to_admin, $plain_text ) {
+			$id = WC_Connect_Compatibility::instance()->get_order_id( $order );
+
+			// Abort if no id was passed, if the order is not marked as 'completed' or if another extension is handling the emailing
+			if ( ! $id
+				|| ! $order->has_status( 'completed' )
+				|| ! WC_Connect_Extension_Compatibility::should_email_tracking_details( $id ) ) {
+				return;
+			}
+
+			$labels = $this->service_settings_store->get_label_order_meta_data( $id );
+
+			// Abort if there are no labels
+			if ( empty( $labels ) ) {
+				return;
+			}
+
+			$markup = '';
+			$link_color = get_option( 'woocommerce_email_text_color' );
+
+			// Generate a table row for each label
+			foreach ( $labels as $label ) {
+				$carrier = $label['carrier_id'];
+				$carrier_label = strtoupper( $carrier );
+				$tracking = $label['tracking'];
+				$error = array_key_exists( 'error', $label );
+				$refunded = array_key_exists( 'refund', $label );
+
+				// If the label has an error or is refunded, move to the next label
+				if ( $error || $refunded ) {
+					continue;
+				}
+
+				if ( $plain_text ) {
+					// Should look like '- USPS: 9405536897846173912345' in plain text mode
+					$markup .= '- ' . $carrier_label . ': ' . $tracking . "\n";
+					continue;
+				}
+
+				$markup .= '<tr>';
+				$markup .= '<td class="td" scope="col">' . esc_html( $carrier_label ) . '</td>';
+
+				switch ( $carrier ) {
+					case 'fedex':
+						$tracking_url = 'https://www.fedex.com/apps/fedextrack/?action=track&tracknumbers=' . $tracking;
+						break;
+					case 'usps':
+						$tracking_url = 'https://tools.usps.com/go/TrackConfirmAction.action?tLabels=' . $tracking;
+						break;
+				}
+
+				$markup .= '<td class="td" scope="col">';
+				$markup .= '<a href="' . esc_url( $tracking_url ) . '" style="color: ' . esc_attr( $link_color ) . '">' . esc_html( $tracking ) . '</a>';
+				$markup .= '</td>';
+				$markup .= '</tr>';
+			}
+
+			// Abort if all labels are refunded
+			if ( empty( $markup ) ) {
+				return;
+			}
+
+			if ( $plain_text ) {
+				echo "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n";
+				echo mb_strtoupper( __( 'Tracking', 'woocommerce-services' ), 'UTF-8' ) . "\n\n";
+				echo $markup;
+				return;
+			}
+
+			?>
+				<div style="font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif; margin-bottom: 40px;">
+					<h2><?php echo __( 'Tracking', 'woocommerce-services' ); ?></h2>
+					<table class="td" cellspacing="0" cellpadding="6" style="margin-top: 10px; width: 100%;">
+						<thead>
+							<tr>
+								<th class="td" scope="col"><?php echo __( 'Provider', 'woocommerce-services' ); ?></th>
+								<th class="td" scope="col"><?php echo __( 'Tracking number', 'woocommerce-services' ); ?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php echo $markup; ?>
+						</tbody>
+					</table>
+				</div>
+			<?php
 		}
 
 		/**
@@ -835,7 +1012,7 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			// TODO - make more generic - allow things other than WC_Connect_Shipping_Method to work here
 
 			$method->set_api_client( $this->get_api_client() );
-			$method->set_logger( $this->get_logger() );
+			$method->set_logger( $this->get_shipping_logger() );
 			$method->set_service_settings_store( $this->get_service_settings_store() );
 
 			$service_schema = $this->get_service_schemas_store()->get_service_schema_by_id_or_instance_id( $id_or_instance_id );
@@ -917,7 +1094,10 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			$plugin_data = get_plugin_data( __FILE__, false, false );
 			$plugin_version = $plugin_data[ 'Version' ];
 
-			wp_register_style( 'wc_connect_admin', $this->wc_connect_base_url . 'woocommerce-services.css', array(), $plugin_version );
+			// Use the same version as Jetpack
+			$jetpack_version = defined( 'JETPACK__VERSION' ) ? JETPACK__VERSION : '0';
+			wp_register_style( 'noticons', $this->wpcom_static_url( '/i/noticons/noticons.css' ), array(), $jetpack_version . '-' . gmdate( 'oW' ) );
+			wp_register_style( 'wc_connect_admin', $this->wc_connect_base_url . 'woocommerce-services.css', array( 'noticons' ), $plugin_version );
 			wp_register_script( 'wc_connect_admin', $this->wc_connect_base_url . 'woocommerce-services.js', array(), $plugin_version );
 			wp_register_script( 'wc_services_admin_pointers', $this->wc_connect_base_url . 'woocommerce-services-admin-pointers.js', array( 'wp-pointer', 'jquery' ), $plugin_version );
 			wp_register_style( 'wc_connect_banner', $this->wc_connect_base_url . 'woocommerce-services-banner.css', array(), $plugin_version );
@@ -1060,7 +1240,7 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			) );
 
 			?>
-				<div class="wcc-root <?php echo esc_attr( $root_view ) ?>" data-args="<?php echo esc_attr( wp_json_encode( $extra_args ) ) ?>">
+				<div class="wcc-root woocommerce <?php echo esc_attr( $root_view ) ?>" data-args="<?php echo esc_attr( wp_json_encode( $extra_args ) ) ?>">
 					<span class="form-troubles" style="opacity: 0">
 						<?php printf( __( 'Section not loading? Visit the <a href="%s">status page</a> for troubleshooting steps.', 'woocommerce-services' ), $debug_page_uri ); ?>
 					</span>

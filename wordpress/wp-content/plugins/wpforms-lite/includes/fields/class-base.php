@@ -250,7 +250,7 @@ abstract class WPForms_Field {
 				$checked = checked( '1', $args['value'], false );
 				$icon    = $args['value'] ? 'fa-toggle-on' : 'fa-toggle-off';
 				$cls     = $args['value'] ? 'wpforms-on' : 'wpforms-off';
-				$status  = $args['value'] ? __( 'On', 'wpforms' ) : __( 'Off', 'wpforms' );
+				$status  = $args['value'] ? esc_html__( 'On', 'wpforms' ) : esc_html__( 'Off', 'wpforms' );
 				$output  = sprintf( '<span class="wpforms-toggle-icon %s"><i class="fa %s" aria-hidden="true"></i> <span class="wpforms-toggle-icon-label">%s</span>', $cls, $icon, $status );
 				$output .= sprintf( '<input type="checkbox" class="%s" id="wpforms-field-option-%d-%s" name="fields[%d][%s]" value="1" %s %s></span>', $class, $id, $slug, $id, $slug, $checked, $data );
 				break;
@@ -312,8 +312,8 @@ abstract class WPForms_Field {
 
 			case 'label':
 				$value   = ! empty( $field['label'] ) ? esc_attr( $field['label'] ) : '';
-				$tooltip = __( 'Enter text for the form field label. Field labels are recommended and can be hidden in the Advanced Settings.', 'wpforms' );
-				$output  = $this->field_element( 'label', $field, array( 'slug' => 'label', 'value' => __( 'Label', 'wpforms' ), 'tooltip' => $tooltip ), false );
+				$tooltip = esc_html__( 'Enter text for the form field label. Field labels are recommended and can be hidden in the Advanced Settings.', 'wpforms' );
+				$output  = $this->field_element( 'label', $field, array( 'slug' => 'label', 'value' => esc_html__( 'Label', 'wpforms' ), 'tooltip' => $tooltip ), false );
 				$output .= $this->field_element( 'text',  $field, array( 'slug' => 'label', 'value' => $value ), false );
 				$output  = $this->field_element( 'row',   $field, array( 'slug' => 'label', 'content' => $output ), false );
 				break;
@@ -322,8 +322,8 @@ abstract class WPForms_Field {
 
 			case 'description':
 				$value   = ! empty( $field['description'] ) ? esc_attr( $field['description'] ) : '';
-				$tooltip = __( 'Enter text for the form field description.', 'wpforms' );
-				$output  = $this->field_element( 'label',    $field, array( 'slug' => 'description', 'value' => __( 'Description', 'wpforms' ), 'tooltip' => $tooltip ), false );
+				$tooltip = esc_html__( 'Enter text for the form field description.', 'wpforms' );
+				$output  = $this->field_element( 'label',    $field, array( 'slug' => 'description', 'value' => esc_html__( 'Description', 'wpforms' ), 'tooltip' => $tooltip ), false );
 				$output .= $this->field_element( 'textarea', $field, array( 'slug' => 'description', 'value' => $value ), false );
 				$output  = $this->field_element( 'row',      $field, array( 'slug' => 'description', 'content' => $output ), false );
 				break;
@@ -333,8 +333,8 @@ abstract class WPForms_Field {
 			case 'required':
 				$default = ! empty( $args['default'] ) ? $args['default'] : '0';
 				$value   = isset( $field['required'] ) ? $field['required'] : $default;
-				$tooltip = __( 'Check this option to mark the field required. A form will not submit unless all required fields are provided.', 'wpforms' );
-				$output  = $this->field_element( 'checkbox', $field, array( 'slug' => 'required', 'value' => $value, 'desc' => __( 'Required', 'wpforms' ), 'tooltip' => $tooltip ), false );
+				$tooltip = esc_html__( 'Check this option to mark the field required. A form will not submit unless all required fields are provided.', 'wpforms' );
+				$output  = $this->field_element( 'checkbox', $field, array( 'slug' => 'required', 'value' => $value, 'desc' => esc_html__( 'Required', 'wpforms' ), 'tooltip' => $tooltip ), false );
 				$output  = $this->field_element( 'row',      $field, array( 'slug' => 'required', 'content' => $output ), false );
 				break;
 
@@ -350,137 +350,300 @@ abstract class WPForms_Field {
 
 			case 'code':
 				$value   = ! empty( $field['code'] ) ? esc_attr( $field['code'] ) : '';
-				$tooltip = __( 'Enter code for the form field.', 'wpforms' );
-				$output  = $this->field_element( 'label',    $field, array( 'slug' => 'code', 'value' => __( 'Code', 'wpforms' ), 'tooltip' => $tooltip ), false );
+				$tooltip = esc_html__( 'Enter code for the form field.', 'wpforms' );
+				$output  = $this->field_element( 'label',    $field, array( 'slug' => 'code', 'value' => esc_html__( 'Code', 'wpforms' ), 'tooltip' => $tooltip ), false );
 				$output .= $this->field_element( 'textarea', $field, array( 'slug' => 'code', 'value' => $value ), false );
 				$output  = $this->field_element( 'row',      $field, array( 'slug' => 'code', 'content' => $output ), false );
 				break;
 
-			// Choices. -------------------------------------------------------//
+			// Choices. ------------------------------------------------------//
 
 			case 'choices':
-				$tooltip = __( 'Add choices for the form field.', 'wpforms' );
-				$toggle  = '<a href="#" class="toggle-bulk-add-display"><i class="fa fa-download"></i> <span>' . __( 'Bulk Add', 'wpforms' ) . '</span></a>';
-				$dynamic = ! empty( $field['dynamic_choices'] ) ? esc_html( $field['dynamic_choices'] ) : '';
 				$values  = ! empty( $field['choices'] ) ? $field['choices'] : $this->defaults;
-				$class   = ! empty( $field['show_values'] ) && $field['show_values'] == '1' ? 'show-values' : '';
-				$class  .= ! empty( $dynamic ) ? ' wpforms-hidden' : '';
+				$label   = ! empty( $args['label'] ) ? esc_html( $args['label'] ) : esc_html__( 'Choices', 'wpforms' );
+				$class   = array();
 
-				// Field option label and type.
-				$option_label = $this->field_element(
+				if ( ! empty( $field['show_values'] ) ) {
+					$class[] = 'show-values';
+				}
+				if ( ! empty( $field['dynamic_choices'] ) ) {
+					$class[] = 'wpforms-hidden';
+				}
+				if ( ! empty( $field['choices_images'] ) ) {
+					$class[] = 'show-images';
+				}
+
+				// Field label.
+				$lbl = $this->field_element(
 					'label',
 					$field,
 					array(
 						'slug'          => 'choices',
-						'value'         => __( 'Choices', 'wpforms' ),
-						'tooltip'       => $tooltip,
-						'after_tooltip' => $toggle,
+						'value'         => $label,
+						'tooltip'       => esc_html__( 'Add choices for the form field.', 'wpforms' ),
+						'after_tooltip' => '<a href="#" class="toggle-bulk-add-display"><i class="fa fa-download"></i> <span>' . esc_html__( 'Bulk Add', 'wpforms' ) . '</span></a>',
 					),
 					false
 				);
-				$option_type = 'checkbox' === $this->type ? 'checkbox' : 'radio';
 
-				// Field option choices inputs
-				$option_choices = sprintf( '<ul data-next-id="%s" class="choices-list %s" data-field-id="%d" data-field-type="%s">', max( array_keys( $values ) ) + 1, $class, $field['id'], $this->type );
-					foreach ( $values as $key => $value ) {
-						$default = ! empty( $value['default'] ) ? $value['default'] : '';
-						$option_choices .= sprintf( '<li data-key="%d">', $key );
-							$option_choices .= sprintf( '<input type="%s" name="fields[%s][choices][%s][default]" class="default" value="1" %s>', $option_type, $field['id'], $key, checked( '1', $default, false ) );
-							$option_choices .= '<span class="move"><i class="fa fa-bars"></i></span>';
-							$option_choices .= sprintf( '<input type="text" name="fields[%s][choices][%s][label]" value="%s" class="label">', $field['id'], $key, esc_attr( $value['label'] ) );
-							$option_choices .= '<a class="add" href="#"><i class="fa fa-plus-circle"></i></a>';
-							$option_choices .= '<a class="remove" href="#"><i class="fa fa-minus-circle"></i></a>';
-							$option_choices .= sprintf( '<input type="text" name="fields[%s][choices][%s][value]" value="%s" class="value">', $field['id'], $key, esc_attr( $value['value'] ) );
-						$option_choices .= '</li>';
+				// Field contents.
+				$fld = sprintf( '<ul data-next-id="%s" class="choices-list %s" data-field-id="%d" data-field-type="%s">',
+					max( array_keys( $values ) ) + 1,
+					wpforms_sanitize_classes( $class, true ),
+					$field['id'],
+					$this->type
+				);
+				foreach ( $values as $key => $value ) {
+					$default   = ! empty( $value['default'] ) ? $value['default'] : '' ;
+					$base      =  sprintf( 'fields[%s][choices][%s]', $field['id'], $key );
+					$image     = ! empty( $value['image'] ) ? $value['image'] : '';
+					$image_btn = '';
+
+					$fld .= '<li data-key="' . absint( $key ) . '">';
+					$fld .= sprintf( '<input type="%s" name="%s[default]" class="default" value="1" %s>',
+						'checkbox' === $this->type ? 'checkbox' : 'radio',
+						$base,
+						checked( '1', $default, false )
+					);
+					$fld .= '<span class="move"><i class="fa fa-bars"></i></span>';
+					$fld .= sprintf( '<input type="text" name="%s[label]" value="%s" class="label">',
+						$base,
+						esc_attr( $value['label'] )
+					);
+					$fld .= '<a class="add" href="#"><i class="fa fa-plus-circle"></i></a><a class="remove" href="#"><i class="fa fa-minus-circle"></i></a>';
+					$fld .= sprintf( '<input type="text" name="%s[value]" value="%s" class="value">',
+						$base,
+						esc_attr( $value['value'] )
+					);
+					$fld .= '<div class="wpforms-image-upload">';
+					$fld .= '<div class="preview">';
+					if ( ! empty( $image ) ) {
+						$fld .= sprintf( '<a href="#" title="%s" class="wpforms-image-upload-remove"><img src="%s"></a>',
+							esc_attr__( 'Remove Image', 'wpforms' ),
+							esc_url_raw( $image )
+						);
+						$image_btn = ' style="display:none;"';
 					}
-				$option_choices .= '</ul>';
+					$fld .= '</div>';
+					$fld .= sprintf( '<button class="wpforms-btn wpforms-btn-md wpforms-btn-light-grey wpforms-btn-block wpforms-image-upload-add" data-after-upload="hide"%s>%s</button>',
+						$image_btn,
+						esc_html__( 'Upload Image', 'wpforms' )
+					);
+					$fld .= sprintf( '<input type="hidden" name="%s[image]" value="%s" class="source">',
+						$base,
+						esc_url_raw( $image )
+					);
+					$fld .= '</div>';
+					$fld .= '</li>';
+				}
+				$fld .= '</ul>';
 
-				// Field option dynamic status.
-				$source_name       = '';
-				$type_name         = '';
-				$status_visibility = ! empty( $dynamic ) && ! empty( $field[ 'dynamic_' . $dynamic ] ) ? '' : 'wpforms-hidden';
+				// Field note: dynamic status.
+				$source  = '';
+				$type    = '';
+				$dynamic = ! empty( $field['dynamic_choices'] ) ? esc_html( $field['dynamic_choices'] ) : '';
 
 				if ( 'post_type' === $dynamic && ! empty( $field[ 'dynamic_' . $dynamic ] ) ) {
-
-					$type_name   = __( 'post type', 'wpforms' );
-					$source      = $field[ 'dynamic_' . $dynamic ];
-					$pt          = get_post_type_object( $source );
-					$source_name = $pt->labels->name;
-
+					$type   = esc_html__( 'post type', 'wpforms' );
+					$pt     = get_post_type_object( $field[ 'dynamic_' . $dynamic ] );
+					$source = $pt->labels->name;
 				} elseif ( 'taxonomy' === $dynamic && ! empty( $field[ 'dynamic_' . $dynamic ] ) ) {
-
-					$type_name   = __( 'taxonomy', 'wpforms' );
-					$source      = $field[ 'dynamic_' . $dynamic ];
-					$tax         = get_taxonomy( $source );
-					$source_name = $tax->labels->name;
+					$type   = esc_html__( 'taxonomy', 'wpforms' );
+					$tax    = get_taxonomy( $field[ 'dynamic_' . $dynamic ] );
+					$source = $tax->labels->name;
 				}
 
-				$option_status = sprintf( '<div class="wpforms-alert-warning wpforms-alert %s">', $status_visibility );
-					/* translators: %1$s - source name; %2$s - type name. */
-					$option_status .= sprintf(
-						__(
-							'Choices are dynamically populated from the %1$s %2$s',
-							'wpforms'
-						),
-						'<span class="dynamic-name">' . $source_name . '</span>',
-						'<span class="dynamic-type">' . $type_name . '</span>'
-					);
-				$option_status .= '</div>';
+				$note = sprintf( '<div class="wpforms-alert-warning wpforms-alert-small wpforms-alert %s">',
+					empty( $dynamic ) && ! empty( $field[ 'dynamic_' . $dynamic ] ) ? '' : 'wpforms-hidden'
+				);
+				/* translators: %1$s - source name; %2$s - type name. */
+				$note .= sprintf(
+					esc_html__(
+						'Choices are dynamically populated from the %1$s %2$s.',
+						'wpforms'
+					),
+					'<span class="dynamic-name">' . $source . '</span>',
+					'<span class="dynamic-type">' . $type . '</span>'
+				);
+				$note .= '</div>';
 
-				// Field option row (markup) including label and input.
+				// Final field output.
 				$output = $this->field_element(
 					'row',
 					$field,
 					array(
 						'slug'    => 'choices',
-						'content' => $option_label . $option_choices . $option_status,
-					)
+						'content' => $lbl . $fld . $note,
+					),
+					false
 				);
 				break;
 
-			// Choices for payments. ------------------------------------------//
+			// Choices for payments. -----------------------------------------//
 
 			case 'choices_payments':
-				$tooltip = __( 'Add choices for the form field.', 'wpforms' );
-				$values  = ! empty( $field['choices'] ) ? $field['choices'] : $this->defaults;
+				$values = ! empty( $field['choices'] ) ? $field['choices'] : $this->defaults;
+				$class  = array();
 
-				// Field option label.
-				$option_label = $this->field_element(
+				if ( ! empty( $field['choices_images'] ) ) {
+					$class[] = 'show-images';
+				}
+
+				// Field label.
+				$lbl = $this->field_element(
 					'label',
 					$field,
 					array(
 						'slug'    => 'choices',
-						'value'   => __( 'Items', 'wpforms' ),
-						'tooltip' => $tooltip,
+						'value'   => esc_html__( 'Items', 'wpforms' ),
+						'tooltip' =>  esc_html__( 'Add choices for the form field.', 'wpforms' ),
 					),
 					false
 				);
 
-				// Field option choices inputs.
-				$option_choices = sprintf( '<ul class="choices-list" data-next-id="%s" data-field-id="%d" data-field-type="%s">', max( array_keys( $values ) ) + 1, $field['id'], $this->type );
-					foreach ( $values as $key => $value ) {
-						$default     = ! empty( $value['default'] ) ? $value['default'] : '';
-						$placeholder = wpforms_format_amount( 0 );
-						$amount      = ! empty( $value['value'] ) ? wpforms_format_amount( wpforms_sanitize_amount( $value['value'] ) ) : $placeholder;
-						$option_choices .= sprintf( '<li data-key="%d">', $key );
-							$option_choices .= sprintf( '<input type="radio" name="fields[%s][choices][%s][default]" class="default" value="1" %s>', $field['id'], $key, checked( '1', $default, false ) );
-							$option_choices .= '<span class="move"><i class="fa fa-bars"></i></span>';
-							$option_choices .= sprintf( '<input type="text" name="fields[%s][choices][%s][label]" value="%s" class="label">', $field['id'], $key, esc_attr( $value['label'] ) );
-							$option_choices .= sprintf( '<input type="text" name="fields[%s][choices][%s][value]" value="%s" class="value wpforms-money-input" placeholder="%s">', $field['id'], $key, $amount, $placeholder );
-							$option_choices .= '<a class="add" href="#"><i class="fa fa-plus-circle"></i></a>';
-							$option_choices .= '<a class="remove" href="#"><i class="fa fa-minus-circle"></i></a>';
-						$option_choices .= '</li>';
-					}
-				$option_choices .= '</ul>';
+				// Field contents.
+				$fld = sprintf( '<ul data-next-id="%s" class="choices-list %s" data-field-id="%d" data-field-type="%s">',
+					max( array_keys( $values ) ) + 1,
+					wpforms_sanitize_classes( $class, true ),
+					$field['id'],
+					$this->type
+				);
+				foreach ( $values as $key => $value ) {
+					$default   = ! empty( $value['default'] ) ? $value['default'] : '' ;
+					$base      =  sprintf( 'fields[%s][choices][%s]', $field['id'], $key );
+					$image     = ! empty( $value['image'] ) ? $value['image'] : '';
+					$image_btn = '';
 
-				// Field option row (markup) including label and input.
+					$fld .= '<li data-key="' . absint( $key ) . '">';
+					$fld .= sprintf( '<input type="radio" name="%s[default]" class="default" value="1" %s>',
+						$base,
+						checked( '1', $default, false )
+					);
+					$fld .= '<span class="move"><i class="fa fa-bars"></i></span>';
+					$fld .= sprintf( '<input type="text" name="%s[label]" value="%s" class="label">',
+						$base,
+						esc_attr( $value['label'] )
+					);
+					$fld .= sprintf( '<input type="text" name="%s[value]" value="%s" class="value value wpforms-money-input" placeholder="%s">',
+						$base,
+						esc_attr( $value['value'] ),
+						wpforms_format_amount( 0 )
+					);
+					$fld .= '<a class="add" href="#"><i class="fa fa-plus-circle"></i></a><a class="remove" href="#"><i class="fa fa-minus-circle"></i></a>';
+					$fld .= '<div class="wpforms-image-upload">';
+					$fld .= '<div class="preview">';
+					if ( ! empty( $image ) ) {
+						$fld .= sprintf( '<a href="#" title="%s" class="wpforms-image-upload-remove"><img src="%s"></a>',
+							esc_attr__( 'Remove Image', 'wpforms' ),
+							esc_url_raw( $image )
+						);
+						$image_btn = ' style="display:none;"';
+					}
+					$fld .= '</div>';
+					$fld .= sprintf( '<button class="wpforms-btn wpforms-btn-md wpforms-btn-light-grey wpforms-btn-block wpforms-image-upload-add" data-after-upload="hide"%s>%s</button>',
+						$image_btn,
+						esc_html__( 'Upload Image', 'wpforms' )
+					);
+					$fld .= sprintf( '<input type="hidden" name="%s[image]" value="%s" class="source">',
+						$base,
+						esc_url_raw( $image )
+					);
+					$fld .= '</div>';
+					$fld .= '</li>';
+				}
+				$fld .= '</ul>';
+
+				// Final field output.
 				$output = $this->field_element(
 					'row',
 					$field,
 					array(
 						'slug'    => 'choices',
-						'content' => $option_label . $option_choices,
-					)
+						'content' => $lbl . $fld,
+					),
+					false
+				);
+				break;
+
+			// Choices Images ------------------------------------------------//
+
+			case 'choices_images':
+
+				// Field note: Image tips.
+				$note = sprintf( '<div class="wpforms-alert-warning wpforms-alert-small wpforms-alert %s">',
+					! empty( $field['choices_images'] ) ? '' : 'wpforms-hidden'
+				);
+				$note .= esc_html__( 'Images are not cropped or resized. For best results, they should be the same size and 250x250 pixels or smaller.', 'wpforms' );
+				$note .= '</div>';
+
+				// Field contents.
+				$fld = $this->field_element(
+					'checkbox',
+					$field,
+					array(
+						'slug'    => 'choices_images',
+						'value'   => isset( $field['choices_images'] ) ? '1' : '0',
+						'desc'    => esc_html__( 'Use image choices', 'wpforms' ),
+						'tooltip' => esc_html__( 'Check this option to enable using images with the choices.', 'wpforms' ),
+					),
+					false
+				);
+
+				// Final field output.
+				$output = $this->field_element(
+					'row',
+					$field,
+					array(
+						'slug'    => 'choices_images',
+						'class'   => ! empty( $field['dynamic_choices'] ) ? 'wpforms-hidden' : '',
+						'content' => $note . $fld,
+					),
+					false
+				);
+				break;
+
+			// Choices Images Style ------------------------------------------//
+
+			case 'choices_images_style':
+
+				// Field label.
+				$lbl = $this->field_element(
+					'label',
+					$field,
+					array(
+						'slug'    => 'choices_images_style',
+						'value'   => esc_html__( 'Image Choice Style', 'wpforms' ),
+						'tooltip' => esc_html__( 'Select the style for the image choices.', 'wpforms' ),
+					),
+					false
+				);
+
+				// Field contents.
+				$fld = $this->field_element(
+					'select',
+					$field,
+					array(
+						'slug'    => 'choices_images_style',
+						'value'   => ! empty( $field['choices_images_style'] ) ? esc_attr( $field['choices_images_style'] ) : 'modern',
+						'options' => array(
+							'modern'  => esc_html__( 'Modern', 'wpforms' ),
+							'classic' => esc_html__( 'Classic', 'wpforms' ),
+							'none'    => esc_html__( 'None', 'wpforms' ),
+						),
+					),
+					false
+				);
+
+				// Final field output.
+				$output = $this->field_element(
+					'row',
+					$field,
+					array(
+						'slug'    => 'choices_images_style',
+						'content' => $lbl . $fld,
+						'class'   => ! empty( $field['choices_images'] ) ? '' : 'wpforms-hidden',
+					),
+					false
 				);
 				break;
 
@@ -492,9 +655,9 @@ abstract class WPForms_Field {
 
 			case 'default_value':
 				$value   = ! empty( $field['default_value'] ) ? esc_attr( $field['default_value'] ) : '';
-				$tooltip = __( 'Enter text for the default form field value.', 'wpforms' );
-				$toggle  = '<a href="#" class="toggle-smart-tag-display" data-type="other"><i class="fa fa-tags"></i> <span>' . __( 'Show Smart Tags', 'wpforms' ) . '</span></a>';
-				$output  = $this->field_element( 'label', $field, array( 'slug' => 'default_value', 'value' => __( 'Default Value', 'wpforms' ), 'tooltip' => $tooltip, 'after_tooltip' => $toggle ), false );
+				$tooltip = esc_html__( 'Enter text for the default form field value.', 'wpforms' );
+				$toggle  = '<a href="#" class="toggle-smart-tag-display" data-type="other"><i class="fa fa-tags"></i> <span>' . esc_html__( 'Show Smart Tags', 'wpforms' ) . '</span></a>';
+				$output  = $this->field_element( 'label', $field, array( 'slug' => 'default_value', 'value' => esc_html__( 'Default Value', 'wpforms' ), 'tooltip' => $tooltip, 'after_tooltip' => $toggle ), false );
 				$output .= $this->field_element( 'text',  $field, array( 'slug' => 'default_value', 'value' => $value ), false );
 				$output  = $this->field_element( 'row',   $field, array( 'slug' => 'default_value', 'content' => $output ), false );
 				break;
@@ -504,13 +667,13 @@ abstract class WPForms_Field {
 			case 'size':
 				$value   = ! empty( $field['size'] ) ? esc_attr( $field['size'] ) : 'medium';
 				$class   = ! empty( $args['class'] ) ? esc_html( $args['class'] ) : '';
-				$tooltip = __( 'Select the default form field size.', 'wpforms' );
+				$tooltip = esc_html__( 'Select the default form field size.', 'wpforms' );
 				$options = array(
-					'small'  => __( 'Small', 'wpforms' ),
-					'medium' => __( 'Medium', 'wpforms' ),
-					'large'  => __( 'Large', 'wpforms' ),
+					'small'  => esc_html__( 'Small', 'wpforms' ),
+					'medium' => esc_html__( 'Medium', 'wpforms' ),
+					'large'  => esc_html__( 'Large', 'wpforms' ),
 				);
-				$output  = $this->field_element( 'label',  $field, array( 'slug' => 'size', 'value' => __( 'Field Size', 'wpforms' ), 'tooltip' => $tooltip ), false );
+				$output  = $this->field_element( 'label',  $field, array( 'slug' => 'size', 'value' => esc_html__( 'Field Size', 'wpforms' ), 'tooltip' => $tooltip ), false );
 				$output .= $this->field_element( 'select', $field, array( 'slug' => 'size', 'value' => $value, 'options' => $options ), false );
 				$output  = $this->field_element( 'row',    $field, array( 'slug' => 'size', 'content' => $output, 'class' => $class ), false );
 				break;
@@ -523,7 +686,7 @@ abstract class WPForms_Field {
 					$override = apply_filters( 'wpforms_advanced_options_override', false );
 					$override = ! empty( $override ) ? 'style="display:' . $override . ';"' : '';
 					$output   = sprintf( '<div class="wpforms-field-option-group wpforms-field-option-group-advanced wpforms-hide" id="wpforms-field-option-advanced-%d" %s>', $field['id'], $override );
-					$output  .= sprintf( '<a href="#" class="wpforms-field-option-group-toggle">%s <i class="fa fa-angle-right"></i></a>', __( 'Advanced Options', 'wpforms' ) );
+					$output  .= sprintf( '<a href="#" class="wpforms-field-option-group-toggle">%s <i class="fa fa-angle-right"></i></a>', esc_html__( 'Advanced Options', 'wpforms' ) );
 					$output  .= '<div class="wpforms-field-option-group-inner">';
 				} else {
 					$output   = '</div></div>';
@@ -534,8 +697,8 @@ abstract class WPForms_Field {
 
 			case 'placeholder':
 				$value   = ! empty( $field['placeholder'] ) ? esc_attr( $field['placeholder'] ) : '';
-				$tooltip = __( 'Enter text for the form field placeholder.', 'wpforms' );
-				$output  = $this->field_element( 'label', $field, array( 'slug' => 'placeholder', 'value' => __( 'Placeholder Text', 'wpforms' ), 'tooltip' => $tooltip ), false );
+				$tooltip = esc_html__( 'Enter text for the form field placeholder.', 'wpforms' );
+				$output  = $this->field_element( 'label', $field, array( 'slug' => 'placeholder', 'value' => esc_html__( 'Placeholder Text', 'wpforms' ), 'tooltip' => $tooltip ), false );
 				$output .= $this->field_element( 'text',  $field, array( 'slug' => 'placeholder', 'value' => $value ), false );
 				$output  = $this->field_element( 'row',   $field, array( 'slug' => 'placeholder', 'content' => $output ), false );
 				break;
@@ -545,12 +708,12 @@ abstract class WPForms_Field {
 			case 'css':
 				$toggle  = '';
 				$value   = ! empty( $field['css'] ) ? esc_attr( $field['css'] ) : '';
-				$tooltip = __( 'Enter CSS class names for the form field container. Class names should be separated with spaces.', 'wpforms' );
+				$tooltip = esc_html__( 'Enter CSS class names for the form field container. Class names should be separated with spaces.', 'wpforms' );
 				if ( ! in_array( $field['type'], array( 'pagebreak' ), true ) ) {
-					$toggle  = '<a href="#" class="toggle-layout-selector-display"><i class="fa fa-th-large"></i> <span>' . __( 'Show Layouts', 'wpforms' ) . '</span></a>';
+					$toggle  = '<a href="#" class="toggle-layout-selector-display"><i class="fa fa-th-large"></i> <span>' . esc_html__( 'Show Layouts', 'wpforms' ) . '</span></a>';
 				}
 				// Build output
-				$output  = $this->field_element( 'label', $field, array( 'slug' => 'css', 'value' => __( 'CSS Classes', 'wpforms' ), 'tooltip' => $tooltip, 'after_tooltip' => $toggle ), false );
+				$output  = $this->field_element( 'label', $field, array( 'slug' => 'css', 'value' => esc_html__( 'CSS Classes', 'wpforms' ), 'tooltip' => $tooltip, 'after_tooltip' => $toggle ), false );
 				$output .= $this->field_element( 'text',  $field, array( 'slug' => 'css', 'value' => $value ), false );
 				$output  = $this->field_element( 'row',   $field, array( 'slug' => 'css', 'content' => $output ), false );
 				break;
@@ -559,9 +722,9 @@ abstract class WPForms_Field {
 
 			case 'label_hide':
 				$value   = isset( $field['label_hide'] ) ? $field['label_hide'] : '0';
-				$tooltip = __( 'Check this option to hide the form field label.', 'wpforms' );
+				$tooltip = esc_html__( 'Check this option to hide the form field label.', 'wpforms' );
 				// Build output
-				$output  = $this->field_element( 'checkbox', $field, array( 'slug' => 'label_hide', 'value' => $value, 'desc' => __( 'Hide Label', 'wpforms' ), 'tooltip' => $tooltip ), false );
+				$output  = $this->field_element( 'checkbox', $field, array( 'slug' => 'label_hide', 'value' => $value, 'desc' => esc_html__( 'Hide Label', 'wpforms' ), 'tooltip' => $tooltip ), false );
 				$output  = $this->field_element( 'row',      $field, array( 'slug' => 'label_hide', 'content' => $output ), false );
 				break;
 
@@ -569,9 +732,9 @@ abstract class WPForms_Field {
 
 			case 'sublabel_hide':
 				$value   = isset( $field['sublabel_hide'] ) ? $field['sublabel_hide'] : '0';
-				$tooltip = __( 'Check this option to hide the form field sub-label.', 'wpforms' );
+				$tooltip = esc_html__( 'Check this option to hide the form field sub-label.', 'wpforms' );
 				// Build output
-				$output  = $this->field_element( 'checkbox', $field, array( 'slug' => 'sublabel_hide', 'value' => $value, 'desc' => __( 'Hide Sub-Labels', 'wpforms' ), 'tooltip' => $tooltip ), false );
+				$output  = $this->field_element( 'checkbox', $field, array( 'slug' => 'sublabel_hide', 'value' => $value, 'desc' => esc_html__( 'Hide Sub-Labels', 'wpforms' ), 'tooltip' => $tooltip ), false );
 				$output  = $this->field_element( 'row',      $field, array( 'slug' => 'sublabel_hide', 'content' => $output ), false );
 				break;
 
@@ -579,13 +742,14 @@ abstract class WPForms_Field {
 
 			case 'input_columns':
 				$value   = ! empty( $field['input_columns'] ) ? esc_attr( $field['input_columns'] ) : '';
-				$tooltip = __( 'Select the layout for displaying field choices.', 'wpforms' );
+				$tooltip = esc_html__( 'Select the layout for displaying field choices.', 'wpforms' );
 				$options = array(
-					''  => __( 'One Column', 'wpforms' ),
-					'2' => __( 'Two Columns', 'wpforms'),
-					'3' => __( 'Three Columns', 'wpforms' ),
+					''       => esc_html__( 'One Column', 'wpforms' ),
+					'2'      => esc_html__( 'Two Columns', 'wpforms' ),
+					'3'      => esc_html__( 'Three Columns', 'wpforms' ),
+					'inline' => esc_html__( 'Inline', 'wpforms' ),
 				);
-				$output  = $this->field_element( 'label',  $field, array( 'slug' => 'input_columns', 'value' => __( 'Choice Layout', 'wpforms' ), 'tooltip' => $tooltip ), false );
+				$output  = $this->field_element( 'label',  $field, array( 'slug' => 'input_columns', 'value' => esc_html__( 'Choice Layout', 'wpforms' ), 'tooltip' => $tooltip ), false );
 				$output .= $this->field_element( 'select', $field, array( 'slug' => 'input_columns', 'value' => $value, 'options' => $options ), false );
 				$output  = $this->field_element( 'row',    $field, array( 'slug' => 'input_columns', 'content' => $output ), false );
 				break;
@@ -594,13 +758,13 @@ abstract class WPForms_Field {
 
 			case 'dynamic_choices':
 				$value   = ! empty( $field['dynamic_choices'] ) ? esc_attr( $field['dynamic_choices'] ) : '';
-				$tooltip = __( 'Select auto-populate method to use.', 'wpforms' );
+				$tooltip = esc_html__( 'Select auto-populate method to use.', 'wpforms' );
 				$options = array(
-					''          => __( 'Off', 'wpforms' ),
-					'post_type' => __( 'Post Type', 'wpforms'),
-					'taxonomy'  => __( 'Taxonomy', 'wpforms' ),
+					''          => esc_html__( 'Off', 'wpforms' ),
+					'post_type' => esc_html__( 'Post Type', 'wpforms' ),
+					'taxonomy'  => esc_html__( 'Taxonomy', 'wpforms' ),
 				);
-				$output  = $this->field_element( 'label',  $field, array( 'slug' => 'dynamic_choices', 'value' => __( 'Dynamic Choices', 'wpforms' ), 'tooltip' => $tooltip ), false );
+				$output  = $this->field_element( 'label',  $field, array( 'slug' => 'dynamic_choices', 'value' => esc_html__( 'Dynamic Choices', 'wpforms' ), 'tooltip' => $tooltip ), false );
 				$output .= $this->field_element( 'select', $field, array( 'slug' => 'dynamic_choices', 'value' => $value, 'options' => $options ), false );
 				$output  = $this->field_element( 'row',    $field, array( 'slug' => 'dynamic_choices', 'content' => $output ), false );
 				break;
@@ -618,7 +782,7 @@ abstract class WPForms_Field {
 
 					if ( 'post_type' === $type ) {
 
-						$type_name = __( 'Post Type', 'wpforms' );
+						$type_name = esc_html__( 'Post Type', 'wpforms' );
 						$items     = get_post_types(
 							array(
 								'public' => true,
@@ -629,7 +793,7 @@ abstract class WPForms_Field {
 
 					} elseif ( 'taxonomy' === $type ) {
 
-						$type_name = __( 'Taxonomy', 'wpforms' );
+						$type_name = esc_html__( 'Taxonomy', 'wpforms' );
 						$items     = get_taxonomies(
 							array(
 								'public' => true,
@@ -639,8 +803,10 @@ abstract class WPForms_Field {
 						unset( $items['post_format'] );
 					}
 
-					$tooltip = sprintf( __( 'Select %s to use for auto-populating field choices.', 'wpforms' ), $type_name );
-					$label   = sprintf( __( 'Dynamic %s Source', 'wpforms' ), $type_name );
+					/* translators: %s - dynamic source type name. */
+					$tooltip = sprintf( esc_html__( 'Select %s to use for auto-populating field choices.', 'wpforms' ), $type_name );
+					/* translators: %s - dynamic source type name. */
+					$label   = sprintf( esc_html__( 'Dynamic %s Source', 'wpforms' ), $type_name );
 					$options = array();
 					$source  = ! empty( $field[ 'dynamic_' . $type ] ) ? esc_attr( $field[ 'dynamic_' . $type ] ) : '';
 
@@ -694,7 +860,15 @@ abstract class WPForms_Field {
 					do_action( "wpforms_field_options_before_{$option}", $field, $this );
 				}
 
+				if ( 'close' === $markup ) {
+					do_action( "wpforms_field_options_bottom_{$option}", $field, $this );
+				}
+
 				echo $output; // WPCS: XSS ok.
+
+				if ( 'open' === $markup ) {
+					do_action( "wpforms_field_options_top_{$option}", $field, $this );
+				}
 
 				if ( 'close' === $markup ) {
 					do_action( "wpforms_field_options_after_{$option}", $field, $this );
@@ -722,16 +896,180 @@ abstract class WPForms_Field {
 	 */
 	public function field_preview_option( $option, $field, $args = array(), $echo = true ) {
 
+		$class = ! empty( $args['class'] ) ? wpforms_sanitize_classes( $args['class'] ) : '';
+
 		switch ( $option ) {
 
 			case 'label':
 				$label  = isset( $field['label'] ) && ! empty( $field['label'] ) ? esc_html( $field['label'] ) : '';
-				$output = sprintf( '<label class="label-title"><span class="text">%s</span><span class="required">*</span></label>', $label );
+				$output = sprintf( '<label class="label-title %s"><span class="text">%s</span><span class="required">*</span></label>', $class, $label );
 				break;
 
 			case 'description':
 				$description = isset( $field['description'] ) && ! empty( $field['description'] ) ? $field['description'] : '';
-				$output      = sprintf( '<div class="description">%s</div>', $description );
+				$description = strpos( $class, 'nl2br' ) !== false ? nl2br( $description ) : $description;
+				$output      = sprintf( '<div class="description %s">%s</div>', $class, $description );
+				break;
+
+			case 'choices':
+				$values  = ! empty( $field['choices'] ) ? $field['choices'] : $this->defaults;
+				$dynamic = ! empty( $field['dynamic_choices'] ) ? $field['dynamic_choices'] : false;
+				$total   = false;
+
+				// Check to see if this field is configured for Dynamic Choices,
+				// either auto populating from a post type or a taxonomy.
+				if ( 'post_type' === $dynamic && ! empty( $field['dynamic_post_type'] ) ) {
+
+					// Post type dynamic populating.
+					$total  = wp_count_posts( $field['dynamic_post_type'] );
+					$total  = $total->publish;
+					$values = array();
+					$posts  = wpforms_get_hierarchical_object(
+						apply_filters( 'wpforms_dynamic_choice_post_type_args',
+							array(
+								'post_type'      => $field['dynamic_post_type'],
+								'posts_per_page' => -1,
+								'orderby'        => 'title',
+								'order'          => 'ASC',
+							),
+							$field,
+							$this->form_id
+						),
+						true
+					);
+
+					foreach ( $posts as $post ) {
+						$values[] = array(
+							'label' => $post->post_title,
+						);
+					}
+				} elseif ( 'taxonomy' === $dynamic && ! empty( $field['dynamic_taxonomy'] ) ) {
+
+					// Taxonomy dynamic populating.
+					$total  = wp_count_terms( $field['dynamic_taxonomy'] );
+					$values = array();
+					$terms  = wpforms_get_hierarchical_object(
+						apply_filters( 'wpforms_dynamic_choice_taxonomy_args',
+							array(
+								'taxonomy'   => $field['dynamic_taxonomy'],
+								'hide_empty' => false,
+							),
+							$field,
+							$this->form_id
+						),
+						true
+					);
+
+					foreach ( $terms as $term ) {
+						$values[] = array(
+							'label' => $term->name,
+						);
+					}
+				}
+
+				// Notify if currently empty.
+				if ( empty( $values ) ) {
+					$values = array(
+						'label' => esc_html__( '(empty)', 'wpforms' ),
+					);
+				}
+
+				// Build output.
+				if ( in_array( $field['type'], array( 'checkbox', 'gdpr-checkbox', 'payment-multiple', 'radio' ), true ) ) {
+
+					if ( in_array( $field['type'], array( 'checkbox', 'gdpr-checkbox', true ) ) ) {
+						$type = 'checkbox';
+					} else {
+						$type = 'radio';
+					}
+
+					$list_class = array( 'primary-input' );
+					$images     = empty( $field['dynamic_choices'] ) && ! empty( $field['choices_images'] );
+
+					if ( $images ) {
+						$list_class[] = 'wpforms-image-choices';
+						$list_class[] = 'wpforms-image-choices-' . sanitize_html_class( $field['choices_images_style'] );
+					}
+
+					$output = sprintf( '<ul class="%s">',
+						wpforms_sanitize_classes( $list_class, true )
+					);
+
+					foreach ( $values as $key => $value ) {
+
+						$default     = isset( $value['default'] ) ? $value['default'] : '';
+						$selected    = checked( '1', $default, false );
+						$input_class = array();
+						$item_class  = array();
+
+						if ( ! empty( $value['default'] ) ) {
+							$item_class[] = 'wpforms-selected';
+						}
+
+						if ( $images ) {
+							$item_class[] = 'wpforms-image-choices-item';
+						}
+
+						$output .= sprintf( '<li class="%s">',
+							wpforms_sanitize_classes( $item_class, true )
+						);
+
+							if ( $images ) {
+
+								if ( in_array( $field['choices_images_style'], array( 'modern', 'classic' ), true ) ) {
+									$input_class[] = 'wpforms-screen-reader-element';
+								}
+
+								$output .= '<label>';
+
+									$output .= sprintf( '<span class="wpforms-image-choices-image"><img src="%s"></span>',
+										! empty( $value['image'] ) ? esc_url( $value['image'] ) : WPFORMS_PLUGIN_URL . 'assets/images/placeholder-200x125.png'
+									);
+
+									if ( 'none' === $field['choices_images_style'] ) {
+										$output .= '<br>';
+									}
+
+									$output .= sprintf( '<input type="%s" class="%s" %s disabled>',
+										$type,
+										wpforms_sanitize_classes( $input_class, true ),
+										$selected
+									);
+
+									$output .= '<span class="wpforms-image-choices-label">' . wp_kses_post( $value['label'] ) . '</span>';
+
+								$output .= '</label>';
+
+							} else {
+								$output .= sprintf( '<input type="%s" %s disabled>%s</li>',
+									$type,
+									$selected,
+									$value['label']
+								);
+							}
+
+						$output .= '</li>';
+					}
+
+					$output .= '</ul>';
+				}
+
+				// Dynamic population is enabled and contains more than 20 items,
+				// include a note about results displayed.
+				if ( $total && $total > 20 ) {
+					$output .= '<div class="wpforms-alert-dynamic wpforms-alert wpforms-alert-warning">';
+					/* translators: %d - total amount of choices. */
+					$output .= sprintf(
+						wp_kses(
+							__( 'Showing the first 20 choices.<br> All %d choices will be displayed when viewing the form.', 'wpforms' ),
+							array(
+								'br' => array()
+							)
+						),
+						absint( $total )
+					);
+					$output .= '</div>';
+				}
 				break;
 		}
 
@@ -753,8 +1091,8 @@ abstract class WPForms_Field {
 		check_ajax_referer( 'wpforms-builder', 'nonce' );
 
 		// Check for permissions.
-		if ( ! current_user_can( apply_filters( 'wpforms_manage_cap', 'manage_options' ) ) ) {
-			die( esc_html__( 'You do no have permission.', 'wpforms' ) );
+		if ( ! wpforms_current_user_can() ) {
+			die( esc_html__( 'You do not have permission.', 'wpforms' ) );
 		}
 
 		// Check for form ID.
@@ -793,9 +1131,9 @@ abstract class WPForms_Field {
 		$this->field_preview( $field );
 		$prev     = ob_get_clean();
 		$preview  = sprintf( '<div class="wpforms-field wpforms-field-%s %s %s" id="wpforms-field-%d" data-field-id="%d" data-field-type="%s">', $field_type, $field_required, $field_class, $field['id'], $field['id'], $field_type );
-		$preview .= sprintf( '<a href="#" class="wpforms-field-duplicate" title="%s"><i class="fa fa-files-o" aria-hidden="true"></i></a>', __( 'Duplicate Field', 'wpforms' ) );
-		$preview .= sprintf( '<a href="#" class="wpforms-field-delete" title="%s"><i class="fa fa-times-circle"></i></a>', __( 'Delete Field', 'wpforms' ) );
-		$preview .= sprintf( '<span class="wpforms-field-helper">%s</span>', __( 'Click to edit. Drag to reorder.', 'wpforms' ) );
+		$preview .= sprintf( '<a href="#" class="wpforms-field-duplicate" title="%s"><i class="fa fa-files-o" aria-hidden="true"></i></a>', esc_attr__( 'Duplicate Field', 'wpforms' ) );
+		$preview .= sprintf( '<a href="#" class="wpforms-field-delete" title="%s"><i class="fa fa-times-circle"></i></a>', esc_attr__( 'Delete Field', 'wpforms' ) );
+		$preview .= sprintf( '<span class="wpforms-field-helper">%s</span>', esc_html__( 'Click to edit. Drag to reorder.', 'wpforms' ) );
 		$preview .= $prev;
 		$preview .= '</div>';
 
@@ -898,7 +1236,7 @@ abstract class WPForms_Field {
 
 		// Basic required check - If field is marked as required, check for entry data.
 		if ( ! empty( $form_data['fields'][ $field_id ]['required'] ) && empty( $field_submit ) && '0' != $field_submit ) {
-			wpforms()->process->errors[ $form_data['id'] ][ $field_id ] = apply_filters( 'wpforms_required_label', __( 'This field is required.', 'wpforms' ) );
+			wpforms()->process->errors[ $form_data['id'] ][ $field_id ] = wpforms_get_required_label();
 		}
 	}
 

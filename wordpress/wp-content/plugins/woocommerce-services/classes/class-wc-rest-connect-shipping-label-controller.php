@@ -36,7 +36,6 @@ class WC_REST_Connect_Shipping_Label_Controller extends WC_REST_Connect_Base_Con
 		$order_id = $request[ 'order_id' ];
 
 		$settings[ 'payment_method_id' ] = $this->settings_store->get_selected_payment_method_id();
-		$settings[ 'ship_date' ] = date( 'Y-m-d', time() + 86400 ); // tomorrow
 		$settings[ 'order_id' ] = $order_id;
 
 		$service_names = array();
@@ -54,7 +53,7 @@ class WC_REST_Connect_Shipping_Label_Controller extends WC_REST_Connect_Base_Con
 				$response->get_error_message(),
 				array( 'message' => $response->get_error_message() )
 			);
-			$this->logger->debug( $error, __CLASS__ );
+			$this->logger->log( $error, __CLASS__ );
 			return $error;
 		}
 
@@ -68,7 +67,7 @@ class WC_REST_Connect_Shipping_Label_Controller extends WC_REST_Connect_Base_Con
 					$label_data->error->message,
 					array( 'message' => $label_data->error->message )
 				);
-				$this->logger->debug( $error, __CLASS__ );
+				$this->logger->log( $error, __CLASS__ );
 				return $error;
 			}
 			$label_ids[] = $label_data->label->label_id;

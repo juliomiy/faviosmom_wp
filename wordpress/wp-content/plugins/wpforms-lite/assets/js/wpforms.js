@@ -1,5 +1,8 @@
 /* global wpforms_settings,grecaptcha,wpforms_validate,wpforms_timepicker */
+
 ;(function($) {
+
+	'use strict';
 
 	var WPForms = {
 
@@ -9,9 +12,6 @@
 		 * @since 1.2.3
 		 */
 		init: function() {
-
-			// Set user identifier
-			WPForms.setUserIndentifier();
 
 			// Document ready
 			$(document).ready(WPForms.ready);
@@ -29,11 +29,19 @@
 		 */
 		ready: function() {
 
+			// Set user identifier
+			WPForms.setUserIndentifier();
+
 			WPForms.loadValidation();
 			WPForms.loadDatePicker();
 			WPForms.loadTimePicker();
 			WPForms.loadInputMask();
 			WPForms.loadPayments();
+
+			// Randomize elements.
+			$( '.wpforms-randomize' ).each( function() {
+				$( this ).randomize();
+			});
 
 			$(document).trigger('wpformsReady');
 		},
@@ -153,24 +161,46 @@
 						properties = {
 							errorClass: 'wpforms-error',
 							validClass: 'wpforms-valid',
-							errorPlacement: function(error, element) {
-								if (element.attr('type') === 'radio' || element.attr('type') === 'checkbox' ) {
-									element.parent().parent().parent().append(error);
-								} else if (element.is('select') && element.attr('class').match(/date-month|date-day|date-year/)) {
-									if (element.parent().find('label.wpforms-error:visible').length === 0) {
-										element.parent().find('select:last').after(error);
+							errorPlacement: function( error, element ) {
+								if ( element.attr( 'type' ) === 'radio' || element.attr( 'type' ) === 'checkbox' ) {
+									if ( element.hasClass( 'wpforms-likert-scale-option' ) ) {
+										if ( element.closest( 'table' ).hasClass( 'single-row' ) ) {
+											element.closest( 'table' ).after( error );
+										} else {
+											element.closest( 'tr' ).find( 'th' ).append( error );
+										}
+									} else {
+										element.parent().parent().parent().append( error );
+									}
+								} else if ( element.is( 'select' ) && element.attr( 'class' ).match( /date-month|date-day|date-year/ ) ) {
+									if ( element.parent().find( 'label.wpforms-error:visible' ).length === 0 ) {
+										element.parent().find( 'select:last' ).after( error );
 									}
 								} else {
 									error.insertAfter(element);
 								}
 							},
-							highlight: function(element, errorClass, validClass) {
-								$(element).addClass(errorClass).removeClass(validClass);
-								$(element).closest('.wpforms-field').addClass('wpforms-has-error');
+							highlight: function( element, errorClass, validClass ) {
+								var $element  = $( element ),
+									$field    = $element.closest( '.wpforms-field' ),
+									inputName = $element.attr( 'name' );
+								if ( $element.attr( 'type' ) === 'radio' || $element.attr( 'type' ) === 'checkbox' ) {
+									$field.find( 'input[name=\''+inputName+'\']' ).addClass( errorClass ).removeClass( validClass );
+								} else {
+									$element.addClass( errorClass ).removeClass( validClass );
+								}
+								$field.addClass( 'wpforms-has-error' );
 							},
-							unhighlight: function(element, errorClass, validClass) {
-								$(element).removeClass(errorClass).addClass(validClass);
-								$(element).closest('.wpforms-field').removeClass('wpforms-has-error');
+							unhighlight: function( element, errorClass, validClass ) {
+								var $element  = $( element ),
+									$field    = $element.closest( '.wpforms-field' ),
+									inputName = $element.attr( 'name' );
+								if ( $element.attr( 'type' ) === 'radio' || $element.attr( 'type' ) === 'checkbox' ) {
+									$field.find( 'input[name=\''+inputName+'\']' ).addClass( validClass ).removeClass( errorClass );
+								} else {
+									$element.addClass( validClass ).removeClass( errorClass );
+								}
+								$field.removeClass( 'wpforms-has-error' );
 							},
 							submitHandler: function(form) {
 
@@ -343,6 +373,42 @@
 				$this.val(formatted);
 			});
 
+			// Rating field: hover effect.
+			$( '.wpforms-field-rating-item' ).hover(
+				function() {
+					$( this ).parent().find( '.wpforms-field-rating-item' ).removeClass( 'selected hover' );
+					$( this ).prevAll().andSelf().addClass( 'hover' );
+				},
+				function() {
+					$( this ).parent().find( '.wpforms-field-rating-item' ).removeClass( 'selected hover' );
+					$( this ).parent().find( 'input:checked' ).parent().prevAll().andSelf().addClass( 'selected' );
+				}
+			);
+
+			// Rating field: toggle selected state.
+			$( document ).on( 'change', '.wpforms-field-rating-item input', function() {
+
+				var $this  = $( this ),
+					$wrap  = $this.closest( '.wpforms-field-rating-items' ),
+					$items = $wrap.find( '.wpforms-field-rating-item' );
+
+				$items.removeClass( 'hover selected' );
+				$this.parent().prevAll().andSelf().addClass( 'selected' );
+			});
+
+			// Checkbox/Radio/Payment checkbox: toggle selected state class.
+			$( document ).on( 'change', '.wpforms-field-checkbox input, .wpforms-field-radio input, .wpforms-field-payment-multiple input', function() {
+
+				var $this = $( this );
+
+				if ( 'radio' === $this.attr( 'type' ) ) {
+					$( this ).closest( 'ul' ).find( 'li' ).removeClass( 'wpforms-selected' );
+					$( this ).closest( 'li' ).addClass( 'wpforms-selected' );
+				} else {
+					$( this ).closest( 'li' ).toggleClass( 'wpforms-selected' );
+				}
+			})
+
 			// OptinMonster: initialize again after OM is finished.
 			// This is to accommodate moving the form in the DOM.
 			$(document).on('OptinMonsterAfterInject', function() {
@@ -485,7 +551,7 @@
 				totalFormattedSymbol = 0,
 				currency             = WPForms.getCurrency();
 
-			$('.wpforms-payment-price').each(function(index, el) {
+			$('.wpforms-payment-price', $form).each(function(index, el) {
 
 				var amount = 0,
 					$this  = $(this);
@@ -686,7 +752,7 @@
 		 */
 		setUserIndentifier: function() {
 
-			if ( ! WPForms.getCookie('_wpfuuid') ) {
+			if ( wpforms_settings.uuid_cookie && ! WPForms.getCookie('_wpfuuid') ) {
 
 				// Generate UUID - http://stackoverflow.com/a/873856/1489528
 				var s         = new Array(36),
@@ -765,8 +831,29 @@
 		}
 	};
 
+	// Initialize.
 	WPForms.init();
 
+	// Add to global scope.
 	window.wpforms = WPForms;
 
+	//--------------------------------------------------------------------//
+	// jQuery Functions.
+	//--------------------------------------------------------------------//
+
+	/**
+	 * Randomize selectors.
+	 *
+	 * @since 1.4.4
+	 */
+	$.fn.randomize = function( selector ){
+
+		var $elems = selector ? $( this ).find( selector ) : $( this ).children();
+
+		for ( var i = $elems.length; i >= 0; i-- ) {
+			$( this ).append( $elems[ Math.random() * i | 0 ] );
+		}
+
+		return this;
+	}
 })(jQuery);

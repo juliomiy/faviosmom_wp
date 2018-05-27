@@ -50,59 +50,8 @@ body {
 	color: #666;
 }
 
-#wpforms-builder .wpforms-alert {
-	padding: 16px;
-	margin-bottom: 18px;
-	border: 1px solid transparent;
-}
-
-#wpforms-builder .wpforms-alert h4 {
-	margin-top: 0;
-	color: inherit;
-}
-
-#wpforms-builder .wpforms-alert  p{
-	margin: 0 0 15px 0;
-}
-
-#wpforms-builder .wpforms-alert p:last-of-type {
-	margin: 0;
-}
-
-#wpforms-builder .wpforms-alert-nomargin {
-	margin: 0;
-}
-
-#wpforms-builder .wpforms-alert-small {
-	font-size: 12px;
-}
-
-#wpforms-builder .wpforms-alert-success {
-	background-color: #dff0d8;
-	border-color: #d6e9c6;
-	color: #3c763d;
-}
-
-#wpforms-builder .wpforms-alert-info {
-	background-color: #d9edf7;
-	border-color: #bce8f1;
-	color: #31708f;
-}
-
-#wpforms-builder .wpforms-alert-warning {
-	background-color: #fcf8e3;
-	border-color: #faebcc;
-	color: #8a6d3b;
-}
-
-#wpforms-builder .wpforms-alert-danger {
-	background-color: #f2dede;
-	border-color: #ebccd1;
-	color: #a94442;
-}
-
 #wpforms-builder input.wpforms-error{
-	border: 1px solid #ebccd1;
+	border: 1px solid #ebccd1 !important;
 }
 
 #wpforms-builder .wpforms-loading-inline {
@@ -349,6 +298,7 @@ body {
 	display: block;
 	font-size: 28px;
 	margin: 0 auto 5px auto;
+	text-align: center !important;
 }
 
 #wpforms-builder .wpforms-panels-toggle span {
@@ -935,6 +885,13 @@ body div.jconfirm div.jconfirm-box div.jconfirm-content {
 	line-height: 1.5;
 }
 
+body div.jconfirm div.jconfirm-box div.jconfirm-content p {
+	font-size: 16px;
+	color: #555;
+	line-height: 1.5;
+	margin: 0 0 16px;
+}
+
 body div.jconfirm div.jconfirm-box input[type=text] {
 	display: block;
 	width: 99%;
@@ -956,13 +913,14 @@ body div.jconfirm div.jconfirm-box #wpforms-embed-shortcode:disabled {
 }
 
 body div.jconfirm div.jconfirm-box button.btn-confirm {
-	background-color: #83c11f;
+	background-color: #e27730;
 	color: #fff;
 	outline: none;
 }
 
 body div.jconfirm div.jconfirm-box button.btn-confirm:hover {
-	background-color: #75ac1c;
+	background-color: #b85a1b;
+	border-color: #b85a1b;
 }
 
 body div.jconfirm div.jconfirm-box .error {

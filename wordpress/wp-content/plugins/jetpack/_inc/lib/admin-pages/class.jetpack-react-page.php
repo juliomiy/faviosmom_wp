@@ -198,7 +198,7 @@ class Jetpack_React_Page extends Jetpack_Admin_Page {
 		// Enqueue jp.js and localize it
 		wp_enqueue_script( 'react-plugin', plugins_url( '_inc/build/admin.js', JETPACK__PLUGIN_FILE ), array(), JETPACK__VERSION, true );
 
-		if ( ! $is_dev_mode ) {
+		if ( ! $is_dev_mode && Jetpack::is_active() ) {
 			// Required for Analytics
 			wp_enqueue_script( 'jp-tracks', '//stats.wp.com/w.js', array(), gmdate( 'YW' ), true );
 		}
@@ -217,8 +217,11 @@ class Jetpack_React_Page extends Jetpack_Admin_Page {
 			);
 		}
 
-		$response = rest_do_request( new WP_REST_Request( 'GET', '/jetpack/v4/module/all' ) );
-		$modules = $response->get_data();
+		// Load API endpoint base classes and endpoints for getting the module list fed into the JS Admin Page
+		require_once JETPACK__PLUGIN_DIR . '_inc/lib/core-api/class.jetpack-core-api-xmlrpc-consumer-endpoint.php';
+		require_once JETPACK__PLUGIN_DIR . '_inc/lib/core-api/class.jetpack-core-api-module-endpoints.php';
+		$moduleListEndpoint = new Jetpack_Core_API_Module_List_Endpoint();
+		$modules = $moduleListEndpoint->get_modules();
 
 		// Preparing translated fields for JSON encoding by transforming all HTML entities to
 		// respective characters.
@@ -263,12 +266,12 @@ class Jetpack_React_Page extends Jetpack_Admin_Page {
 				'isPublic'	=> '1' == get_option( 'blog_public' ),
 				'isInIdentityCrisis' => Jetpack::validate_sync_error_idc_option(),
 			),
+			'connectUrl' => Jetpack::init()->build_connect_url( true, false, false ),
 			'dismissedNotices' => $this->get_dismissed_jetpack_notices(),
 			'isDevVersion' => Jetpack::is_development_version(),
 			'currentVersion' => JETPACK__VERSION,
 			'getModules' => $modules,
 			'showJumpstart' => jetpack_show_jumpstart(),
-			'showHolidaySnow' => function_exists( 'jetpack_show_holiday_snow_option' ) ? jetpack_show_holiday_snow_option() : false,
 			'rawUrl' => Jetpack::build_raw_urls( get_home_url() ),
 			'adminUrl' => esc_url( admin_url() ),
 			'stats' => array(
@@ -282,9 +285,6 @@ class Jetpack_React_Page extends Jetpack_Admin_Page {
 				'roles' => $stats_roles,
 			),
 			'settings' => $this->get_flattened_settings( $modules ),
-			'settingNames' => array(
-				'jetpack_holiday_snow_enabled' => function_exists( 'jetpack_holiday_snow_option_name' ) ? jetpack_holiday_snow_option_name() : false,
-			),
 			'userData' => array(
 //				'othersLinked' => Jetpack::get_other_linked_admins(),
 				'currentUser'  => jetpack_current_user_data(),
@@ -303,6 +303,7 @@ class Jetpack_React_Page extends Jetpack_Admin_Page {
 				 */
 				'showPromotions' => apply_filters( 'jetpack_show_promotions', true ),
 				'isAtomicSite' => jetpack_is_atomic_site(),
+				'plan' => Jetpack::get_active_plan(),
 			),
 			'themeData' => array(
 				'name'      => $current_theme->get( 'Name' ),
@@ -389,6 +390,7 @@ function jetpack_current_user_data() {
 		'isConnected' => Jetpack::is_user_connected( $current_user->ID ),
 		'isMaster'    => $is_master_user,
 		'username'    => $current_user->user_login,
+		'id'          => $current_user->ID,
 		'wpcomUser'   => $dotcom_data,
 		'gravatar'    => get_avatar( $current_user->ID, 40, 'mm', '', array( 'force_display' => true ) ),
 		'permissions' => array(

@@ -13,7 +13,7 @@ class WordAds_Params {
 			'wordads_approved'           => false,
 			'wordads_active'             => false,
 			'wordads_house'              => true,
-			'enable_header_ad'           => false,
+			'enable_header_ad'           => true,
 			'wordads_second_belowpost'   => true,
 			'wordads_display_front_page' => true,
 			'wordads_display_post'       => true,
@@ -71,16 +71,12 @@ class WordAds_Params {
 	 * @since 4.5.0
 	 */
 	public static function is_cloudflare() {
-		if ( defined( 'WORDADS_CLOUDFLARE' ) ) {
-			return true;
-		}
-		if ( isset( $_SERVER['HTTP_CF_CONNECTING_IP'] ) ) {
-			return true;
-		}
-		if ( isset( $_SERVER['HTTP_CF_IPCOUNTRY'] ) ) {
-			return true;
-		}
-		if ( isset( $_SERVER['HTTP_CF_VISITOR'] ) ) {
+		if (
+			defined( 'WORDADS_CLOUDFLARE' )
+			|| isset( $_SERVER['HTTP_CF_CONNECTING_IP'] )
+			|| isset( $_SERVER['HTTP_CF_IPCOUNTRY'] )
+			|| isset( $_SERVER['HTTP_CF_VISITOR'] )
+		) {
 			return true;
 		}
 
@@ -145,6 +141,35 @@ class WordAds_Params {
 		}
 
 		return $this->page_type;
+	}
+
+	/**
+	 * @return int The page type code for ipw config
+	 *
+	 * @since 5.6.0
+	 */
+	public function get_page_type_ipw() {
+		if ( ! empty( $this->page_type_ipw ) ) {
+			return $this->page_type_ipw;
+		}
+
+		$page_type_ipw = 6;
+		if ( self::is_static_home() || is_home() || is_front_page() ) {
+			$page_type_ipw = 0;
+		} else if ( is_page() ) {
+			$page_type_ipw = 2;
+		} else if ( is_singular() ) {
+			$page_type_ipw = 1;
+		} else if ( is_search() ) {
+			$page_type_ipw = 4;
+		} else if ( is_category() || is_tag() || is_archive() || is_author() ) {
+			$page_type_ipw = 3;
+		} else if ( is_404() ) {
+			$page_type_ipw = 5;
+		}
+
+		$this->page_type_ipw = $page_type_ipw;
+		return $page_type_ipw;
 	}
 
 	/**

@@ -40,6 +40,7 @@ class Sharing_Service {
 	 * Gets a list of all available service names and classes
 	 */
 	public function get_all_services( $include_custom = true ) {
+		global $wp_version;
 		// Default services
 		// if you update this list, please update the REST API tests
 		// in bin/tests/api/suites/SharingTest.php
@@ -49,7 +50,6 @@ class Sharing_Service {
 			'linkedin'          => 'Share_LinkedIn',
 			'reddit'            => 'Share_Reddit',
 			'twitter'           => 'Share_Twitter',
-			'press-this'        => 'Share_PressThis',
 			'google-plus-1'     => 'Share_GooglePlus1',
 			'tumblr'            => 'Share_Tumblr',
 			'pinterest'         => 'Share_Pinterest',
@@ -71,6 +71,10 @@ class Sharing_Service {
 		 */
 		if ( apply_filters( 'sharing_services_email', Jetpack::is_akismet_active() ) ) {
 			$services['email'] = 'Share_Email';
+		}
+
+		if ( is_multisite() && ( version_compare( $wp_version, '4.9-RC1-42107', '<' ) || is_plugin_active( 'press-this/press-this-plugin.php' ) ) ) {
+			$services['press-this'] = 'Share_PressThis';
 		}
 
 		if ( $include_custom ) {
@@ -217,8 +221,17 @@ class Sharing_Service {
 		}
 
 		// Cleanup after any filters that may have produced duplicate services
-		$enabled['visible'] = array_unique( $enabled['visible'] );
-		$enabled['hidden']  = array_unique( $enabled['hidden'] );
+		if ( is_array( $enabled['visible'] ) ) {
+			$enabled['visible'] = array_unique( $enabled['visible'] );
+		} else {
+			$enabled['visible'] = array();
+		}
+
+		if ( is_array( $enabled['hidden'] ) ) {
+			$enabled['hidden']  = array_unique( $enabled['hidden'] );
+		} else {
+			$enabled['hidden'] = array();
+		}
 
 		// Form the enabled services
 		$blog = array( 'visible' => array(), 'hidden' => array() );
@@ -226,7 +239,10 @@ class Sharing_Service {
 		foreach ( $blog AS $area => $stuff ) {
 			foreach ( (array)$enabled[$area] AS $service ) {
 				if ( isset( $services[$service] ) ) {
-					$blog[$area][$service] = new $services[$service]( $service, array_merge( $global, isset( $options[$service] ) ? $options[$service] : array() ) );
+					if ( ! isset( $options[ $service ] ) || ! is_array( $options[ $service ] ) ) {
+						$options[ $service ] = array();
+					}
+					$blog[ $area ][ $service ] = new $services[ $service ]( $service, array_merge( $global, $options[ $service ] ) );
 				}
 			}
 		}
@@ -335,10 +351,11 @@ class Sharing_Service {
 		if ( $this->global === false ) {
 			$options = get_option( 'sharing-options' );
 
-			if ( is_array( $options ) && isset( $options['global'] ) )
+			if ( is_array( $options ) && isset( $options['global'] ) && is_array( $options['global'] ) ) {
 				$this->global = $options['global'];
-			else
+			} else {
 				$this->global = $this->set_global_options( $options['global'] );
+			}
 		}
 
 		if ( ! isset( $this->global['show'] ) ) {
@@ -787,7 +804,15 @@ function sharing_display( $text = '', $echo = false ) {
 			} else {
 				$ver = '20141212';
 			}
-			wp_register_script( 'sharing-js', plugin_dir_url( __FILE__ ).'sharing.js', array( 'jquery' ), $ver );
+			wp_register_script(
+				'sharing-js',
+				Jetpack::get_file_url_for_environment(
+					'_inc/build/sharedaddy/sharing.min.js',
+					'modules/sharedaddy/sharing.js'
+				),
+				array( 'jquery' ),
+				$ver
+			);
 
 			// Enqueue scripts for the footer
 			add_action( 'wp_footer', 'sharing_add_footer' );

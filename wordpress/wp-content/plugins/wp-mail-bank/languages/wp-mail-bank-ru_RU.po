@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mail Bank\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-17 13:25+0530\n"
-"PO-Revision-Date: 2017-04-24 15:02+0530\n"
+"POT-Creation-Date: 2018-01-17 15:56+0530\n"
+"PO-Revision-Date: 2018-01-17 15:56+0530\n"
 "Last-Translator: Tech Banker\n"
 "Language-Team: Russian (Russia)\n"
 "Language: ru_RU\n"
@@ -12,330 +12,343 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && n"
 "%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2);\n"
-"X-Generator: Poedit 1.8.11\n"
-"X-Loco-Source-Locale: en-US\n"
-"X-Loco-Project-Id: 18546\n"
-"X-Loco-Api-Version: 1.0.15 20161109-1\n"
-"X-Poedit-KeywordsList: __\n"
+"X-Generator: Poedit 2.0.1\n"
+"X-Loco-Source-Locale: en-IN\n"
+"X-Loco-Project-Id: 38931\n"
+"X-Loco-Api-Version: 1.0.18 20180111-1\n"
+"X-Poedit-KeywordsList: __;_e\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: assets\n"
+
+#: includes/translations.php:26
+msgid "Email Log has been deleted Successfully"
+msgstr "Журнал сообщений успешно удален"
+
+#: includes/translations.php:27
+msgid "Are you sure you want to delete Email Log?"
+msgstr "Вы точно хотите удалить Журнал сообщений?"
+
+#: includes/translations.php:28
+msgid "MailGun API"
+msgstr "MailGun API"
+
+#: includes/translations.php:29
+msgid ""
+"Your host may have installed a firewall between you and the server. Ask them "
+"to open the ports."
+msgstr ""
+"Хост установил брандмауэр между вами и сервером. Запросите доступ к портам."
+
+#: includes/translations.php:30
+msgid ""
+"You may have tried to (incorrectly) use SSL over port 587. Check your "
+"encryption and port settings."
+msgstr ""
+"Вы пытались (неправильно) использовать SSL через порт 587. Проверьте Ваши "
+"настройки шифрования и портов."
+
+#: includes/translations.php:31
+msgid ""
+"Your host may have poor connectivity to the mail server. Try doubling the "
+"Read Timeout."
+msgstr ""
+"У вашего хоста ненадежное соединение с сервером электронной почты. Удвойте "
+"значение тайм-аута считывания."
 
 #: includes/translations.php:32
-msgid "Basic Info"
-msgstr "Базовая информация"
+msgid ""
+"Your host may have installed a firewall (DROP packets) between you and the "
+"server. Ask them to open the ports."
+msgstr ""
+"Ваш хост установил брандмауэр (отбрасывание пакетов) между вами и сервером. "
+"Запросите доступ к портам."
 
 #: includes/translations.php:33
-msgid "Account Setup"
-msgstr "Настройка учетной записи"
+msgid ""
+"Your host may have tried to (incorrectly) use TLS over port 465. Check your "
+"encryption and port settings."
+msgstr ""
+"Ваш хост пытался (неправильно) использовать TLS через порт 465. Проверьте "
+"Ваши настройки шифрования и портов."
 
 #: includes/translations.php:34
-msgid "Confirm"
-msgstr "подтвердить"
+msgid ""
+"Your host has likely installed a firewall (REJECT packets) between you and "
+"the server. Ask them to open the ports."
+msgstr ""
+"Ваш хост установил брандмауэр (отклонение пакетов) между вами и сервером. "
+"Запросите доступ к портам."
+
+#: includes/translations.php:35
+msgid ""
+"Your Web Host provider may have installed a firewall between you and the "
+"server."
+msgstr "Ваш хост-провайдер установил брандмауэр между вами и сервером."
+
+#: includes/translations.php:36
+msgid ""
+"Contact the admin of the server and ask if they allow outgoing communication "
+"on port 25,465,587."
+msgstr ""
+"Узнайте у администратора сервера, разрешен ли исходящий обмен данными через "
+"порт 25,465,587."
 
 #: includes/translations.php:37
-msgid "Mail Bank"
-msgstr "Mail Bank"
+msgid ""
+"It seems like they are blocking certain traffic. Ask them to open the ports."
+msgstr "Вероятно, часть трафика блокируется. Запросите доступ к портам."
 
 #: includes/translations.php:38
-msgid "Email Setup"
-msgstr "Конфигурация E-mail"
+msgid ""
+"Your Web Host provider may have blocked the use of mail() function on your "
+"server."
+msgstr ""
+"Ваш хост-провайдер, возможно, заблокировал функцию mail() для вашего сервера."
 
 #: includes/translations.php:39
-msgid "Email Logs"
-msgstr "Почтовые журналы"
-
-#: includes/translations.php:40
-msgid "Email Log Details"
-msgstr "Электронная почта Вход Подробности"
-
-#: includes/translations.php:41 includes/translations.php:92
-msgid "Test Email"
-msgstr "Тест E-mail"
+#, fuzzy
+#| msgid "Ask them to enable the mail() function to start sending emails.\\n"
+msgid "Ask them to enable the mail() function to start sending emails."
+msgstr ""
+"Запросите активацию функции mail() для возможности отправки электронной "
+"почты.\\n"
 
 #: includes/translations.php:42
+msgid "Premium Edition"
+msgstr "Премиум-версия"
+
+#: includes/translations.php:43
+msgid ""
+"This feature is available only in Premium Editions! <br> Kindly Purchase to "
+"unlock it!"
+msgstr ""
+"Эта функция доступна только в Премиум-версии! <br> Купите ее для "
+"разблокировки!"
+
+#: includes/translations.php:46
+msgid "Basic Info"
+msgstr "Основные сведения"
+
+#: includes/translations.php:47
+msgid "Account Setup"
+msgstr "Настройка аккаунта"
+
+#: includes/translations.php:48
+msgid "Confirm"
+msgstr "Подтвердить"
+
+#: includes/translations.php:52
+msgid "Email Setup"
+msgstr "Настройка адреса электронной почты"
+
+#: includes/translations.php:53 lib/dashboard-widget.php:169
+msgid "Email Logs"
+msgstr "Журналы сообщений"
+
+#: includes/translations.php:54
+msgid "Test Email"
+msgstr "Тестовое сообщение"
+
+#: includes/translations.php:55
 msgid "Plugin Settings"
 msgstr "Настройки плагина"
 
-#: includes/translations.php:43
-msgid "Feedbacks"
-msgstr "Отзывы"
-
-#: includes/translations.php:44
-msgid "Roles & Capabilities"
-msgstr "Роли и возможности"
-
-#: includes/translations.php:45
+#: includes/translations.php:56
 msgid "System Information"
-msgstr "Системная Информация"
+msgstr "Информация о системе"
 
-#: includes/translations.php:48
+#: includes/translations.php:57
+msgid "Ask For Help"
+msgstr "Помощь"
+
+#: includes/translations.php:58
+msgid "Roles & Capabilities"
+msgstr "Роли и Полномочия"
+
+#: includes/translations.php:61
 msgid "Success!"
 msgstr "Успешно!"
 
-#: includes/translations.php:49
-msgid "Email Setup has been updated Successfully"
-msgstr "E-mail Конфигурация был успешно обновлен"
-
-#: includes/translations.php:50
-msgid "Your Feedback has been sent Successfully"
-msgstr "Ваше мнение было успешно отправлено"
-
-#: includes/translations.php:51
-msgid "Your request email has been sent Successfully"
-msgstr "Mesajul cu cererea ta a fost transmis"
-
-#: includes/translations.php:52
-msgid "Roles & Capabilities have been updated Successfully"
-msgstr "Rolurile şi Capabilităţile au fost actualizate"
-
-#: includes/translations.php:53
-msgid "Test Email was sent Successfully!"
-msgstr "Тест E-mail был отправлен успешно!"
-
-#: includes/translations.php:54
-msgid "Test Email was not sent!"
-msgstr "Тест E-mail не был отправлен!"
-
-#: includes/translations.php:55
-msgid "Plugin Settings have been updated Successfully"
-msgstr "Setările modulului au fost actualizate"
-
-#: includes/translations.php:56
-msgid "Please choose an Action from Dropdown!"
-msgstr "Пожалуйста, выберите действие из выпавших!"
-
-#: includes/translations.php:57
-msgid "Please choose at least 1 record to delete!"
-msgstr "Пожалуйста, выберите по крайней мере 1 запись для удаления!"
-
-#: includes/translations.php:58
-msgid "Are you sure you want to delete Email Logs?"
-msgstr "Вы уверены, что хотите удалить Журналы по электронной почте?"
-
-#: includes/translations.php:59
-msgid "Selected Logs have been deleted Successfully"
-msgstr "Выбранные журналы были успешно удалены"
-
-#: includes/translations.php:60
-msgid "Are you sure you want to delete Email Log?"
-msgstr "Вы уверены, что хотите удалить e-mail журнал?"
-
-#: includes/translations.php:61
-msgid "Email Log has been deleted Successfully"
-msgstr "E-mail журнал был успешно удален"
-
 #: includes/translations.php:62
+msgid "Email Setup has been updated Successfully"
+msgstr "Настройка электронной почты успешно обновлена"
+
+#: includes/translations.php:63
+msgid "Test Email was sent Successfully!"
+msgstr "Тестовое сообщение успешно отправлено!"
+
+#: includes/translations.php:64
+msgid "Test Email was not sent!"
+msgstr "Тестовое сообщение не отправлено!"
+
+#: includes/translations.php:65
+msgid "Plugin Settings have been updated Successfully"
+msgstr "Настройки плагина успешно обновлены"
+
+#: includes/translations.php:66
 msgid ""
 "The OAuth is not supported by providing SMTP Host, kindly provide username "
 "and password"
 msgstr ""
-"OAuth не поддерживается путем предоставления SMTP-хостинга, просьба "
-"предоставить имя пользователя и пароль"
-
-#: includes/translations.php:63
-msgid "Invalid Secret Key. Please rectify and try again!"
-msgstr ""
-"Недействительный Секретный ключ. Пожалуйста, исправьте и попробуйте еще раз!"
-
-#: includes/translations.php:64
-msgid "Licensing"
-msgstr "лицензирование"
+"OAuth не поддерживается при указании SMTP-хоста, укажите имя пользователя и "
+"пароль"
 
 #: includes/translations.php:67
-msgid "Your License has been activated Successfully"
-msgstr "Ваша лицензия была активирована успешно"
+msgid "Your Name"
+msgstr "Ваше имя"
 
 #: includes/translations.php:68
-msgid "Sent"
-msgstr "Отправлено"
+msgid "Please provide your Name"
+msgstr "Укажите свое имя"
 
 #: includes/translations.php:69
-msgid "Not Sent"
-msgstr "Не отправлено"
+msgid "Roles & Capabilities have been updated Successfully"
+msgstr "Роли и Полномочия успешно обновлены"
 
-#: includes/translations.php:70
-msgid "Important Disclaimer!"
-msgstr "Важно Отказ от ответственности!"
+#: includes/translations.php:72 lib/dashboard-widget.php:173
+msgid "Email Sent"
+msgstr "Сообщение отправлено"
 
-#: includes/translations.php:71
+#: includes/translations.php:73 lib/dashboard-widget.php:178
+msgid "Email Not Sent"
+msgstr "Сообщение не отправлено"
+
+#: includes/translations.php:74
 msgid ""
 "You don't have Sufficient Access to this Page. Kindly contact the "
 "Administrator for more Privileges"
 msgstr ""
-"У вас нет доступа к этой странице. Пожалуйста, обратитесь к администратору "
-"за дополнительными привилегиями"
-
-#: includes/translations.php:72
-msgid "Enable"
-msgstr "Включить"
-
-#: includes/translations.php:73
-msgid "Disable"
-msgstr "Выключить"
-
-#: includes/translations.php:74
-msgid "Override"
-msgstr "Отменить"
+"У вас недостаточно прав для доступа к этой странице. Запросите расширение "
+"полномочий у Администратора"
 
 #: includes/translations.php:75
-msgid "Don't Override"
-msgstr "Не отменять"
+msgid "Enable"
+msgstr "Активировать"
 
 #: includes/translations.php:76
+msgid "Disable"
+msgstr "Дезактивировать"
+
+#: includes/translations.php:77
+msgid "Override"
+msgstr "Игнорировать"
+
+#: includes/translations.php:78
+msgid "Don't Override"
+msgstr "Не игнорировать"
+
+#: includes/translations.php:79
 msgid "Save Settings"
 msgstr "Сохранить настройки"
 
-#: includes/translations.php:77
+#: includes/translations.php:80
 msgid "Subject"
-msgstr "субъект"
+msgstr "Тема"
 
-#: includes/translations.php:78
+#: includes/translations.php:81
 msgid "Next Step"
 msgstr "Следующий шаг"
 
-#: includes/translations.php:79
+#: includes/translations.php:82
 msgid "Previous Step"
 msgstr "Предыдущий шаг"
 
-#: includes/translations.php:80
-msgid "Settings"
-msgstr "настройки"
+#: includes/translations.php:83
+msgid "Know about Full Features"
+msgstr "Узнайте о полном наборе функций"
 
-#: includes/translations.php:81
-msgid "Not available"
-msgstr "Недоступен"
-
-#: includes/translations.php:82
-msgid ""
-"The following php extensions are not found on your server or are currently "
-"disabled. These might create few problems in configuring Mail Bank. Please "
-"contact your WebHost to setup these extensions on your server."
-msgstr ""
-"Următoarele extensii php nu se găsesc pe server sau sunt dezactivate. "
-"Acestea pot crea probleme de configurare în modulul Mail Bank. Te rugăm să "
-"contactezi administratorul serverului de găzduire pentru remediere."
+#: includes/translations.php:84
+msgid "or"
+msgstr "или"
 
 #: includes/translations.php:85
-msgid "Cc"
-msgstr "Cc"
+msgid "Check our Online Demos"
+msgstr "Посмотрите онлайн демо-версию"
 
 #: includes/translations.php:86
-msgid "Bcc"
-msgstr "Bcc"
-
-#: includes/translations.php:87
-msgid "Please provide valid Cc Email Address"
-msgstr "Укажите действительный Cc E-mail адрес"
-
-#: includes/translations.php:88
-msgid "Please provide valid Bcc Email Address"
-msgstr "Укажите действительный Bcc E-mail адрес"
-
-#: includes/translations.php:89
-msgid "Please provide Cc Email"
-msgstr "Укажите Cc E-mail"
-
-#: includes/translations.php:90
-msgid "Please provide Bcc Email"
-msgstr "Укажите Bcc E-mail"
+msgid "N/A"
+msgstr "Недоступно"
 
 #: includes/translations.php:91
-msgid "Mailer Settings"
-msgstr "Настройки отправителя"
+msgid ""
+"A valid Email Address that will be used in the \"CC\" field of the email. "
+"Use Comma \",\" for including multiple email addresses in the \"CC\" field"
+msgstr ""
+"Действующий адрес электронной почты, используемый в поле \"CC\" сообщения. "
+"Укажите несколько адресов в поле \"CC\" через \",\""
+
+#: includes/translations.php:92
+msgid ""
+"A valid Email Address that will be used in the 'BCC' field of the email. Use "
+"Comma ',' for including multiple email addresses in the 'BCC' field"
+msgstr ""
+"Действующий адрес электронной почты, используемый в поле 'BCC' сообщения. "
+"Укажите несколько адресов в поле 'BCC' через ','"
 
 #: includes/translations.php:93
-msgid "From Name"
-msgstr "От имени"
+msgid "Please provide CC Email Address"
+msgstr "Укажите адрес электронной почты для отправки копии"
 
 #: includes/translations.php:94
-msgid ""
-"From Name is the inbox field that tells your recipient who sent the "
-"messages. If you would like to override the pre-configured From Name, then "
-"you would need to insert the name in the inbox field"
-msgstr ""
-"От имени указанного в поле почтового ящика, который сообщает вашему "
-"получателю, который послал сообщения. Если вы хотите переопределить "
-"предварительно сконфигурированные От имени, то вам нужно будет вставить имя "
-"в поле почтового ящика"
+msgid "Please provide BCC Email Address"
+msgstr "Укажите адрес электронной почты для отправки скрытой копии"
 
 #: includes/translations.php:95
-msgid "Please provide From Name"
-msgstr "Пожалуйста, укажите от кого"
+msgid "From Name"
+msgstr "Имя отправителя"
 
 #: includes/translations.php:96
-msgid "From Email"
-msgstr "С адреса электронной почты"
+msgid "Please provide From Name"
+msgstr "Укажите имя отправителя"
 
 #: includes/translations.php:97
-msgid ""
-"From Email is the inbox field that tells your recipient from which Email "
-"Address the messages are coming. If you would like to override the pre-"
-"configured From Email, then you would need to insert an Email Address in the "
-"inbox field"
-msgstr ""
-"С адреса электронной почты в поле почтового ящика, который сообщает вашему "
-"получателю, от куда приходят сообщения. Если вы хотите, переопределить "
-"предварительно сконфигурированные адреса электронной почты, то вам нужно "
-"будет вставить e-mail в поле почтового ящика"
+msgid "From Email"
+msgstr "Адрес электронной почты отправителя"
 
 #: includes/translations.php:98
 msgid "Please provide From Email Address"
-msgstr "Пожалуйста, укажите с какого Адреса электронной почты"
+msgstr "Укажите адрес электронной почты отправителя"
 
 #: includes/translations.php:99
 msgid "Mailer Type"
-msgstr "Тип отправителя"
+msgstr "Тип почтовой программы"
 
 #: includes/translations.php:100
-msgid ""
-"This field provides you an ability to choose a specific option for Mailer "
-"Type. If you would like to send an Email via SMTP mailer, you would need to "
-"select Send Email via SMTP from the drop down or you could use PHP mail () "
-"Function"
-msgstr ""
-"Это поле предоставляет вам возможность выбрать конкретный вариант для  типа "
-"отправителя. Если вы хотели бы отправить электронную почту через SMTP "
-"почтовой программы, вам нужно будет выбрать Отправить e-mail через SMTP из "
-"выпадающего списка или вы можете использовать PHP maii() Function"
+msgid "Choose among the variety of options for routing emails."
+msgstr "Выберите из нескольких опций отправки сообщений."
 
 #: includes/translations.php:101
 msgid "Send Email via SMTP"
-msgstr "Отправить на e-mail через SMTP"
+msgstr "Отправка сообщений по SMTP"
 
 #: includes/translations.php:102
 msgid "Use The PHP mail() Function"
-msgstr "Использование PHP-mail () Функции"
+msgstr "Использовать функцию PHP mail()"
 
-#: includes/translations.php:103
+#: includes/translations.php:103 includes/translations.php:232
 msgid "SMTP Host"
-msgstr "SMTR-хостинг"
+msgstr "SMTP-хост"
 
 #: includes/translations.php:104
-msgid ""
-"If you would like to send an Email via different host, you would need to "
-"insert that specific host name like smtp.gmail.com in the inbox field"
-msgstr ""
-"Если вы хотите отправить электронную почту через другой хост, вам нужно  "
-"вставить этот коретное имя хоста, как smtp.gmail.com в поле почтового ящика"
+msgid "Server that will send the email"
+msgstr "Сервер, с которого отправляется сообщение"
 
 #: includes/translations.php:105
 msgid "Please provide SMTP Host"
-msgstr "Пожалуйста, укажите SMTR-хостинг"
+msgstr "Укажите SMTP-хост"
 
 #: includes/translations.php:106
 msgid "SMTP Port"
-msgstr "SMTR порт"
+msgstr "SMTP-порт"
 
 #: includes/translations.php:107
-msgid ""
-"This inbox field is specified to provide a valid SMTP Port for authentication"
-msgstr ""
-"В этом поле указывается почтовый ящик, чтобы предоставить SMTP порт для "
-"аутентификации"
+msgid "Port to connect to the email server"
+msgstr "Порт для соединения с сервером электронной почты"
 
 #: includes/translations.php:108
 msgid "Please provide SMTP Port"
-msgstr "Укажите SMTR порт"
+msgstr "Укажите SMTP-порт"
 
 #: includes/translations.php:109
 msgid "Encryption"
@@ -343,876 +356,871 @@ msgstr "Шифрование"
 
 #: includes/translations.php:110
 msgid ""
-"It provides you an ability to choose a specific option for Encryption. If "
-"you would like to send an Email with TLS encryption, you would need to "
-"select Use TLS Encryption from the drop down or you could use SSL "
-"Encryption. For that you would need to select Use SSL Encryption from the "
-"drop down. If you would like to send an Email without encryption, you would "
-"need to select No Encryption from the drop down"
+"Encrypt the email when sent to the email server using the different methods "
+"available"
 msgstr ""
-"Это дает вам возможность выбрать конкретный вариант для шифрования. Если вы "
-"хотите отправить по электронной почте с шифрованием TLS, вам нужно будет "
-"выбрать Использовать TLS шифрования из выпадающего списка или вы могли бы "
-"использовать SSL шифрование. Для этого вам нужно будет выбрать Использовать "
-"SSL-шифрования из выпадающего списка. Если вы хотите отправить по "
-"электронной почте без шифрования, вам нужно будет выбрать без шифрования из "
-"выпадающего списка"
-
-#: includes/translations.php:111
-msgid "No Encryption"
-msgstr "Без шифрования"
-
-#: includes/translations.php:112
-msgid "Use SSL Encryption"
-msgstr "Использование SSL-шифрования"
-
-#: includes/translations.php:113
-msgid "Use TLS Encryption"
-msgstr "Использование TLS-шифрования"
+"Шифровать сообщение при отправке на сервер электронной почте с помощью "
+"разных доступных методов"
 
 #: includes/translations.php:114
 msgid "Authentication"
-msgstr "Идентификация"
+msgstr "Аутентификация"
 
 #: includes/translations.php:115
-msgid ""
-"This inbox field allows you to choose an appropriate option for "
-"authentication. It provides you the Two-way authentication factor; If you "
-"would like to authenticate yourself via Username and Password, you would "
-"need to select Use Username and Password from the drop down. You can also "
-"authenticate by an OAuth 2.0 protocol, which requires Client Id and Secret "
-"Key, for that you would need to select Use OAuth (Client ID and Secret Key) "
-"from the drop down. You can easily get Client Id and Secret Key from "
-"respective SMTP Server Developers section"
-msgstr ""
-"Поле Входящие позволяет выбрать подходящий вариант для проверки подлинности. "
-"Это дает вам фактор двухсторонней аутентификации; Если вы хотите "
-"идентифицировать себя с помощью имени пользователя и пароля, вам нужно будет "
-"выбрать Использовать имя пользователя и пароль из выпадающего списка. Кроме "
-"того, можно проверить подлинность с помощью протокола OAuth 2.0, который "
-"требует идентификатор клиента и секретный ключ, для этого вам нужно будет "
-"выбрать Использовать OAuth (ID клиента и Секретный ключ) из выпадающего "
-"списка. Вы можете легко получить идентификатор клиента и секретного ключа от "
-"соответствующего SMTP сервера"
+msgid "Method for authentication (almost always Login)"
+msgstr "Способ аутентификации (почти всегда \"Вход в систему\")"
 
-#: includes/translations.php:116
-msgid "Use SMTP Authentication"
-msgstr "Используется SMTR идетификация"
+#: includes/translations.php:116 includes/translations.php:152
+msgid "Email Address"
+msgstr "Адрес электронной почты"
 
 #: includes/translations.php:117
-msgid "Don't Use SMTP Authentication"
-msgstr "Не использовать SMTR идентификация"
+msgid "A valid Email Address on which you would like to send a Test Email"
+msgstr ""
+"Действующий адрес электронной почты, на которой отправляется тестовое "
+"сообщение"
 
 #: includes/translations.php:118
-msgid "Test Email Address"
-msgstr "Тестовый E-mail адрес"
+msgid "Please provide Email Address"
+msgstr "Укажите адрес электронной почты"
 
 #: includes/translations.php:119
-msgid ""
-"In this field, you would need to provide a valid Email Address in the inbox "
-"field on which you would like to receive Test email"
-msgstr ""
-"В этой области, укажите действительный адрес электронной почты в поле "
-"почтового ящика, на который вы хотели бы получить тестовое письмо"
+msgid "Subject Line for your Test Email"
+msgstr "Строка темы вашего тестового сообщения"
 
 #: includes/translations.php:120
-msgid "Please provide Test Email Address"
-msgstr "Пожалуйста, укажите Тестовый e-mail адрес"
+msgid "Please provide Subject"
+msgstr "Укажите тему"
 
-#: includes/translations.php:121
-msgid "In this field, you would need to provide a subject for Test Email"
-msgstr "В этом поле вам нужно указать тему для Тестового Письма"
+#: includes/translations.php:121 includes/translations.php:183
+msgid "Email Content"
+msgstr "Содержание сообщения"
 
 #: includes/translations.php:122
-msgid "Please provide Subject"
-msgstr "Пожалуйста, укажите Тему"
+msgid "Email Content for your Test Email"
+msgstr "Содержание вашего тестового сообщения"
 
 #: includes/translations.php:123
-msgid "Email Content"
-msgstr "Содержимое письма"
+msgid "Send Test Email"
+msgstr "Отправить тестовое сообщение"
 
 #: includes/translations.php:124
-msgid "In this field, you would need to provide the content for Test Email"
-msgstr "В этом поле вам нужно указать содержимое Тестового Письма"
+msgid "SMTP Debugging Output"
+msgstr "Выходные данные отладки SMTP"
 
 #: includes/translations.php:125
-msgid "Send Test Email"
-msgstr "Отправить Тестовое Письмо"
-
-#: includes/translations.php:126
-msgid "SMTP Debugging Output"
-msgstr "Отладочный вывод SMTP"
-
-#: includes/translations.php:127
 msgid "Checking your settings"
 msgstr "Проверка ваших настроек"
 
-#: includes/translations.php:128
+#: includes/translations.php:126
 msgid "Result"
 msgstr "Результат"
 
-#: includes/translations.php:129
+#: includes/translations.php:127
 msgid "Send Another Test Email"
-msgstr "Отправить еще одно Тестовое Письмо"
+msgstr "Отправить еще одно тестовое сообщение"
+
+#: includes/translations.php:128
+msgid "From Name Configuration"
+msgstr "Настройка имени отправителя"
+
+#: includes/translations.php:129
+msgid ""
+"Do you want to override the Default Name that tells email recipient about "
+"who sent the email?"
+msgstr ""
+"Вы хотите игнорировать имя по умолчанию, сообщающее получателю об "
+"отправителе сообщения?"
 
 #: includes/translations.php:130
-msgid "From Name Configuration"
-msgstr "Указать Отправителя"
+msgid "From Email Configuration"
+msgstr "Настройка адреса электронной почты отправителя"
 
 #: includes/translations.php:131
 msgid ""
-"If you would like to override the pre-configured name which will be used "
-"while sending Emails, then you would need to choose Override from the drop "
-"down and vice-versa"
+"Do you want to override the Default Email Address that tells email recipient "
+"about the sender?"
 msgstr ""
-"Если вы хотите изменить имя, по умолчанию используемое при отправке писем, "
-"тогда вам нужно выбрать пункт Заменить из выпадающего меню, в противном "
-"случае выберите Не заменять"
+"Вы хотите игнорировать адрес электронной почты по умолчанию, сообщающий "
+"получателю об отправителе?"
 
 #: includes/translations.php:132
-msgid "From Email Configuration"
-msgstr "Адрес Отправителя"
-
-#: includes/translations.php:133
-msgid ""
-"If you would like to override your pre-configured Email Address which will "
-"be used while sending Emails, then you would need to choose Override from "
-"the drop down and vice-versa"
-msgstr ""
-"Если вы хотите изменить адрес, по умолчанию используемый при отправке писем, "
-"тогда вам нужно выбрать пункт Заменить из выпадающего меню, в противном "
-"случае выберите Не заменять"
-
-#: includes/translations.php:134
 msgid "Username"
 msgstr "Имя пользователя"
 
-#: includes/translations.php:135
+#: includes/translations.php:133
 msgid ""
-"In this field, you would need to provide a username to authenticate your "
-"SMTP details"
+" Login is typically the full email address (Example: mailbox@yourdomain.com)"
 msgstr ""
-"В этом поле вам нужно указать имя пользователя для аутентификации по SMTP"
+"В качестве логина обычно используется полный адрес электронной почты "
+"(Пример: mailbox@yourdomain.com)"
 
-#: includes/translations.php:136
+#: includes/translations.php:134
 msgid "Please provide username"
-msgstr "Пожалуйста, укажите имя пользователя"
+msgstr "Укажите имя пользователя"
 
-#: includes/translations.php:137
+#: includes/translations.php:135
 msgid "Password"
 msgstr "Пароль"
 
+#: includes/translations.php:136
+msgid "Password is typically the same as the password to retrieve the email"
+msgstr "Пароль обычно тот же, что и пароль для открытия сообщения"
+
+#: includes/translations.php:137
+msgid "Please provide password"
+msgstr "Укажите пароль"
+
 #: includes/translations.php:138
-msgid ""
-"In this field, you would need to provide a password to authenticate your "
-"SMTP details"
-msgstr "В этом поле вам нужно указать пароль для аутентификации SMTP"
+msgid "Redirect URI"
+msgstr "URI переадресации"
 
 #: includes/translations.php:139
-msgid "Please provide password"
-msgstr "Пожалуйста, укажите пароль"
-
-#: includes/translations.php:140
-msgid "Redirect URI"
-msgstr "URI перенаправления"
-
-#: includes/translations.php:141
 msgid ""
 "Please copy this Redirect URI and Paste into Redirect URI field when "
 "creating your app"
 msgstr ""
-"Copiază adresa de redirijare URI în caseta de redirijare atunci când creezi "
-"o aplicaţie"
-
-#: includes/translations.php:142
-msgid "Use OAuth (Client Id and Secret Key required)"
-msgstr "Использовать OAuth (потребуются ID клиента и секретный ключ)"
-
-#: includes/translations.php:143
-msgid "Plain Authentication"
-msgstr "Обычная проверка подлинности"
-
-#: includes/translations.php:144
-msgid "Cram-MD5"
-msgstr "Запрос-ответ MD5"
+"Скопируйте этот URI переадресации и вставьте в поле \"URI переадресации\" "
+"при создании вашего приложения"
 
 #: includes/translations.php:145
-msgid "Login"
-msgstr "Авторизоваться"
+msgid "Client Id"
+msgstr "Id клиента"
 
 #: includes/translations.php:146
-msgid "Client Id"
-msgstr "ID клиента"
+msgid "Secret Key"
+msgstr "Секретный ключ"
 
 #: includes/translations.php:147
-msgid "Secret Key"
-msgstr "Секретный Ключ"
+msgid "Client Id issued by your SMTP Host"
+msgstr "Id клиента, выданный вашим SMTP-хостом"
 
 #: includes/translations.php:148
-msgid "Please provide valid Client Id issued by your SMTP Host"
-msgstr ""
-"Просьба указать действительный идентификатор клиента, выданный вашим SMTP-"
-"хостингом"
+msgid "Secret Key issued by your SMTP Host"
+msgstr "Секретный ключ, выданный вашим SMTP-хостом"
 
 #: includes/translations.php:149
-msgid "Please provide valid Secret Key issued by your SMTP Host"
-msgstr ""
-"Пожалуйста укажите действительный Секретный Ключ, выданный вашим SMTP-"
-"хостингом"
+msgid "Please provide Client Id"
+msgstr "Укажите Id клиента"
 
 #: includes/translations.php:150
-msgid "Please provide Client Id"
-msgstr "Просьба предоставить идентификатор клиента"
+msgid "Please provide Secret Key"
+msgstr "Укажите секретный ключ"
 
 #: includes/translations.php:151
-msgid "Please provide Secret Key"
-msgstr "Пожалуйста укажите Секретный Ключ"
-
-#: includes/translations.php:152
 msgid ""
 "Yes, automatically send a Test Email upon clicking on the Next Step Button "
 "to verify settings"
 msgstr ""
-"Да, автоматически отправлять тестовое письмо при нажатии на следующем шаге "
-"Кнопка для проверки настроек"
+"Да, автоматически отправлять тестовое сообщение при нажатии кнопки Next Step "
+"(Следующий шаг) для проверки настроек"
 
 #: includes/translations.php:153
-msgid "Email Address"
-msgstr "Адрес электронной почты"
+msgid "A valid Email Address account from which you would like to send Emails"
+msgstr "Действующий аккаунт электронной почты для отправки сообщений"
 
 #: includes/translations.php:154
-msgid ""
-"In this field, you would need to add a valid Email Address in the inbox "
-"field from which you would like to send Emails"
-msgstr ""
-"В этой области, добавте действительный адрес электронной почты, в поле "
-"почтовом ящике, из которого вы хотели бы отправить сообщения электронной "
-"почты"
+msgid "Please provide valid Email Address"
+msgstr "Укажите действующий адрес электронной почты"
 
 #: includes/translations.php:155
-msgid "Please provide valid Email Address"
-msgstr "Пожалуйста, укажите правильный адрес электронной почты"
+msgid "Reply To"
+msgstr "Получатель"
 
 #: includes/translations.php:156
-msgid "Reply To"
-msgstr "Ответить на"
+msgid ""
+"A valid Email Address that will be used in the 'Reply-To' field of the email"
+msgstr ""
+"Действующий адрес электронной почты, используемый в поле 'Получатель' "
+"сообщения"
 
 #: includes/translations.php:157
-msgid ""
-"In this field, you would need to add a valid Email Address that is "
-"automatically inserted into the Reply To field when a user replies to an "
-"email message"
-msgstr ""
-"В этой области, вы должны добавить действительный адрес электронной почты, "
-"который автоматически вставляется в поле Ответить, когда пользователь "
-"отвечает на сообщение электронной почты"
+msgid "Please provide Reply To Email Address"
+msgstr "Укажите адрес электронной почты получателя"
 
 #: includes/translations.php:158
-msgid "Please provide Reply To Email Address"
-msgstr ""
-"Перевести\n"
-"\n"
-"Please provide Reply To Email Address\n"
-"\n"
-"Просьба предоставить ответ на адрес электронной почты"
+msgid "Get Google Client Id and Secret Key"
+msgstr "Получите Id клиента и секретный ключ Google"
 
 #: includes/translations.php:159
-msgid "Get Google Client Id and Secret Key"
-msgstr "Получить идентификатор Google-клиента и Секретный Ключ"
+msgid "Get Microsoft Client Id and Secret Key"
+msgstr "Получите Id клиента и секретный ключ Microsoft"
 
 #: includes/translations.php:160
-msgid "Get Microsoft Client Id and Secret Key"
-msgstr "Получить идентификатор Microsoft-клиента и Секретный Ключ"
+msgid "Get Yahoo Client Id and Secret Key"
+msgstr "Получите Id клиента и секретный ключ Yahoo"
 
 #: includes/translations.php:161
-msgid "Get Yahoo Client Id and Secret Key"
-msgstr "Получить идентификатор Yahoo-клиента и Секретный Ключ"
+msgid "SendGrid API"
+msgstr "SendGrid API"
 
-#: includes/translations.php:164
+#: includes/translations.php:163
 msgid "Start Date"
 msgstr "Дата начала"
 
+#: includes/translations.php:164 includes/translations.php:179
+msgid "Resend Email"
+msgstr "Переслать сообщение"
+
 #: includes/translations.php:165
 msgid "Please provide Start Date"
-msgstr "Пожалуйста, укажите дату начала"
+msgstr "Укажите дату начала"
 
 #: includes/translations.php:166
-msgid "This field shows starting date of Email Logs"
-msgstr "Это поле показывает дату начала E-mail журналов"
+msgid "Start Date for Email Logs"
+msgstr "Дата начала Журнала сообщений"
 
 #: includes/translations.php:167
 msgid "End Date"
-msgstr "Дата Окончания"
+msgstr "Дата завершения"
 
 #: includes/translations.php:168
-msgid "Please provide End Date"
-msgstr "Пожалуйста, укажите Дату Окончания"
+msgid "Limit Records"
+msgstr "Предельное число записей"
 
 #: includes/translations.php:169
-msgid "This field shows ending date of Email Logs"
-msgstr "Это поле показывает конечную дату почтового журналов"
+msgid "Number of Logs to view"
+msgstr "Количество Журналов для просмотра"
 
-#: includes/translations.php:170
+#: includes/translations.php:174
+msgid "Please provide End Date"
+msgstr "Укажите Дату завершения"
+
+#: includes/translations.php:175
+msgid "End Date for Email Logs"
+msgstr "Дата завершения Журналов сообщений"
+
+#: includes/translations.php:176
 msgid "Submit"
-msgstr "Отправить"
+msgstr "Передать"
 
-#: includes/translations.php:171
+#: includes/translations.php:177
 msgid "Bulk Action"
-msgstr "Массовое действие"
+msgstr "Общее действие"
 
-#: includes/translations.php:172
+#: includes/translations.php:178
 msgid "Delete"
 msgstr "Удалить"
 
-#: includes/translations.php:173
-msgid "Apply"
-msgstr "Подать заявление"
-
-#: includes/translations.php:174
-msgid "Email To"
-msgstr "E-mail Для"
-
-#: includes/translations.php:175
-msgid "Action"
-msgstr "действие"
-
-#: includes/translations.php:176
-msgid "Show Details"
-msgstr "Показать подробности"
-
-#: includes/translations.php:177
-msgid "Email Details"
-msgstr "E-mail подробности"
-
-#: includes/translations.php:178
-msgid "Email Debugging output"
-msgstr "Depanarea email-urilor"
-
-#: includes/translations.php:179
-msgid "Close"
-msgstr "Закрыть"
-
 #: includes/translations.php:180
-msgid "Debugging Output"
-msgstr "Отладка"
+msgid "Apply"
+msgstr "Применить"
 
 #: includes/translations.php:181
-msgid "Show Debugging Output"
-msgstr "Показать Отладку"
+msgid "Email To"
+msgstr "Получатель"
 
 #: includes/translations.php:182
-msgid "Email Sent To"
-msgstr "E-mail отправлен"
-
-#: includes/translations.php:183
-msgid "Date/Time"
-msgstr "Дата/Время"
+msgid "Action"
+msgstr "Действие"
 
 #: includes/translations.php:184
-msgid "Status"
-msgstr "Состояние"
+msgid "Debug Output"
+msgstr "Выходные данные отладки"
 
 #: includes/translations.php:185
-msgid "From"
-msgstr "De la"
+msgid "Date/Time"
+msgstr "Дата/время"
 
-#: includes/translations.php:186
-msgid "Back to Email Logs"
-msgstr "Înapoi la jurnalele de email"
-
-#: includes/translations.php:189
-msgid "Automatic Plugin Updates"
-msgstr "Автоматическое обновление плагинов"
-
-#: includes/translations.php:190
-msgid ""
-"Please choose a specific option whether to allow Automatic Plugin Updates"
-msgstr ""
-"Пожалуйста, выберите вариант, следует ли разрешить Автоматическое обновление "
-"плагинов"
-
-#: includes/translations.php:191
+#: includes/translations.php:188
 msgid "Debug Mode"
 msgstr "Режим отладки"
 
+#: includes/translations.php:189
+msgid "Do you want to see Debugging Output for your emails?"
+msgstr "Вы хотите просмотреть выходные данные отладки для ваших сообщений?"
+
+#: includes/translations.php:190
+msgid "Remove Database at Uninstall"
+msgstr "Удалить базу данных при удалении"
+
+#: includes/translations.php:191
+msgid "Do you want to remove database at Uninstall of the Plugin?"
+msgstr "Вы хотите удалить базу данных при удалении Плагина?"
+
 #: includes/translations.php:192
-msgid "Please choose a specific option for Debug Mode"
-msgstr "Пожалуйста, выберите вариант режима отладки"
+msgid "Monitor Email Logs"
+msgstr "Контроль Журналов сообщений"
 
 #: includes/translations.php:193
-msgid "Remove Tables at Uninstall"
-msgstr "Удалить таблицы при удалении программы"
-
-#: includes/translations.php:194
-msgid ""
-"Please choose a specific option whether to allow Remove Tables at Uninstall"
-msgstr ""
-"Пожалуйста, выберите вариант, следует ли разрешить удалять таблицы при "
-"удалении программы"
-
-#: includes/translations.php:195
-msgid "Monitoring Email Logs"
-msgstr "Мониторинг журналов электронной почты"
+msgid "Do you want to monitor your all Outgoing Emails?"
+msgstr "Вы хотите контролировать все исходящие сообщения?"
 
 #: includes/translations.php:196
-msgid "This field is used to allow Email Logs to monitor or not"
-msgstr ""
-"Использовать эту область для мониторига журналов электронной почты или нет"
-
-#: includes/translations.php:199
 msgid "Show Mail Bank Menu"
-msgstr "Arată Mail Bank în meniul lateral"
+msgstr "Показать меню Mail Bank"
 
-#: includes/translations.php:200
-msgid "Please choose a specific role who can see Sidebar Menu"
-msgstr ""
-"Пожалуйста, выберите определенную роль, тех кто может видеть боковую панель "
-"меню"
+#: includes/translations.php:197
+msgid ""
+"Choose among the following roles who would be able to see the Mail Bank Menu?"
+msgstr "Выберите роли, которые смогут просматривать Меню Mail Bank?"
 
-#: includes/translations.php:201
+#: includes/translations.php:198
 msgid "Administrator"
 msgstr "Администратор"
 
-#: includes/translations.php:202
+#: includes/translations.php:199
 msgid "Author"
 msgstr "Автор"
 
-#: includes/translations.php:203
+#: includes/translations.php:200
 msgid "Editor"
 msgstr "Редактор"
 
-#: includes/translations.php:204
+#: includes/translations.php:201
 msgid "Contributor"
-msgstr "Участник"
+msgstr "Исполнитель"
 
-#: includes/translations.php:205
+#: includes/translations.php:202
 msgid "Subscriber"
 msgstr "Подписчик"
 
-#: includes/translations.php:206
+#: includes/translations.php:203
 msgid "Others"
-msgstr "Другие"
+msgstr "Прочие"
+
+#: includes/translations.php:204
+msgid "Show Mail Bank Top Bar Menu"
+msgstr "Показать меню верхней строки Mail Bank"
+
+#: includes/translations.php:205
+msgid "Do you want to show Mail Bank menu in Top Bar?"
+msgstr "Отобразить меню Mail Bank на Верхней строке?"
+
+#: includes/translations.php:206
+msgid "An Administrator Role can do the following "
+msgstr "Администратор может выполнять следующие действия"
 
 #: includes/translations.php:207
-msgid "Show Mail Bank Top Bar Menu"
-msgstr "Arată Mail Bank în meniul de sus"
+msgid ""
+"Choose what pages would be visible to the users having Administrator Access"
+msgstr ""
+"Выберите страницы, отображаемые для пользователей с правами Администратора"
 
 #: includes/translations.php:208
-msgid "Please choose a specific option from Mail Bank Top Bar Menu"
-msgstr "Alege o opţiune specifică din meniul Mail Bank de sus"
-
-#: includes/translations.php:209
-msgid "An Administrator Role can do the following "
-msgstr "В Роле Администратор можно выполнить следующие действия"
-
-#: includes/translations.php:210
-msgid "Please choose specific page available for the Administrator Access"
-msgstr "Пожалуйста, выберите страницу доступ к которой имеет администратор"
-
-#: includes/translations.php:211
 msgid "Full Control"
 msgstr "Полный контроль"
 
-#: includes/translations.php:212
+#: includes/translations.php:209
 msgid "An Author Role can do the following "
-msgstr " В Роле Автора можно сделать следующее"
+msgstr "Автор может выполнять следующие действия"
+
+#: includes/translations.php:210
+msgid "Choose what pages would be visible to the users having Author Access"
+msgstr "Выберите страницы, отображаемые для пользователей с правами Автора"
+
+#: includes/translations.php:211
+msgid "An Editor Role can do the following "
+msgstr "Редактор может выполнять следующие действия"
+
+#: includes/translations.php:212
+msgid "Choose what pages would be visible to the users having Editor Access"
+msgstr "Выберите страницы, отображаемые для пользователей с правами Редактора"
 
 #: includes/translations.php:213
-msgid "Please choose specific page available for Author Access"
-msgstr "Пожалуйста, выберите страницу доступную для Автора"
+msgid "A Contributor Role can do the following "
+msgstr "Исполнитель может выполнять следующие действия"
 
 #: includes/translations.php:214
-msgid "An Editor Role can do the following "
-msgstr "В Редакторе ролей можно выполнить следующие действия"
+msgid ""
+"Choose what pages would be visible to the users having Contributor Access"
+msgstr ""
+"Выберите страницы, отображаемые для пользователей с правами Исполнителя"
 
 #: includes/translations.php:215
-msgid "Please choose specific page available for Editor Access"
-msgstr "Пожалуйста, выберите страницу доступную для редактора"
+msgid "Other Roles can do the following "
+msgstr "Прочие роли могут выполнять следующие действия"
 
 #: includes/translations.php:216
-msgid "A Contributor Role can do the following "
-msgstr "В Роли участника можно сделать следующее"
+msgid ""
+"Choose what pages would be visible to the users having Others Role Access"
+msgstr ""
+"Выберите страницы, отображаемые для пользователей с правами Прочих ролей"
 
 #: includes/translations.php:217
-msgid "Please choose specific page available for Contributor Access"
-msgstr "Пожалуйста, выберите страницу доступной для участника"
+msgid "Please tick the appropriate capabilities for security purposes "
+msgstr "Отметьте галочкой соответствующие полномочия для целей безопасности"
 
 #: includes/translations.php:218
-msgid "Other Roles can do the following "
-msgstr "Другие роли могут сделать следующее"
+msgid "Only users with these capabilities can access Mail Bank"
+msgstr "Только пользователи с этими полномочиями имеют доступ к Mail Bank"
 
 #: includes/translations.php:219
-msgid "Please choose specific page available for Others Role Access"
-msgstr ""
-"Пожалуйста, выберите конкретную страницу действительную для других ролей "
-"доступа"
+msgid "A Subscriber Role can do the following"
+msgstr "Подписчик может выполнять следующие действия"
 
 #: includes/translations.php:220
-msgid "Please tick the appropriate capabilities for security purposes "
-msgstr "Пожалуйста, отметьте соответствующие возможности в целях безопасности"
-
-#: includes/translations.php:221
-msgid "Only users with these capabilities can access Mail Bank"
-msgstr "Doar utilizatorii cu aceste capabilităţi pot accesa Mail Bank"
-
-#: includes/translations.php:222
-msgid "A Subscriber Role can do the following"
-msgstr "В Роли подписчика можно сделать следующее"
+msgid ""
+"Choose what pages would be visible to the users having Subscriber Access"
+msgstr "Выберите страницы, отображаемые для пользователей с правами Подписчика"
 
 #: includes/translations.php:223
-msgid "Please choose specific page available for Subscriber Access"
-msgstr "Alege o pagină dedicată accesului pentru Abonat"
+msgid "Sending Test Email to"
+msgstr "Получатель тестового сообщения"
 
-#: includes/translations.php:226
-msgid "Thank You!"
-msgstr "Благодарю Вас"
+#: includes/translations.php:224
+msgid "Email Status"
+msgstr "Статус сообщения"
 
 #: includes/translations.php:227
-msgid ""
-"Kindly fill in the below form, if you would like to suggest some features "
-"which are not in the Plugin"
-msgstr ""
-"Пожалуйста, заполните форму ниже, если вы хотели бы предложить некоторые "
-"особенности, которых нет в плагине"
+msgid "Connectivity Test"
+msgstr "Проверка возможности соединения"
 
 #: includes/translations.php:228
-msgid ""
-"If you also have any suggestion/complaint, you can use the same form below"
-msgstr ""
-"Если у вас также есть какие-либо предложения / жалобы, вы можете "
-"использовать ту же форму ниже"
+msgid "Transport"
+msgstr "Передача"
 
 #: includes/translations.php:229
-msgid "You can also write us on"
-msgstr "Вы также можете написать нам на"
+msgid "Socket"
+msgstr "Сокет"
 
 #: includes/translations.php:230
-msgid "Your Name"
-msgstr "Ваше Имя"
+msgid "Status"
+msgstr "Статус"
 
 #: includes/translations.php:231
-msgid "Please provide your Name which will be sent along with your Feedback"
-msgstr ""
-"Пожалуйста, укажите Ваше имя, которое будет отправлено вместе с обратной "
-"связью"
-
-#: includes/translations.php:232
-msgid "Please provide your Name"
-msgstr "Введите ваше имя"
+msgid "SMTP"
+msgstr "SMTP"
 
 #: includes/translations.php:233
-msgid "Your Email"
-msgstr "Ваш e-mail"
-
-#: includes/translations.php:234
-msgid ""
-"Please provide your Email Address which will be sent along with your Feedback"
-msgstr ""
-"Te rugăm să scrii adresa ta de email, care va fi transmisă împreună cu "
-"mesajul tău"
+msgid "Begin Test"
+msgstr "Начать проверку"
 
 #: includes/translations.php:235
-msgid "Please provide your Email Address"
-msgstr "Пожалуйста, укажите ваш адрес электронной почты"
-
-#: includes/translations.php:236
-msgid "Please provide your Feedback which will be sent along"
-msgstr "Пожалуйста, укажите ваш отзыв, который будет отправлен вместе"
-
-#: includes/translations.php:237
-msgid "Please provide your Feedback"
-msgstr "Просьба представить свой отзыв"
+msgid "SMTP Server that will be used for a Connectivity Test"
+msgstr "SMTP-сервер, используемый для проверки возможности соединения"
 
 #: includes/translations.php:238
-msgid "Send Feedback"
-msgstr "Отправить отзыв"
+msgid "Additional Headers"
+msgstr "Дополнительные заголовки"
 
-#: includes/translations.php:241
-msgid "Sending Test Email to"
-msgstr "Отправка тестового сообщения на"
-
-#: includes/translations.php:242
-msgid "Email Status"
-msgstr "E-mail Статус"
-
-#: includes/translations.php:245
-msgid "Important Notice!"
-msgstr "Важное замечание!"
-
-#: includes/translations.php:246
+#: includes/translations.php:239
 msgid ""
-"Congratulations! You have recently purchased Mail Bank Business Edition and "
-"now you would need to activate the license in order to unlock it!"
+"You also can insert additional headers in this optional field in order to "
+"include in your email"
 msgstr ""
-"Felicitări! Ai achiziţionat Ediţia Business a modulului Mail Bank, iar acum "
-"trebuie să activezi licenţa pentru a debloca modulul."
+"Вы можете также добавить дополнительные заголовки в опциональное поле для "
+"включения в сообщение"
 
-#: includes/translations.php:247
+#: lib/dashboard-widget.php:167
+msgid "is configured"
+msgstr "настраивается"
+
+#: lib/dashboard-widget.php:168
+msgid "will send mail through"
+msgstr "почта будет отправляться через"
+
+#: lib/dashboard-widget.php:168
+msgid "to"
+msgstr "в"
+
+#: lib/dashboard-widget.php:168
+msgid "using"
+msgstr "с помощью"
+
+#: lib/dashboard-widget.php:169
+msgid "Email Configuration"
+msgstr "Настройка электронной почты"
+
+#: lib/dashboard-widget.php:183
+msgid "Upgrade Now to Premium Editions"
+msgstr "Обновите сейчас до Премиум-версии"
+
+#: views/wizard/wizard.php:52
+msgid "Hi there!"
+msgstr "Здравствуйте!"
+
+#: views/wizard/wizard.php:53
 msgid ""
-"Kindly fill in the required details and click on Validate License to unlock "
-"it"
+"Don't ever miss an opportunity to opt in for Email Notifications / "
+"Announcements about exciting New Features and Update Releases."
 msgstr ""
-"Пожалуйста, заполните необходимые поля и нажмите Подтвердить лицензию, чтобы "
-"разблокировать его"
+"Не забудьте подписаться на уведомления / новости об интересных новых "
+"функциях и обновлениях."
 
-#: includes/translations.php:248
-msgid "If you face any issues activating the license, you may contact us at "
-msgstr ""
-"Если у вас возникнут проблемы при активации лицензии, вы можете связаться с "
-"нами по адресу"
-
-#: includes/translations.php:250
-msgid "Product Name"
-msgstr "наименование товара"
-
-#: includes/translations.php:251
-msgid "Current Version"
-msgstr "Текущая версия"
-
-#: includes/translations.php:252
-msgid "Website URL"
-msgstr "URL сайта"
-
-#: includes/translations.php:253
-msgid "Order ID"
-msgstr "номер заказа"
-
-#: includes/translations.php:254
-msgid "API KEY"
-msgstr "API KEY"
-
-#: includes/translations.php:255
-msgid "Validate License"
-msgstr "Проверка лицензии"
-
-#: includes/translations.php:257
-msgid "This field shows your Installed Product"
-msgstr "Это поле показывает ваш установленный продукт"
-
-#: includes/translations.php:258
-msgid "This field shows your Installed Product Version"
-msgstr "Это поле показывает установленную на компьютере версию продукта"
-
-#: includes/translations.php:259
-msgid "This field shows your Website URL"
-msgstr "В этом поле отображается URL вашего веб-сайта"
-
-#: includes/translations.php:260
+#: views/wizard/wizard.php:54
 msgid ""
-"Please provide your Order ID  which you have received after purchasing the "
-"Product. This will be used for Validating the License"
+"Contribute in helping us making our plugin compatible with most plugins and "
+"themes by allowing to share non-sensitive information about your website."
 msgstr ""
-"Укажите свой идентификатор заказа, который Вы получили после покупки "
-"продукта. Это будет использоваться для проверки Лицензии"
+"Помогите нам обеспечить совместимость нашего плагина с другими плагинами и "
+"темами, разрешив доступ к несекретной информации о вашем сайте."
 
-#: includes/translations.php:261
+#: views/wizard/wizard.php:61
+msgid "Email Address for Notifications"
+msgstr "Адрес электронной почты для уведомлений"
+
+#: views/wizard/wizard.php:66
+msgid "If you're not ready to Opt-In, that's ok too!"
+msgstr "Если вы не согласитесь, это не проблема!"
+
+#: views/wizard/wizard.php:67
+msgid "Mail Bank will still work fine."
+msgstr "Mail Bank продолжит нормальную работу."
+
+#: views/wizard/wizard.php:71
+msgid "What permissions are being granted?"
+msgstr "Какие разрешения будут предоставлены?"
+
+#: views/wizard/wizard.php:79
+msgid "User Details"
+msgstr "Данные пользователя"
+
+#: views/wizard/wizard.php:80
+msgid "Name and Email Address"
+msgstr "Имя и адрес электронной почты"
+
+#: views/wizard/wizard.php:90
+msgid "Current Plugin Status"
+msgstr "Текущий статус плагина"
+
+#: views/wizard/wizard.php:91
+msgid "Activation, Deactivation and Uninstall"
+msgstr "Активация, дезактивация и удаление"
+
+#: views/wizard/wizard.php:101
+msgid "Notifications"
+msgstr "Уведомления"
+
+#: views/wizard/wizard.php:102
+msgid "Updates &amp; Announcements"
+msgstr "Обновления и Новости"
+
+#: views/wizard/wizard.php:112
+msgid "Website Overview"
+msgstr "Обзор сайта"
+
+#: views/wizard/wizard.php:113
+msgid "Site URL, WP Version, PHP Info, Plugins &amp; Themes Info"
+msgstr "URL сайта, версия WP, сведения о PHP, сведения о плагинах и темах"
+
+#: views/wizard/wizard.php:122
+#, fuzzy
+#| msgid "Opt-In &amp; Continue "
+msgid "Opt-In &amp; Continue"
+msgstr "Согласиться и продолжить"
+
+#: views/wizard/wizard.php:126
+#, fuzzy
+#| msgid "Skip &amp; Continue "
+msgid "Skip &amp; Continue"
+msgstr "Пропустить и продолжить"
+
+#: views/wizard/wizard.php:133
+msgid "Privacy Policy"
+msgstr "Политика конфиденциальности"
+
+#: views/wizard/wizard.php:135
+msgid "Terms &amp; Conditions"
+msgstr "Положения и условия"
+
+#: wp-mail-bank.php:898
+msgid "Sure! I'd love to!"
+msgstr "Конечно! С удовольствием!"
+
+#: wp-mail-bank.php:899
+msgid "I've already left a review"
+msgstr "Я уже оставил отзыв"
+
+#: wp-mail-bank.php:900
+msgid "Maybe Later"
+msgstr "Возможно, позже"
+
+#: wp-mail-bank.php:902
+msgid "Leave A Review For Mail Bank ?"
+msgstr "Вы хотите оставить отзыв о Mail Bank ?"
+
+#: wp-mail-bank.php:903
 msgid ""
-"Please provide your API Key which you have received after purchasing the "
-"Product. This will be used for Validating the License"
+"We love and care about you. Mail Bank Team is putting our maximum efforts to "
+"provide you the best functionalities.<br> We would really appreciate if you "
+"could spend a couple of seconds to give a Nice Review to the plugin for "
+"motivating us!"
 msgstr ""
-"Пожалуйста, укажите ваш ключ API, который вы получили после покупки "
-"продукта. Это будет использоваться для проверки Лицензии"
+"Нам важно ваша удовлетворенность. Команда Mail Bank прилагает максимальные "
+"усилия, чтобы разработать для вас самые лучшие функции.<br> Просим вас "
+"потратить немного времени и оставить отзыв о плагине, чтобы мотивировать нас!"
 
-#: includes/translations.php:262
-msgid "Please provide Order ID received after making the purchase"
+#: wp-mail-bank.php:1060
+msgid "We feel guilty when anyone stop using Mail Bank."
+msgstr "Мы чувствуем свою вину, если вы перестали использовать Mail Bank."
+
+#: wp-mail-bank.php:1061
+msgid "If Mail Bank isn't working for you, others also may not."
 msgstr ""
-"Просьба предоставить идентификатор заказа, полученные после совершения "
-"покупки"
+"Если вам не подходит Mail Bank, вам могут не подойти и другие варианты."
 
-#: includes/translations.php:263
-msgid "Please provide API Key received after making the purchase"
-msgstr "Просьба предоставить ключ API, полученные после совершения покупки"
+#: wp-mail-bank.php:1062
+msgid "We would love to hear your feedback about what went wrong."
+msgstr "Сообщите нам о возникшей проблеме."
 
-#~ msgid "WP Mail Booster"
-#~ msgstr "WP Mail Booster"
+#: wp-mail-bank.php:1063
+msgid "We would like to help you in fixing the issue."
+msgstr "Мы хотели бы помочь Вам решить проблему."
 
-#~ msgid "Email Configuration"
-#~ msgstr "Конфигурация E-mail"
+#: wp-mail-bank.php:1070
+msgid "The Plugin didn't work"
+msgstr "Плагин не работает"
 
-#~ msgid "Email Configuration has been saved Successfully"
-#~ msgstr "E-mail Конфигурация успешно сохранена"
+#: wp-mail-bank.php:1076
+msgid "I found a better Plugin"
+msgstr "Я нашел более подходящий Плагин"
 
-#~ msgid "Roles & Capabilities have been saved Successfully"
-#~ msgstr "Роли и возможности были успешно сохранены"
+#: wp-mail-bank.php:1082
+msgid "It's a temporary deactivation. I'm just debugging an issue."
+msgstr "Дезактивация временная. Я лишь пытаюсь решить проблему."
 
-#~ msgid "Plugin Settings have been saved Successfully"
-#~ msgstr "Настройки Плагинf были успешно сохранены"
+#: wp-mail-bank.php:1088
+msgid "Open a Support Ticket for me."
+msgstr "Создайте для меня Запрос в службу поддержки."
 
-#~ msgid "* Openssl extension not found or disabled"
-#~ msgstr "* Расширение Openssl не найдено или отключено"
+#~ msgid "Use OAuth (Client Id and Secret Key required)"
+#~ msgstr "Используйте OAuth (необходим Id клиента и секретный ключ)"
 
-#~ msgid ""
-#~ "Please Copy this Redirect URI and Paste into Redirect URI field when "
-#~ "creating your app"
-#~ msgstr ""
-#~ "Пожалуйста, скопируйте данный URI перенаправления и вставьте в "
-#~ "соответствующее поле в процессе создания вашего приложения"
+#~ msgid "Email Log Details"
+#~ msgstr "Сведения о Журнале сообщений"
 
-#~ msgid "Use Username and Password"
-#~ msgstr "Использовать Имя пользователя и Пароль"
+#~ msgid "Feedback"
+#~ msgstr "Обратная связь"
 
-#~ msgid "Show Mail Booster Menu"
-#~ msgstr "Показать меню Mail Booster "
+#~ msgid "Your Feedback has been sent Successfully"
+#~ msgstr "Ваш отзыв успешно отправлен"
 
-#~ msgid "Other Roles"
-#~ msgstr "Другие роли"
+#~ msgid "Please choose an Action from Dropdown!"
+#~ msgstr "Выберите действие из выпадающего списка!"
 
-#~ msgid "Show Mail Booster Top Bar Menu"
-#~ msgstr "Показать верхнюю панель меню Mail Booster "
+#~ msgid "Please choose at least 1 record to delete!"
+#~ msgstr "Выберите минимум 1 запись для удаления!"
 
-#~ msgid "Please choose a specific option from Mail Booster Top Bar Menu"
-#~ msgstr "Пожалуйста, выберите вариант из верхней панели меню Mail Booster"
+#~ msgid "Are you sure you want to delete Email Logs?"
+#~ msgstr "Вы точно хотите удалить Журналы сообщений?"
 
-#~ msgid " Please choose specific page available for Subscriber Access"
-#~ msgstr "Пожалуйста, выберите страницу доступной для подписчика"
+#~ msgid "Selected Logs have been deleted Successfully"
+#~ msgstr "Выбранные журналы успешно удалены"
 
-#~ msgid "Other Roles can do the following"
-#~ msgstr "Другие роли могут сделать следующее"
+#~ msgid "Are you sure you want to Resend Emails?"
+#~ msgstr "Вы точно хотите переслать сообщения?"
 
-#~ msgid ""
-#~ "From here you can select the specific page available for the Other Users "
-#~ "Access."
-#~ msgstr ""
-#~ "Отсюда вы можете выбрать страницу доступ к которой имеют другие "
-#~ "пользователи."
+#~ msgid "Invalid Secret Key. Please rectify and try again!"
+#~ msgstr "Недействительный секретный ключ. Исправьте и повторите попытку!"
 
-#~ msgid ""
-#~ "Please provide Email Address which will be sent along with your Feedback"
-#~ msgstr ""
-#~ "Просьба укажите адрес электронной почты, который будет отправлен вместе с "
-#~ "обратной связью"
+#~ msgid "Licensing"
+#~ msgstr "Лицензирование"
 
-#~ msgid ""
-#~ "Congratulations! You have recently purchased WP Mail Booster Business "
-#~ "Edition and now you would need to activate the license in order to unlock "
-#~ "it!"
-#~ msgstr ""
-#~ "Поздравления! Вы недавно приобрели WP Mail Booster Business Edition и "
-#~ "теперь вам нужно будет активировать лицензию, чтобы разблокировать его!"
+#~ msgid "Your Email has been Resent Successfully"
+#~ msgstr "Ваше сообщение успешно переслано"
 
-#~ msgid ""
-#~ "Please provide your Order ID which you have received after purchasing the "
-#~ "Product. This will be used for Validating the License"
-#~ msgstr ""
-#~ "\n"
-#~ "Укажите свой идентификатор заказа, который Вы получили после покупки "
-#~ "продукта. Это будет использоваться для проверки Лицензии"
+#~ msgid "Your Emails have been Resent Successfully"
+#~ msgstr "Ваши сообщения успешно пересланы"
+
+#~ msgid "Unfortunately, Your Email has not been Sent"
+#~ msgstr "К сожалению, ваше сообщение не было отправлено"
+
+#~ msgid "Are you sure you want to Resend Email?"
+#~ msgstr "Вы точно хотите переслать сообщение?"
+
+#~ msgid "Your License has been activated Successfully"
+#~ msgstr "Ваша Лицензия успешно активирована"
 
 #~ msgid ""
 #~ "The following php extensions are not found on your server or are "
 #~ "currently disabled. These might create few problems in configuring Mail "
-#~ "Booster. Please contact your WebHost to setup these extensions on your "
-#~ "server."
+#~ "Bank. Please contact your WebHost to setup these extensions on your server"
 #~ msgstr ""
-#~ "\n"
-#~ "Следующие расширения PHP не найден на сервере или в настоящее время "
-#~ "отключены. Это может создать некоторые проблемы в настройке почты "
-#~ "Booster. Пожалуйста, обратитесь к вашему WebHost установить эти "
-#~ "расширения на вашем сервере."
+#~ "Следующие расширения php отсутствуют на вашем сервере или неактивны. Это "
+#~ "может создать проблемы при настройке Mail Bank. Запросите у хоста "
+#~ "настройку этих расширений на вашем сервере"
 
-#~ msgid "Only users with these capabilities can access Mail Booster"
-#~ msgstr ""
-#~ "Только пользователи с этими возможностями могут получать доступ к Mail "
-#~ "Booster"
+#~ msgid "Get Mailgun API Key"
+#~ msgstr "Получить ключ API Mailgun"
 
-#~ msgid "If you would like to translate in "
-#~ msgstr ""
-#~ "\n"
-#~ "Если вы хотите перевести в"
+#~ msgid "In this field, you would need to provide Mailgun API Key"
+#~ msgstr "В этом поле нужно указать ключ API Mailgun"
+
+#~ msgid "Domain Name"
+#~ msgstr "Имя домена"
+
+#~ msgid "In this field, you would need to provide Mailgun domain name"
+#~ msgstr "В этом поле нужно указать имя домена Mailgun"
+
+#~ msgid "Please provide Mailgun Domain Name"
+#~ msgstr "Укажите имя домена Mailgun"
+
+#~ msgid "In this field, you need to provide SendGrid API Key"
+#~ msgstr "В этом поле нужно указать Ключ API SendGrid"
+
+#~ msgid "Please provide valid API key"
+#~ msgstr "Укажите действующий ключ API"
 
 #~ msgid ""
-#~ " & help us, we will reward you with a free Personal Edition License of "
-#~ "Mail Booster. If Interested, Kindly click "
+#~ "A valid Email Address that will be used in the 'CC' field of the email. "
+#~ "Use Comma ',' for including multiple email addresses in the 'CC' field"
 #~ msgstr ""
-#~ "& Помочь нам, мы будем награждать вас с бесплатной Лицензией Personal "
-#~ "Edition от  Mail Booster. Если вы заинтересованы, Пожалуйста нажмите"
+#~ "Действующий адрес электронной почты, используемый в поле 'CC' сообщения. "
+#~ "Укажите несколько адресов в поле 'CC' через ','"
 
-#~ msgid "here"
-#~ msgstr "здесь"
+#~ msgid "Mailer Settings"
+#~ msgstr "Настройки почтовой программы"
 
-#~ msgid "Are you sure you want to close without sending Translation Request?"
-#~ msgstr "Вы уверены, что хотите закрыть без отправки запроса на перевод?"
+#~ msgid "Choose among the variety of options for routing emails"
+#~ msgstr "Выберите один из вариантов маршрутизации сообщений"
 
-#~ msgid "Translation Request"
-#~ msgstr "Запрос Перевода"
+#~ msgid "Mailgun API"
+#~ msgstr "Mailgun API"
 
-#~ msgid "Language Interested to Translate"
-#~ msgstr "Интересующий Язык Перевода"
+#~ msgid "Get SendGrid API Key"
+#~ msgstr "Получить ключ API SendGrid"
 
-#~ msgid "Please choose a language which you want to translate"
-#~ msgstr "Пожалуйста, выберите язык, на который вы хотите перевести"
+#~ msgid "Use SMTP Authentication"
+#~ msgstr "Использовать SMTP-аутентификацию"
 
-#~ msgid "Please provide a language"
-#~ msgstr "Пожалуйста укажите язык"
+#~ msgid "Don't Use SMTP Authentication"
+#~ msgstr "Не использовать SMTP-аутентификацию"
 
-#~ msgid "Query"
-#~ msgstr "Запрос"
+#~ msgid "Test Email Address"
+#~ msgstr "Адрес для тестового сообщения"
 
-#~ msgid "Please provide your query"
-#~ msgstr "Пожалуйста, укажите ваш запрос"
+#~ msgid "Email Details"
+#~ msgstr "Сведения о сообщении"
 
-#~ msgid "Please provide your Email"
-#~ msgstr ""
-#~ "\n"
-#~ "Пожалуйста, укажите ваш e-mail"
+#~ msgid "Close"
+#~ msgstr "Закрыть"
 
-#~ msgid "Send Request"
-#~ msgstr "Оправить Запрос"
+#~ msgid "Email Sent To"
+#~ msgstr "Сообщение отправлено"
 
-#~ msgid "* Click "
-#~ msgstr ""
-#~ "\n"
-#~ "* Нажмите"
+#~ msgid "From"
+#~ msgstr "От"
 
-#~ msgid "here "
-#~ msgstr "здесь"
+#~ msgid "Back to Email Logs"
+#~ msgstr "Возврат в Журналы сообщений"
 
-#~ msgid " to see Premium Edition Features in detail"
-#~ msgstr "чтобы увидеть Характеристики Premium Edition  подробно"
-
-#~ msgid "* For Mail Booster Demos, click "
-#~ msgstr "* Для получения Mail Booster Demos, нажмите"
-
-#~ msgid "* For Mail Booster User Guide for this page, click "
-#~ msgstr ""
-#~ "* Что бы получить Руководство пользователя Mail Booster  для этой "
-#~ "страницы, нажмите"
-
-#~ msgid "* Filters "
-#~ msgstr ""
-#~ "\n"
-#~ "* Фильтры"
-
-#~ msgid "* Reply to, Cc and Bcc Fields "
-#~ msgstr "* Ответить на, Сс и Bcc полях"
-
-#~ msgid "* Deleting Email Logs "
-#~ msgstr "* Удаление e-mail Журналов"
-
-#~ msgid "* Debugging Output"
-#~ msgstr "*Отладка"
-
-#~ msgid "* Email Logs Details "
-#~ msgstr "* Подробности e-mail Журналов "
-
-#~ msgid "* Saving Roles & Capabilities "
-#~ msgstr "* Сохранение Ролей & Возможностей"
-
-#~ msgid " Premium Edition Features :"
-#~ msgstr "Особенности Premium Edition:"
-
-#~ msgid " Features available in Business and Developer Editions :"
-#~ msgstr "Функции, доступные в бизнесе и редакторе Editions:"
+#~ msgid "Automatic Plugin Updates"
+#~ msgstr "Автоматические обновления плагина"
 
 #~ msgid ""
-#~ "This feature is only available in Business and Developer Editions! <br> "
-#~ "Kindly Purchase to unlock it!"
+#~ "Please choose a specific option whether to allow Automatic Plugin Updates"
+#~ msgstr "Выберите вариант разрешения автоматических обновлений Плагина"
+
+#~ msgid "Monitoring Email Logs"
+#~ msgstr "Контроль Журналов сообщений"
+
+#~ msgid "Thank You!"
+#~ msgstr "Спасибо!"
+
+#~ msgid ""
+#~ "Kindly fill in the below form, if you would like to suggest some features "
+#~ "which are not in the Plugin"
 #~ msgstr ""
-#~ "Эта функция доступна только в бизнесе, и редакторе Editions! <br> \n"
-#~ "Приобретите для его разблокировки!"
+#~ "Заполните форму ниже, чтобы предложить функции, отсутствующие в Плагине"
 
-#~ msgid "* Bulk Delete "
-#~ msgstr "* Удалить Основную массу"
+#~ msgid ""
+#~ "If you also have any suggestion/complaint, you can use the same form below"
+#~ msgstr "Если у Вас есть предложения/жалобы, заполните эту же форму ниже"
 
-#~ msgid "* Debugging Output "
-#~ msgstr "* Отладка"
+#~ msgid "You can also write us on"
+#~ msgstr "Вы можете также написать нам"
+
+#~ msgid "Please provide your Name which will be sent along with your Feedback"
+#~ msgstr "Укажите Ваше имя, отправляемое вместе с отзывом"
+
+#~ msgid "Your Email"
+#~ msgstr "Ваш адрес электронной почты"
+
+#~ msgid ""
+#~ "Please provide your Email Address which will be sent along with your "
+#~ "Feedback"
+#~ msgstr "Укажите Ваш адрес электронной почты, отправляемый вместе с отзывом"
+
+#~ msgid "Please provide your Email Address"
+#~ msgstr "Укажите ваш адрес электронной почты"
+
+#~ msgid "Please provide your Feedback which will be sent along"
+#~ msgstr "Укажите отзыв, который будет отправлен"
+
+#~ msgid "Please provide your Feedback"
+#~ msgstr "Укажите отзыв"
+
+#~ msgid "Send Feedback"
+#~ msgstr "Отправить отзыв"
+
+#~ msgid "Your request Email has been sent Successfully"
+#~ msgstr "Ваше сообщение с запросом успешно отправлено"
+
+#~ msgid "Service Available"
+#~ msgstr "Услуга доступна"
+
+#~ msgid "Server ID"
+#~ msgstr "ID сервера"
+
+#~ msgid "Important Notice!"
+#~ msgstr "Важное примечание!"
+
+#~ msgid ""
+#~ "Congratulations! You have recently purchased Mail Bank and now you would "
+#~ "need to activate the license in order to unlock it!"
+#~ msgstr ""
+#~ "Поздравляем! Вы недавно приобрели Mail Bank и вам нужно активировать "
+#~ "лицензию для разблокировки!"
+
+#~ msgid ""
+#~ "Kindly fill in the required details and click on Validate License to "
+#~ "unlock it"
+#~ msgstr ""
+#~ "Введите необходимые данные и нажмите \"Подтвердить Лицензию\" для "
+#~ "разблокировки"
+
+#~ msgid ""
+#~ "If you face any issues activating the license, you may contact us at "
+#~ msgstr "В случае проблем с активацией лицензии, напишите нам по адресу"
+
+#~ msgid "Product Name"
+#~ msgstr "Название продукта"
+
+#~ msgid "Current Version"
+#~ msgstr "Текущая версия"
+
+#~ msgid "Website URL"
+#~ msgstr "URL сайта"
+
+#~ msgid "Order ID"
+#~ msgstr "№ заказа"
+
+#~ msgid "API KEY"
+#~ msgstr "КЛЮЧ API"
+
+#~ msgid "Validate License"
+#~ msgstr "Подтвердить Лицензию"
+
+#~ msgid "This field shows your Installed Product"
+#~ msgstr "В этом поле показан ваш установленный Продукт"
+
+#~ msgid "This field shows your Installed Product Version"
+#~ msgstr "В этом поле показана Версия вашего установленного Продукта"
+
+#~ msgid "This field shows your Website URL"
+#~ msgstr "В этом поле показан URL вашего сайта"
+
+#~ msgid ""
+#~ "Please provide your Order ID  which you have received after purchasing "
+#~ "the Product. This will be used for Validating the License"
+#~ msgstr ""
+#~ "Укажите № заказа, полученный после покупки продукта. Он необходим для "
+#~ "подтверждения Лицензии"
+
+#~ msgid ""
+#~ "Please provide your API Key which you have received after purchasing the "
+#~ "Product. This will be used for Validating the License"
+#~ msgstr ""
+#~ "Укажите ключ API, полученный после покупки Продукта. Он необходим для "
+#~ "подтверждения Лицензии"
+
+#~ msgid "Please provide Order ID received after making the purchase"
+#~ msgstr "Укажите № заказа, полученный после покупки"
+
+#~ msgid "Please provide API Key received after making the purchase"
+#~ msgstr "Укажите ключ API, полученный после покупки"
+
+#~ msgid "If Mail Bank is not working for you, others also may not."
+#~ msgstr ""
+#~ "Если Mail Bank вам не подходит, вам также не подойдут и другие варианты."

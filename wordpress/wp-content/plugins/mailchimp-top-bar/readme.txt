@@ -3,8 +3,8 @@ Contributors: Ibericode, DvanKooten, hchouhan, lapzor
 Donate link: https://mc4wp.com/#utm_source=wp-plugin-repo&utm_medium=mailchimp-top-bar&utm_campaign=donate-link
 Tags: mailchimp, form, newsletter, mc4wp, email, opt-in, subscribe, call to action
 Requires at least: 4.1
-Tested up to: 4.8.1
-Stable tag: 1.2.16
+Tested up to: 4.9
+Stable tag: 1.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -104,7 +104,7 @@ Adding the following CSS to your site should hide the bar on all screens smaller
 
 `
 @media( max-width: 600px ) {
-	#mailchimp-top-bar { display: none !important; }
+	&#35;mailchimp-top-bar { display: none !important; }
 }
 `
 
@@ -124,6 +124,14 @@ Please open a topic on the [WordPress.org plugin support forums](https://wordpre
 
 == Changelog ==
 
+
+#### 1.3 - November 1, 2017
+
+**Improvements**
+
+- Form now submits over AJAX, no longer reloading the entire page.
+- Added `for` attribute to label elements, thanks [gabriel-kaam](https://github.com/gabriel-kaam).
+- Added `mctb_replace_interests` filter hook.
 
 #### 1.2.16 - January 19, 2017
 

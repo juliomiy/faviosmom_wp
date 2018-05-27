@@ -24,6 +24,28 @@ if ( ! class_exists( 'WC_Connect_Compatibility_WC26' ) ) {
 		}
 
 		/**
+		 * Get admin url for a given order
+		 *
+		 * @param WC_Order $order
+		 *
+		 * @return string
+		 */
+		public function get_edit_order_url( WC_Order $order ) {
+			return get_admin_url( null, 'post.php?post=' . $this->get_order_id( $order ) . '&action=edit' );
+		}
+
+		/**
+		 * Get the payment method for a given Order.
+		 *
+		 * @param WC_Order $order
+		 *
+		 * @return string
+		 */
+		public function get_payment_method( WC_Order $order ) {
+			return $order->payment_method;
+		}
+
+		/**
 		 * Retrieve the corresponding Product for the given Order Item.
 		 *
 		 * @param WC_Order $order
@@ -92,6 +114,17 @@ if ( ! class_exists( 'WC_Connect_Compatibility_WC26' ) ) {
 
 			/* translators: %d: Deleted Product ID */
 			return sprintf( __( '#%d - [Deleted product]', 'woocommerce-services' ), $product_id );
+		}
+
+		/**
+		 * For a given product, return it's name. In supported versions, variable
+		 * products will include their attributes.
+		 *
+		 * @param WC_Product $product Product (variable, simple, etc)
+		 * @return string The product (or variation) name, ready to print
+		 */
+		public function get_product_name( WC_Product $product ) {
+			return $product->get_title();
 		}
 	}
 }

@@ -13,40 +13,34 @@
  * to license@zend.com so we can send you a copy immediately.
  *
  * @category Zend
- * @package mail_bank_Zend_Mail
+ * @package Mail_Bank_Zend_Mail
  * @subpackage Storage
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license http://framework.zend.com/license/new-bsd	  New BSD License
+ * @license http://framework.zend.com/license/new-bsd     New BSD License
  * @version $Id$
  */
-/**
- * @category Zend
- * @package mail_bank_Zend_Mail
- * @subpackage Storage
- * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
- * @license http://framework.zend.com/license/new-bsd	  New BSD License
- */
-if (!defined("ABSPATH")) {
-   exit;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 } // Exit if accessed directly
-interface mail_bank_Zend_Mail_Message_Interface {
-   /**
-    * return toplines as found after headers
-    *
-    * @return string toplines
-    */
-   public function getTopLines();
-   /**
-    * check if flag is set
-    *
-    * @param mixed $flag a flag name, use constants defined in mail_bank_Zend_Mail_Storage
-    * @return bool true if set, otherwise false
-    */
-   public function hasFlag($flag);
-   /**
-    * get all set flags
-    *
-    * @return array array with flags, key and value are the same for easy lookup
-    */
-   public function getFlags();
+interface Mail_Bank_Zend_Mail_Message_Interface {
+	/**
+	 * Return toplines as found after headers.
+	 *
+	 * @return string toplines
+	 */
+	public function get_top_lines();
+	/**
+	 * Checks if flag is set
+	 *
+	 * @param mixed $flag a flag name, use constants defined in Mail_Bank_Zend_Mail_Storage.
+	 * @return bool true if set, otherwise false.
+	 */
+	public function has_flag( $flag);
+	/**
+	 * Get all set flags.
+	 *
+	 * @return array array with flags, key and value are the same for easy lookup.
+	 */
+	public function get_flags();
 }

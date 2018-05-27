@@ -88,6 +88,20 @@
 						keys: ['enter'],
 						action: function () {
 							window.open(wpforms_builder_lite.upgrade_url,'_blank');
+							$.alert({
+								title: false,
+								content: wpforms_builder_lite.upgrade_modal,
+								icon: 'fa fa-info-circle',
+								type: 'blue',
+								boxWidth: '565px',
+								buttons: {
+									confirm: {
+										text: wpforms_builder.ok,
+										btnClass: 'btn-confirm',
+										keys: [ 'enter' ]
+									}
+								}
+							});
 						}
 					},
 					cancel: {

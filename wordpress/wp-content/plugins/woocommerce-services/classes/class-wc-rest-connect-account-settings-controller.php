@@ -23,10 +23,21 @@ class WC_REST_Connect_Account_Settings_Controller extends WC_REST_Connect_Base_C
 	}
 
 	public function get() {
-		// Always get a fresh copy when hitting this endpoint
-		$this->payment_methods_store->fetch_payment_methods_from_connect_server();
+		// Always get a fresh list of payment methods when hitting this endpoint
+		$payment_methods_warning = false;
+		$payment_methods_success = $this->payment_methods_store->fetch_payment_methods_from_connect_server();
+
+		if ( ! $payment_methods_success ) {
+			$payment_methods_warning = __( 'There was a problem updating your saved credit cards.', 'woocommerce-services' );
+		}
 
 		$master_user = WC_Connect_Jetpack::get_master_user();
+		if ( is_a( $master_user, 'WP_User' ) ) {
+			$connected_data = WC_Connect_Jetpack::get_connected_user_data( $master_user->ID );
+			$email = $connected_data['email'];
+		} else {
+			$email = '';
+		}
 
 		return new WP_REST_Response( array(
 			'success'  => true,
@@ -34,20 +45,26 @@ class WC_REST_Connect_Account_Settings_Controller extends WC_REST_Connect_Base_C
 			'formData' => $this->settings_store->get_account_settings(),
 			'formMeta' => array(
 				'can_manage_payments' => $this->can_user_manage_payment_methods(),
+				'can_edit_settings' => true,
 				'master_user_name' => is_a( $master_user, 'WP_User' ) ? $master_user->display_name : '',
 				'master_user_login' => is_a( $master_user, 'WP_User' ) ? $master_user->user_login : '',
- 				'payment_methods' => $this->payment_methods_store->get_payment_methods(),
-			)
+				'master_user_email' => $email,
+				'payment_methods' => $this->payment_methods_store->get_payment_methods(),
+				'warnings' => array( 'payment_methods' => $payment_methods_warning ),
+			),
 		), 200 );
 	}
 
 	public function post( $request ) {
+		$settings = $request->get_json_params();
+
 		if ( ! $this->can_user_manage_payment_methods() ) {
-			return new WP_Error( 'forbidden', __( 'You are not allowed to do that', 'woocommerce-services' ), array( 'status' => 403 ) );
+			// Ignore the user-provided payment method ID if he doesn't have permission to change it
+			$old_settings = $this->settings_store->get_account_settings();
+			$settings['selected_payment_method_id'] = $old_settings['selected_payment_method_id'];
 		}
 
-		$settings = $request->get_json_params();
-		$result   = $this->settings_store->update_account_settings( $settings );
+		$result = $this->settings_store->update_account_settings( $settings );
 
 		if ( is_wp_error( $result ) ) {
 			$error = new WP_Error( 'save_failed',
@@ -60,7 +77,7 @@ class WC_REST_Connect_Account_Settings_Controller extends WC_REST_Connect_Base_C
 					$result->get_error_data()
 				)
 			);
-			$this->logger->debug( $error, __CLASS__ );
+			$this->logger->log( $error, __CLASS__ );
 			return $error;
 		}
 

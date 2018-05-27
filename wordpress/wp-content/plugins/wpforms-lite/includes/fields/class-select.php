@@ -18,23 +18,23 @@ class WPForms_Field_Select extends WPForms_Field {
 	public function init() {
 
 		// Define field type information
-		$this->name     = __( 'Dropdown', 'wpforms' );
+		$this->name     = esc_html__( 'Dropdown', 'wpforms' );
 		$this->type     = 'select';
 		$this->icon     = 'fa-caret-square-o-down';
 		$this->order    = 7;
 		$this->defaults = array(
 			1 => array(
-				'label'   => __( 'First Choice', 'wpforms' ),
+				'label'   => esc_html__( 'First Choice', 'wpforms' ),
 				'value'   => '',
 				'default' => '',
 			),
 			2 => array(
-				'label'   => __( 'Second Choice', 'wpforms' ),
+				'label'   => esc_html__( 'Second Choice', 'wpforms' ),
 				'value'   => '',
 				'default' => '',
 			),
 			3 => array(
-				'label'   => __( 'Third Choice', 'wpforms' ),
+				'label'   => esc_html__( 'Third Choice', 'wpforms' ),
 				'value'   => '',
 				'default' => '',
 			),
@@ -85,24 +85,25 @@ class WPForms_Field_Select extends WPForms_Field {
 			'markup' => 'open',
 		) );
 
-		// Show Values toggle option.
-		$tooltip     = __( 'Check this to manually set form field values.', 'wpforms' );
-		$show_values = isset( $field['show_values'] ) ? $field['show_values'] : '0';
-		$show_values = $this->field_element(
-			'checkbox',
-			$field,
-			array(
+		// Show Values toggle option. This option will only show if already used
+		// or if manually enabled by a filter.
+		if ( ! empty( $field['show_values'] ) || apply_filters( 'wpforms_fields_show_options_setting', false ) ) {
+			$show_values = $this->field_element(
+				'checkbox',
+				$field,
+				array(
+					'slug'    => 'show_values',
+					'value'   => isset( $field['show_values'] ) ? $field['show_values'] : '0',
+					'desc'    => esc_html__( 'Show Values', 'wpforms' ),
+					'tooltip' => esc_html__( 'Check this to manually set form field values.', 'wpforms' ),
+				),
+				false
+			);
+			$this->field_element( 'row', $field, array(
 				'slug'    => 'show_values',
-				'value'   => $show_values,
-				'desc'    => __( 'Show Values', 'wpforms' ),
-				'tooltip' => $tooltip,
-			),
-			false
-		);
-		$this->field_element( 'row', $field, array(
-			'slug'    => 'show_values',
-			'content' => $show_values,
-		) );
+				'content' => $show_values,
+			) );
+		}
 
 		// Size.
 		$this->field_option( 'size', $field );
@@ -196,7 +197,7 @@ class WPForms_Field_Select extends WPForms_Field {
 			// Notify if currently empty.
 			if ( empty( $values ) ) {
 				$values = array(
-					'label' => __( '(empty)', 'wpforms' ),
+					'label' => esc_html__( '(empty)', 'wpforms' ),
 				);
 			}
 

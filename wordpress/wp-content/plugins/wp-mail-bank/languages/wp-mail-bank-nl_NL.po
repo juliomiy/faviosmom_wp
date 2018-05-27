@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mail Bank\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-08 12:45+0530\n"
-"PO-Revision-Date: 2017-04-21 09:51+0530\n"
+"POT-Creation-Date: 2018-01-20 09:38+0530\n"
+"PO-Revision-Date: 2018-01-20 09:38+0530\n"
 "Last-Translator: Tech Banker\n"
 "Language-Team: Dutch (Netherlands)\n"
 "Language: nl_NL\n"
@@ -11,1081 +11,1229 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Poedit 1.8.11\n"
-"X-Loco-Source-Locale: en-US\n"
-"X-Loco-Project-Id: 18545\n"
-"X-Loco-Api-Version: 1.0.15 20161010-2\n"
-"X-Poedit-KeywordsList: __\n"
+"X-Generator: Poedit 2.0.1\n"
+"X-Loco-Source-Locale: en-IN\n"
+"X-Loco-Project-Id: 38931\n"
+"X-Loco-Api-Version: 1.0.18 20180111-1\n"
+"X-Poedit-KeywordsList: __;_e\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: assets\n"
+
+#: includes/translations.php:26
+msgid "Email Log has been deleted Successfully"
+msgstr "E-maillog is succesvol verwijderd"
+
+#: includes/translations.php:27
+msgid "Are you sure you want to delete Email Log?"
+msgstr "Weet je zeker dat je het E-maillog wilt verwijderen?"
+
+#: includes/translations.php:28
+msgid "MailGun API"
+msgstr "MailGun API"
+
+#: includes/translations.php:29
+msgid ""
+"Your host may have installed a firewall between you and the server. Ask them "
+"to open the ports."
+msgstr ""
+"Uw gastheer heeft mogelijk een firewall tussen u en de server geïnstalleerd. "
+"Vraag hen om de poorten te openen."
+
+#: includes/translations.php:30
+msgid ""
+"You may have tried to (incorrectly) use SSL over port 587. Check your "
+"encryption and port settings."
+msgstr ""
+"U hebt mogelijk geprobeerd SSL via poort 587 (verkeerd te gebruiken). "
+"Controleer uw coderings- en poortinstellingen."
+
+#: includes/translations.php:31
+msgid ""
+"Your host may have poor connectivity to the mail server. Try doubling the "
+"Read Timeout."
+msgstr ""
+"Uw host heeft mogelijk een slechte verbinding met de e-mailserver. Probeer "
+"de Read Timeout te verdubbelen."
 
 #: includes/translations.php:32
-msgid "Basic Info"
-msgstr "Basis informatie"
+msgid ""
+"Your host may have installed a firewall (DROP packets) between you and the "
+"server. Ask them to open the ports."
+msgstr ""
+"Uw host heeft mogelijk een firewall (DROP-pakketten) tussen u en de server "
+"geïnstalleerd. Vraag hen om de poorten te openen."
 
 #: includes/translations.php:33
-msgid "Account Setup"
-msgstr "Account instellingen"
+msgid ""
+"Your host may have tried to (incorrectly) use TLS over port 465. Check your "
+"encryption and port settings."
+msgstr ""
+"Uw host heeft mogelijk geprobeerd TLS via poort 465 (verkeerd) te gebruiken. "
+"Controleer uw coderings- en poortinstellingen."
 
 #: includes/translations.php:34
+msgid ""
+"Your host has likely installed a firewall (REJECT packets) between you and "
+"the server. Ask them to open the ports."
+msgstr ""
+"Uw host heeft waarschijnlijk een firewall (REJECT-pakketten) tussen u en de "
+"server geïnstalleerd. Vraag hen om de poorten te openen."
+
+#: includes/translations.php:35
+msgid ""
+"Your Web Host provider may have installed a firewall between you and the "
+"server."
+msgstr ""
+"Uw Web Host-provider heeft mogelijk een firewall tussen u en de server "
+"geïnstalleerd."
+
+#: includes/translations.php:36
+msgid ""
+"Contact the admin of the server and ask if they allow outgoing communication "
+"on port 25,465,587."
+msgstr ""
+"Neem contact op met de beheerder van de server en vraag of ze uitgaande "
+"communicatie toestaan ​​op poort 25,465,587."
+
+#: includes/translations.php:37
+msgid ""
+"It seems like they are blocking certain traffic. Ask them to open the ports."
+msgstr ""
+"Het lijkt erop dat ze bepaalde verkeer blokkeren. Vraag hen om de poorten te "
+"openen."
+
+#: includes/translations.php:38
+msgid ""
+"Your Web Host provider may have blocked the use of mail() function on your "
+"server."
+msgstr ""
+"Uw Web Host-provider heeft mogelijk het gebruik van de functie mail op uw "
+"server geblokkeerd."
+
+#: includes/translations.php:39
+msgid "Ask them to enable the mail() function to start sending emails."
+msgstr "Vraag hen om de functie mail in te schakelen om e-mails te verzenden."
+
+#: includes/translations.php:42
+msgid "Premium Edition"
+msgstr "Premium Editie"
+
+#: includes/translations.php:43
+msgid ""
+"This feature is available only in Premium Editions! <br> Kindly Purchase to "
+"unlock it!"
+msgstr ""
+"Deze functie is alleen beschikbaar in Premium Edities! Graag aanschaffen om "
+"het te ontgrendelen!"
+
+#: includes/translations.php:46
+msgid "Basic Info"
+msgstr "Basis Informatie"
+
+#: includes/translations.php:47
+msgid "Account Setup"
+msgstr "Account Instellen"
+
+#: includes/translations.php:48
 msgid "Confirm"
 msgstr "Bevestigen"
 
-#: includes/translations.php:37
-msgid "Mail Bank"
-msgstr "Mail Bank"
-
-#: includes/translations.php:38
-msgid "Email Setup"
-msgstr "Email instellingen"
-
-#: includes/translations.php:39
-msgid "Email Logs"
-msgstr "Email logs"
-
-#: includes/translations.php:40
-msgid "Email Log Details"
-msgstr "Email log details"
-
-#: includes/translations.php:41 includes/translations.php:92
-msgid "Test Email"
-msgstr "Test email"
-
-#: includes/translations.php:42
-msgid "Plugin Settings"
-msgstr "Plugin instellingen"
-
-#: includes/translations.php:43
-msgid "Feedbacks"
-msgstr "Terugkoppelingen"
-
-#: includes/translations.php:44
-msgid "Roles & Capabilities"
-msgstr "Rollen en opties"
-
-#: includes/translations.php:45
-msgid "System Information"
-msgstr "Systeem informatie"
-
-#: includes/translations.php:48
-msgid "Success!"
-msgstr "Succes!"
-
-#: includes/translations.php:49
-msgid "Email Setup has been updated Successfully"
-msgstr "Email instellingen zijn bijgewerkt"
-
-#: includes/translations.php:50
-msgid "Your Feedback has been sent Successfully"
-msgstr "Uw terugkoppeling is verzonden"
-
-#: includes/translations.php:51
-msgid "Your request email has been sent Successfully"
-msgstr "Uw verzoek email is verzonden"
-
 #: includes/translations.php:52
-msgid "Roles & Capabilities have been updated Successfully"
-msgstr "Rollen en opties zijn bijgewerkt"
+msgid "Email Setup"
+msgstr "E-mail Instellen"
 
-#: includes/translations.php:53
-msgid "Test Email was sent Successfully!"
-msgstr "Test email is verzonden!"
+#: includes/translations.php:53 lib/dashboard-widget.php:169
+msgid "Email Logs"
+msgstr "E-maillogboeken "
 
 #: includes/translations.php:54
-msgid "Test Email was not sent!"
-msgstr "Test email is niet verzonden!"
+msgid "Test Email"
+msgstr "Test E-mail"
 
 #: includes/translations.php:55
-msgid "Plugin Settings have been updated Successfully"
-msgstr "Plugin instellingen zijn bijgewerkt"
+msgid "Plugin Settings"
+msgstr "Plugin-instellingen"
 
 #: includes/translations.php:56
-msgid "Please choose an Action from Dropdown!"
-msgstr "Kies een handeling uit de dropdown!"
+msgid "System Information"
+msgstr "Systeem Informatie"
 
 #: includes/translations.php:57
-msgid "Please choose at least 1 record to delete!"
-msgstr "Selecteer minstens 1 record om te verwijderen!"
+msgid "Ask For Help"
+msgstr "Vraag Om Hulp"
 
 #: includes/translations.php:58
-msgid "Are you sure you want to delete Email Logs?"
-msgstr "Weet je zeker dat je de email logs wilt verwijderen?"
-
-#: includes/translations.php:59
-msgid "Selected Logs have been deleted Successfully"
-msgstr "Geselecteerde logs zijn verwijderd"
-
-#: includes/translations.php:60
-msgid "Are you sure you want to delete Email Log?"
-msgstr "Weet je zeker dat je de email log wilt verwijderen?"
+msgid "Roles & Capabilities"
+msgstr "Rollen & Mogelijkheden"
 
 #: includes/translations.php:61
-msgid "Email Log has been deleted Successfully"
-msgstr "Email log is verwijderd"
+msgid "Success!"
+msgstr "Goed gedaan!"
 
 #: includes/translations.php:62
+msgid "Email Setup has been updated Successfully"
+msgstr "Email Setup is succesvol bijgewerkt"
+
+#: includes/translations.php:63
+msgid "Test Email was sent Successfully!"
+msgstr "Test E-mail is succesvol verzonden!"
+
+#: includes/translations.php:64
+msgid "Test Email was not sent!"
+msgstr "Test E-mail is niet verzonden!"
+
+#: includes/translations.php:65
+msgid "Plugin Settings have been updated Successfully"
+msgstr "Plugin-Instellingen zijn succesvol bijgewerkt"
+
+#: includes/translations.php:66
 msgid ""
 "The OAuth is not supported by providing SMTP Host, kindly provide username "
 "and password"
 msgstr ""
-"De OAuth is niet beschikbaar bij de invoerde SMTP host. Voer de "
-"gebruikersnaam en wachtwoord in"
-
-#: includes/translations.php:63
-msgid "Invalid Secret Key. Please rectify and try again!"
-msgstr "Ongeldige Secret Key, controleer en probeer het nog eens!"
-
-#: includes/translations.php:64
-msgid "Licensing"
-msgstr "Licenties"
+"De OAuth wordt niet ondersteund door de aangeboden SMTP-host, geef je "
+"gebruikersnaam en wachtwoord op."
 
 #: includes/translations.php:67
-msgid "Your License has been activated Successfully"
-msgstr "Uw licentie is geactiveerd"
+msgid "Your Name"
+msgstr "Jouw Naam"
 
 #: includes/translations.php:68
-msgid "Sent"
-msgstr "Verzonden"
+msgid "Please provide your Name"
+msgstr "Geef alstublieft uw Naam op"
 
 #: includes/translations.php:69
-msgid "Not Sent"
-msgstr "Niet verzonden"
+msgid "Roles & Capabilities have been updated Successfully"
+msgstr "Rollen en Mogelijkheden zijn met succes bijgewerkt"
 
-#: includes/translations.php:70
-msgid "Important Disclaimer!"
-msgstr "Belangrijke disclaimer!"
+#: includes/translations.php:72 lib/dashboard-widget.php:173
+msgid "Email Sent"
+msgstr "E-mail Verzonden"
 
-#: includes/translations.php:71
+#: includes/translations.php:73 lib/dashboard-widget.php:178
+msgid "Email Not Sent"
+msgstr "E-mail Niet Verzonden"
+
+#: includes/translations.php:74
 msgid ""
 "You don't have Sufficient Access to this Page. Kindly contact the "
 "Administrator for more Privileges"
 msgstr ""
-"Je heb niet voldoende rechten om deze pagina te bekijken. Vraag je "
-"administrator om meer rechten"
-
-#: includes/translations.php:72
-msgid "Enable"
-msgstr "Aan"
-
-#: includes/translations.php:73
-msgid "Disable"
-msgstr "Uit"
-
-#: includes/translations.php:74
-msgid "Override"
-msgstr "Vervangen"
+"U hebt onvoldoende toegang tot deze pagina. Neem contact op met de beheerder "
+"voor meer privileges"
 
 #: includes/translations.php:75
-msgid "Don't Override"
-msgstr "Niet vervangen"
+msgid "Enable"
+msgstr "In staat stellen"
 
 #: includes/translations.php:76
-msgid "Save Settings"
-msgstr "Instellingen opslaan"
+msgid "Disable"
+msgstr "Onbruikbaar maken"
 
 #: includes/translations.php:77
+msgid "Override"
+msgstr "Opheffen"
+
+#: includes/translations.php:78
+msgid "Don't Override"
+msgstr "Niet Opheffen"
+
+#: includes/translations.php:79
+msgid "Save Settings"
+msgstr "Instellingen Opslaan"
+
+#: includes/translations.php:80
 msgid "Subject"
 msgstr "Onderwerp"
 
-#: includes/translations.php:78
-msgid "Next Step"
-msgstr "Volgende stap"
-
-#: includes/translations.php:79
-msgid "Previous Step"
-msgstr "Vorige stap"
-
-#: includes/translations.php:80
-msgid "Settings"
-msgstr "Instellingen"
-
 #: includes/translations.php:81
-msgid "Not available"
-msgstr "Niet beschikbaar"
+msgid "Next Step"
+msgstr "Volgende Stap"
 
 #: includes/translations.php:82
-msgid ""
-"The following php extensions are not found on your server or are currently "
-"disabled. These might create few problems in configuring Mail Bank. Please "
-"contact your WebHost to setup these extensions on your server."
-msgstr ""
-"De volgende php uitbreidingen zijn niet gevonden op de server of zijn op dit "
-"moment uitgeschakeld. Dit geeft mogelijk problemen met configureren van Mail "
-"Bank. Neem contact op met je webhost om de uitbreidingen te installeren en/"
-"of aan te zetten."
+msgid "Previous Step"
+msgstr "Vorige Stap"
+
+#: includes/translations.php:83
+msgid "Know about Full Features"
+msgstr "Weet alles over de Volledige Functies"
+
+#: includes/translations.php:84
+msgid "or"
+msgstr "of"
 
 #: includes/translations.php:85
-msgid "Cc"
-msgstr "Kopie"
+msgid "Check our Online Demos"
+msgstr "Bekijk onze Online Demo's"
 
 #: includes/translations.php:86
-msgid "Bcc"
-msgstr "Blinde kopie"
-
-#: includes/translations.php:87
-msgid "Please provide valid Cc Email Address"
-msgstr "Voer een geldig email adres in voor kopie"
-
-#: includes/translations.php:88
-msgid "Please provide valid Bcc Email Address"
-msgstr "Voer een geldig email adres in voor blinde kopie"
-
-#: includes/translations.php:89
-msgid "Please provide Cc Email"
-msgstr "Voer een kopie email adres in"
-
-#: includes/translations.php:90
-msgid "Please provide Bcc Email"
-msgstr "Voer een blinde kopie email adres in"
+msgid "N/A"
+msgstr "Niet Beschikbaar"
 
 #: includes/translations.php:91
-msgid "Mailer Settings"
-msgstr "Mailer instellingen"
+msgid ""
+"A valid Email Address that will be used in the \"CC\" field of the email. "
+"Use Comma \",\" for including multiple email addresses in the \"CC\" field"
+msgstr ""
+"Een geldig e-mailadres dat wordt gebruikt in het 'CC' veld van de e-mail. "
+"Gebruik Komma \",\" voor het opnemen van meerdere e-mailadressen in het \"CC"
+"\" veld"
+
+#: includes/translations.php:92
+msgid ""
+"A valid Email Address that will be used in the 'BCC' field of the email. Use "
+"Comma ',' for including multiple email addresses in the 'BCC' field"
+msgstr ""
+"Een geldig e-mailadres dat zal worden gebruikt in het 'BCC' veld van de e-"
+"mail. Gebruik Komma ',' voor het opnemen van meerdere e-mailadressen in het "
+"'BCC' veld"
 
 #: includes/translations.php:93
-msgid "From Name"
-msgstr "Afzender naam"
+msgid "Please provide CC Email Address"
+msgstr "Geef alstublieft het CC-E-mailadres"
 
 #: includes/translations.php:94
-msgid ""
-"From Name is the inbox field that tells your recipient who sent the "
-"messages. If you would like to override the pre-configured From Name, then "
-"you would need to insert the name in the inbox field"
-msgstr ""
-"De afzender naam toont wie het bericht verstuurd heeft. Wilt u dit "
-"overschrijven, dan dient u de naam in te vullen in het invul veld"
+msgid "Please provide BCC Email Address"
+msgstr "Geef alstublieft het BCC-e-mailadres"
 
 #: includes/translations.php:95
-msgid "Please provide From Name"
-msgstr "Voer de afzender naam in"
+msgid "From Name"
+msgstr "Van Naam"
 
 #: includes/translations.php:96
-msgid "From Email"
-msgstr "Afzender email"
+msgid "Please provide From Name"
+msgstr "Geef alstublieft Van naam op"
 
 #: includes/translations.php:97
-msgid ""
-"From Email is the inbox field that tells your recipient from which Email "
-"Address the messages are coming. If you would like to override the pre-"
-"configured From Email, then you would need to insert an Email Address in the "
-"inbox field"
-msgstr ""
-"Het afzender email adres toont het email adres van de verzender. Wilt u dit "
-"overschrijven, dan dient u het email adres in te vullen in het invul veld."
+msgid "From Email"
+msgstr "Van E-mail"
 
 #: includes/translations.php:98
 msgid "Please provide From Email Address"
-msgstr "Voer een afzender email adres in"
+msgstr "Geef het E-mailadres op"
 
 #: includes/translations.php:99
 msgid "Mailer Type"
-msgstr "Mailer type"
+msgstr "Mailer Type"
 
 #: includes/translations.php:100
-msgid ""
-"This field provides you an ability to choose a specific option for Mailer "
-"Type. If you would like to send an Email via SMTP mailer, you would need to "
-"select Send Email via SMTP from the drop down or you could use PHP mail () "
-"Function"
-msgstr ""
-"Dit veld geeft u de mogelijk een specifieke Mailer type te kiezen. Wilt u "
-"email verzenden via de SMTP mailer, dan kiest u deze uit de dropdown. In "
-"andere gevallen kiest u de PHP mail() functie."
+msgid "Choose among the variety of options for routing emails."
+msgstr "Kies uit de verscheidenheid aan opties voor het routeren van e-mails."
 
 #: includes/translations.php:101
 msgid "Send Email via SMTP"
-msgstr "Verstuur email met SMTP"
+msgstr "Verstuur E-mail via SMTP"
 
 #: includes/translations.php:102
 msgid "Use The PHP mail() Function"
-msgstr "Gebruik de PHP mail() functie"
+msgstr "Gebruik De PHP mail Functie"
 
-#: includes/translations.php:103
+#: includes/translations.php:103 includes/translations.php:232
 msgid "SMTP Host"
-msgstr "SMTP Host"
+msgstr "SMTP-host"
 
 #: includes/translations.php:104
-msgid ""
-"If you would like to send an Email via different host, you would need to "
-"insert that specific host name like smtp.gmail.com in the inbox field"
-msgstr ""
-"Wilt u de email versturen via een andere host, zoals bijvoorbeeld smtp.gmail."
-"com, dan vult u dit in in het betreffende veld"
+msgid "Server that will send the email"
+msgstr "Server die de e-mail zal verzenden"
 
 #: includes/translations.php:105
 msgid "Please provide SMTP Host"
-msgstr "Voer de SMTP host in"
+msgstr "Geef alstublieft de SMTP-host"
 
 #: includes/translations.php:106
 msgid "SMTP Port"
-msgstr "SMTP poort"
+msgstr "SMTP-poort"
 
 #: includes/translations.php:107
-msgid ""
-"This inbox field is specified to provide a valid SMTP Port for authentication"
-msgstr ""
-"Dit veld is bedoeld om een geldige SMTP poort aan te geven voor authenticatie"
+msgid "Port to connect to the email server"
+msgstr "Poort om verbinding te maken met de e-mailserver"
 
 #: includes/translations.php:108
 msgid "Please provide SMTP Port"
-msgstr "Voer de SMTP poort in"
+msgstr "Geef alstublieft de SMTP-poort"
 
 #: includes/translations.php:109
 msgid "Encryption"
-msgstr "Encryptie"
+msgstr "Versleuteling"
 
 #: includes/translations.php:110
 msgid ""
-"It provides you an ability to choose a specific option for Encryption. If "
-"you would like to send an Email with TLS encryption, you would need to "
-"select Use TLS Encryption from the drop down or you could use SSL "
-"Encryption. For that you would need to select Use SSL Encryption from the "
-"drop down. If you would like to send an Email without encryption, you would "
-"need to select No Encryption from the drop down"
+"Encrypt the email when sent to the email server using the different methods "
+"available"
 msgstr ""
-"Dit geeft de mogelijkheid om een specifieke enctyptie te kiezen. Wilt u "
-"email verzenden met TLS encryptie, selecteer deze dan uit het dropdown veld. "
-"U kunt ook kiezen om met SSL encryptie te verzenden. In dat geval kiest u "
-"deze optie uit het dropdown veld. Wenst u de email niet te encrypten? Kies "
-"dan \"Geen encryptie\" uit het dropdown veld."
-
-#: includes/translations.php:111
-msgid "No Encryption"
-msgstr "Geen encryptie"
-
-#: includes/translations.php:112
-msgid "Use SSL Encryption"
-msgstr "Gebruik SSL encryptie"
-
-#: includes/translations.php:113
-msgid "Use TLS Encryption"
-msgstr "Gebruik TLS encryptie"
+"Versleutel de e-mail wanneer deze naar de e-mailserver wordt verzonden met "
+"behulp van de verschillende beschikbare methoden"
 
 #: includes/translations.php:114
 msgid "Authentication"
 msgstr "Authenticatie"
 
 #: includes/translations.php:115
-msgid ""
-"This inbox field allows you to choose an appropriate option for "
-"authentication. It provides you the Two-way authentication factor; If you "
-"would like to authenticate yourself via Username and Password, you would "
-"need to select Use Username and Password from the drop down. You can also "
-"authenticate by an OAuth 2.0 protocol, which requires Client Id and Secret "
-"Key, for that you would need to select Use OAuth (Client ID and Secret Key) "
-"from the drop down. You can easily get Client Id and Secret Key from "
-"respective SMTP Server Developers section"
-msgstr ""
-"Dit invoerveld geeft de mogelijkheid om authenticatie te kiezen. Het biedt u "
-"de mogelijkeheid voor twee-weg authenticatie; Als je jezelf wilt "
-"authenticeren met gebruikersnaam en wachtwoord, kies dan \"Gebruik "
-"gebruikersnaam en wachtwoord\" uit het dropdown veld. Je kunt ook gebruik "
-"maken van het OAuth 2.0 protocol, welke een Client Id en Secret Key "
-"gebruiken. Voor deze optie selecteer je \"Gebruik OAuth\". Je kunt eenvoudig "
-"een Client Id en Secret key opvragen bij de betreffende SMTP server "
-"ontwikkelaars sectie"
+msgid "Method for authentication (almost always Login)"
+msgstr "Methode voor authenticatie (bijna altijd inloggen)"
 
-#: includes/translations.php:116
-msgid "Use SMTP Authentication"
-msgstr "Gebruik SMTP authenticatie"
+#: includes/translations.php:116 includes/translations.php:152
+msgid "Email Address"
+msgstr "Emailadres"
 
 #: includes/translations.php:117
-msgid "Don't Use SMTP Authentication"
-msgstr "Gebruik geen SMTP authenticatie"
+msgid "A valid Email Address on which you would like to send a Test Email"
+msgstr "Een geldig E-mailadres waarop u een Test E-mail wilt verzenden"
 
 #: includes/translations.php:118
-msgid "Test Email Address"
-msgstr "Test email adres"
+msgid "Please provide Email Address"
+msgstr "Geef alstublieft uw E-mailadres"
 
 #: includes/translations.php:119
-msgid ""
-"In this field, you would need to provide a valid Email Address in the inbox "
-"field on which you would like to receive Test email"
-msgstr ""
-"In dit veld voer je een geldig email adres in waarop je het Test email "
-"bericht wilt ontvangen"
+msgid "Subject Line for your Test Email"
+msgstr "Onderwerpregel voor uw Test E-mail"
 
 #: includes/translations.php:120
-msgid "Please provide Test Email Address"
-msgstr "Voer een Test email adres in"
+msgid "Please provide Subject"
+msgstr "Geef alstublieft uw Onderwerp"
 
-#: includes/translations.php:121
-msgid "In this field, you would need to provide a subject for Test Email"
-msgstr "In dit veld vul je het onderwerp in voor het Test email bericht"
+#: includes/translations.php:121 includes/translations.php:183
+msgid "Email Content"
+msgstr "E-mail Inhoud"
 
 #: includes/translations.php:122
-msgid "Please provide Subject"
-msgstr "Voer een onderwerp in"
+msgid "Email Content for your Test Email"
+msgstr "E-mailinhoud voor uw test E-mail"
 
 #: includes/translations.php:123
-msgid "Email Content"
-msgstr "Email inhoud"
+msgid "Send Test Email"
+msgstr "Zend Test E-mail"
 
 #: includes/translations.php:124
-msgid "In this field, you would need to provide the content for Test Email"
-msgstr "In dit veld voer je de inhoud in voor het Test email bericht"
+msgid "SMTP Debugging Output"
+msgstr "Uitvoer SMTP-foutopsporing"
 
 #: includes/translations.php:125
-msgid "Send Test Email"
-msgstr "Verstuur Test email"
+msgid "Checking your settings"
+msgstr "Controleer uw instellingen"
 
 #: includes/translations.php:126
-msgid "SMTP Debugging Output"
-msgstr "SMTP debugging uitvoer"
+msgid "Result"
+msgstr "Resultaten"
 
 #: includes/translations.php:127
-msgid "Checking your settings"
-msgstr "Controleren van je instellingen"
+msgid "Send Another Test Email"
+msgstr "Zend nog een Test E-mail"
 
 #: includes/translations.php:128
-msgid "Result"
-msgstr "Resultaat"
+msgid "From Name Configuration"
+msgstr "Van Naamconfiguratie"
 
 #: includes/translations.php:129
-msgid "Send Another Test Email"
-msgstr "Stuur nog een Test email bericht"
+msgid ""
+"Do you want to override the Default Name that tells email recipient about "
+"who sent the email?"
+msgstr ""
+"Wilt u de standaardnaam die de e-mailontvanger vertelt over wie de e-mail "
+"heeft verzonden, overschrijven?"
 
 #: includes/translations.php:130
-msgid "From Name Configuration"
-msgstr "Afzender naam configuratie"
+msgid "From Email Configuration"
+msgstr "Van E-mailconfiguratie"
 
 #: includes/translations.php:131
 msgid ""
-"If you would like to override the pre-configured name which will be used "
-"while sending Emails, then you would need to choose Override from the drop "
-"down and vice-versa"
+"Do you want to override the Default Email Address that tells email recipient "
+"about the sender?"
 msgstr ""
-"Als je de standaard ingestelde afzendernaam wilt wijzigen kies je Vervangen "
-"uit de drop down en vica versa"
+"Wilt u het Standaard E-mailadres dat de e-mailontvanger vertelt over de "
+"afzender, overschrijven?"
 
 #: includes/translations.php:132
-msgid "From Email Configuration"
-msgstr "Afzender email configuratie"
-
-#: includes/translations.php:133
-msgid ""
-"If you would like to override your pre-configured Email Address which will "
-"be used while sending Emails, then you would need to choose Override from "
-"the drop down and vice-versa"
-msgstr ""
-"Als je het standaard ingestelde email adres wilt wijzigen kies je Vervangen "
-"uit de drop down en vica versa"
-
-#: includes/translations.php:134
 msgid "Username"
 msgstr "Gebruikersnaam"
 
-#: includes/translations.php:135
+#: includes/translations.php:133
 msgid ""
-"In this field, you would need to provide a username to authenticate your "
-"SMTP details"
+" Login is typically the full email address (Example: mailbox@yourdomain.com)"
 msgstr ""
-"In dit veld dien je de gebruikersnaam in te vullen voor het aanmelden op de "
-"SMTP server"
+"Inloggen is meestal het volledige e-mailadres (Voorbeeld: mailbox@uwdomein."
+"com)"
 
-#: includes/translations.php:136
+#: includes/translations.php:134
 msgid "Please provide username"
-msgstr "Voer een gebruikersnaam in"
+msgstr "Geef alstublieft uw gebruikersnaam"
 
-#: includes/translations.php:137
+#: includes/translations.php:135
 msgid "Password"
 msgstr "Wachtwoord"
 
-#: includes/translations.php:138
-msgid ""
-"In this field, you would need to provide a password to authenticate your "
-"SMTP details"
+#: includes/translations.php:136
+msgid "Password is typically the same as the password to retrieve the email"
 msgstr ""
-"In dit veld dien je het wachtwoord in te vullen voor het aanmelden op de "
-"SMTP server"
+"Wachtwoord is meestal hetzelfde als het wachtwoord om de e-mail op te halen"
+
+#: includes/translations.php:137
+msgid "Please provide password"
+msgstr "Geef alstublieft uw wachtwoord"
+
+#: includes/translations.php:138
+msgid "Redirect URI"
+msgstr "URI omleiden"
 
 #: includes/translations.php:139
-msgid "Please provide password"
-msgstr "Voer een wachtwoord in"
-
-#: includes/translations.php:140
-msgid "Redirect URI"
-msgstr "Doorstuur URI"
-
-#: includes/translations.php:141
 msgid ""
 "Please copy this Redirect URI and Paste into Redirect URI field when "
 "creating your app"
 msgstr ""
-"Kopieer en plak deze doorstuur URI in het Doorstuur URI veld bij het "
-"aanmaken van je app"
-
-#: includes/translations.php:142
-msgid "Use OAuth (Client Id and Secret Key required)"
-msgstr "Gebruik OAuth ( Client ID en Secret Key nodig )"
-
-#: includes/translations.php:143
-msgid "Plain Authentication"
-msgstr "Open verificatie"
-
-#: includes/translations.php:144
-msgid "Cram-MD5"
-msgstr "Cram-MD5"
+"Kopieer deze omleidings-URI en plak in URI-omleidingsveld bij het maken van "
+"uw app"
 
 #: includes/translations.php:145
-msgid "Login"
-msgstr "Aanmelden"
+msgid "Client Id"
+msgstr "Klant ID"
 
 #: includes/translations.php:146
-msgid "Client Id"
-msgstr "Client Id"
+msgid "Secret Key"
+msgstr "Geheime Sleutel"
 
 #: includes/translations.php:147
-msgid "Secret Key"
-msgstr "Secret Key"
+msgid "Client Id issued by your SMTP Host"
+msgstr "Klant-ID uitgegeven door uw SMTP-host"
 
 #: includes/translations.php:148
-msgid "Please provide valid Client Id issued by your SMTP Host"
-msgstr "Voer een geldig Client Id in uitgegeven door je SMTP host"
+msgid "Secret Key issued by your SMTP Host"
+msgstr "Geheime sleutel uitgegeven door uw SMTP-host"
 
 #: includes/translations.php:149
-msgid "Please provide valid Secret Key issued by your SMTP Host"
-msgstr "Voer een geldige Secret Key in uitgegeven door je SMTP host"
+msgid "Please provide Client Id"
+msgstr "Geef alstublieft de Klant-ID"
 
 #: includes/translations.php:150
-msgid "Please provide Client Id"
-msgstr "Voer een Client Id in"
+msgid "Please provide Secret Key"
+msgstr "Geef alstublieft de Geheime Sleutel"
 
 #: includes/translations.php:151
-msgid "Please provide Secret Key"
-msgstr "Voer een Secret Key in"
-
-#: includes/translations.php:152
 msgid ""
 "Yes, automatically send a Test Email upon clicking on the Next Step Button "
 "to verify settings"
 msgstr ""
-"Ja, stuur automatisch een Test email bericht na het klikken op de \"Volgende "
-"stap\" button om de instellingen te controleren"
+"Ja, verzend automatisch een Test E-mail door op de knop Volgende Stap te "
+"klikken om de instellingen te controleren"
 
 #: includes/translations.php:153
-msgid "Email Address"
-msgstr "Email adres"
+msgid "A valid Email Address account from which you would like to send Emails"
+msgstr "Een geldig E-mailadres waarmee u E-mails wilt verzenden"
 
 #: includes/translations.php:154
-msgid ""
-"In this field, you would need to add a valid Email Address in the inbox "
-"field from which you would like to send Emails"
-msgstr ""
-"In dit veld vul je een geldig email adres in waarop je emails wenst te "
-"ontvangen"
+msgid "Please provide valid Email Address"
+msgstr "Geef alstublieft een geldig E-mailadres"
 
 #: includes/translations.php:155
-msgid "Please provide valid Email Address"
-msgstr "Voer een geldig email adres in"
+msgid "Reply To"
+msgstr "Reageer Naar"
 
 #: includes/translations.php:156
-msgid "Reply To"
-msgstr "Antwoorden naar"
+msgid ""
+"A valid Email Address that will be used in the 'Reply-To' field of the email"
+msgstr ""
+"Een geldig E-mailadres dat wordt gebruikt in het veld 'Beantwoorden' van de "
+"e-mail"
 
 #: includes/translations.php:157
-msgid ""
-"In this field, you would need to add a valid Email Address that is "
-"automatically inserted into the Reply To field when a user replies to an "
-"email message"
-msgstr ""
-"In dit veld voer je een geldig email adres in wat automatisch gebruikt wordt "
-"als Antwoord naar adres als een gebruik een email bericht beantwoord"
+msgid "Please provide Reply To Email Address"
+msgstr "Geef alstublieft antwoord naar het E-mailadres"
 
 #: includes/translations.php:158
-msgid "Please provide Reply To Email Address"
-msgstr "Voer een geldig Antwoord naar email adres in"
+msgid "Get Google Client Id and Secret Key"
+msgstr "Krijg Google Klant-ID en geheime sleutel"
 
 #: includes/translations.php:159
-msgid "Get Google Client Id and Secret Key"
-msgstr "Haal een Google Client Id en Secret key op"
+msgid "Get Microsoft Client Id and Secret Key"
+msgstr "Haal Microsoft Klant-ID en geheime sleutel op"
 
 #: includes/translations.php:160
-msgid "Get Microsoft Client Id and Secret Key"
-msgstr "Haal een Microsoft Client Id en Secret Key op"
+msgid "Get Yahoo Client Id and Secret Key"
+msgstr "Get Yahoo Klant-ID en geheime sleutel"
 
 #: includes/translations.php:161
-msgid "Get Yahoo Client Id and Secret Key"
-msgstr "Haal een Yahoo Client Id en Secret Key op"
+msgid "SendGrid API"
+msgstr "SendGrid API"
 
-#: includes/translations.php:164
+#: includes/translations.php:163
 msgid "Start Date"
-msgstr "Start datum"
+msgstr "Startdatum"
+
+#: includes/translations.php:164 includes/translations.php:179
+msgid "Resend Email"
+msgstr "E-mail opnieuw verzenden"
 
 #: includes/translations.php:165
 msgid "Please provide Start Date"
-msgstr "Voer een start datum in"
+msgstr "Geef alstublieft de Startdatum"
 
 #: includes/translations.php:166
-msgid "This field shows starting date of Email Logs"
-msgstr "Dit veld toont de start datum van de email logs"
+msgid "Start Date for Email Logs"
+msgstr "Startdatum voor E-maillogboeken"
 
 #: includes/translations.php:167
 msgid "End Date"
-msgstr "Eind datum"
+msgstr "Einddatum"
 
 #: includes/translations.php:168
-msgid "Please provide End Date"
-msgstr "Voer een eind datum in"
+msgid "Limit Records"
+msgstr "Records Beperken"
 
 #: includes/translations.php:169
-msgid "This field shows ending date of Email Logs"
-msgstr "Dit veld toont de eind datum van de email logs"
+msgid "Number of Logs to view"
+msgstr "Aantal te bekijken Logs"
 
-#: includes/translations.php:170
+#: includes/translations.php:174
+msgid "Please provide End Date"
+msgstr "Geef alstublieft de Einddatum"
+
+#: includes/translations.php:175
+msgid "End Date for Email Logs"
+msgstr "Einddatum voor E-maillogboeken"
+
+#: includes/translations.php:176
 msgid "Submit"
-msgstr "Versturen"
+msgstr "Bevestigen"
 
-#: includes/translations.php:171
+#: includes/translations.php:177
 msgid "Bulk Action"
-msgstr "Massa actie"
+msgstr "Bulkactie"
 
-#: includes/translations.php:172
+#: includes/translations.php:178
 msgid "Delete"
 msgstr "Verwijderen"
 
-#: includes/translations.php:173
+#: includes/translations.php:180
 msgid "Apply"
-msgstr "Doorvoeren"
+msgstr "Toepassen"
 
-#: includes/translations.php:174
+#: includes/translations.php:181
 msgid "Email To"
-msgstr "Email naar"
+msgstr "E-mail Naar"
 
-#: includes/translations.php:175
+#: includes/translations.php:182
 msgid "Action"
 msgstr "Actie"
 
-#: includes/translations.php:176
-msgid "Show Details"
-msgstr "Toon details"
+#: includes/translations.php:184
+msgid "Debug Output"
+msgstr "Debug uitvoer"
 
-#: includes/translations.php:177
-msgid "Email Details"
-msgstr "Email details"
-
-#: includes/translations.php:178
-msgid "Email Debugging output"
-msgstr "Email debugging uitvoer"
-
-#: includes/translations.php:179
-msgid "Close"
-msgstr "Sluiten"
-
-#: includes/translations.php:180
-msgid "Debugging Output"
-msgstr "Debugging uitvoer"
-
-#: includes/translations.php:181
-msgid "Show Debugging Output"
-msgstr "Toon debugging uitvoer"
-
-#: includes/translations.php:182
-msgid "Email Sent To"
-msgstr "Email verzonden aan"
-
-#: includes/translations.php:183
+#: includes/translations.php:185
 msgid "Date/Time"
 msgstr "Datum/Tijd"
 
-#: includes/translations.php:184
-msgid "Status"
-msgstr "Status"
-
-#: includes/translations.php:185
-msgid "From"
-msgstr "Van"
-
-#: includes/translations.php:186
-msgid "Back to Email Logs"
-msgstr "Terug naar de email logs"
+#: includes/translations.php:188
+msgid "Debug Mode"
+msgstr "Debug Modus"
 
 #: includes/translations.php:189
-msgid "Automatic Plugin Updates"
-msgstr "Automatische plugin updates"
+msgid "Do you want to see Debugging Output for your emails?"
+msgstr "Wilt u Debugging Uitvoer voor uw e-mails zien?"
 
 #: includes/translations.php:190
-msgid ""
-"Please choose a specific option whether to allow Automatic Plugin Updates"
-msgstr "Kies de specifieke optie om de Automatisch updates aan te zetten"
+msgid "Remove Database at Uninstall"
+msgstr "Verwijder Databank bij De-installeren"
 
 #: includes/translations.php:191
-msgid "Debug Mode"
-msgstr "Debug modus"
+msgid "Do you want to remove database at Uninstall of the Plugin?"
+msgstr "Wilt u de database verwijderen bij het De-installeren van de plug-in?"
 
 #: includes/translations.php:192
-msgid "Please choose a specific option for Debug Mode"
-msgstr "Kies de specifieke optie om de Debug modus aan te zetten"
+msgid "Monitor Email Logs"
+msgstr "E-maillogboeken controleren"
 
 #: includes/translations.php:193
-msgid "Remove Tables at Uninstall"
-msgstr "Verwijder tabellen bij deinstalleren"
-
-#: includes/translations.php:194
-msgid ""
-"Please choose a specific option whether to allow Remove Tables at Uninstall"
-msgstr ""
-"Kies de specifieke optie om de tabellen te verwijderen bij deinstallatie aan "
-"te zetten"
-
-#: includes/translations.php:195
-msgid "Monitoring Email Logs"
-msgstr "Controleren email logs"
+msgid "Do you want to monitor your all Outgoing Emails?"
+msgstr "Wilt u al uw uitgaande e-mails controleren?"
 
 #: includes/translations.php:196
-msgid "This field is used to allow Email Logs to monitor or not"
-msgstr ""
-"Dit veld geeft aan of de email logs in de gaten gehouden worden of niet"
+msgid "Show Mail Bank Menu"
+msgstr "Toon Mail Bank Menu"
+
+#: includes/translations.php:197
+msgid ""
+"Choose among the following roles who would be able to see the Mail Bank Menu?"
+msgstr "Kies uit de volgende rollen wie zou het Mail Bank Menu kunnen zien?"
+
+#: includes/translations.php:198
+msgid "Administrator"
+msgstr "Beheerder"
 
 #: includes/translations.php:199
-msgid "Show Mail Bank Menu"
-msgstr "Toon Mail Bank menu"
-
-#: includes/translations.php:200
-msgid "Please choose a specific role who can see Sidebar Menu"
-msgstr ""
-"Kies de specifieke optie om aan te geven welke rol het zijmenu kan zien"
-
-#: includes/translations.php:201
-msgid "Administrator"
-msgstr "Administrator"
-
-#: includes/translations.php:202
 msgid "Author"
 msgstr "Auteur"
 
-#: includes/translations.php:203
+#: includes/translations.php:200
 msgid "Editor"
 msgstr "Editor"
 
-#: includes/translations.php:204
+#: includes/translations.php:201
 msgid "Contributor"
 msgstr "Bijdrager"
 
-#: includes/translations.php:205
+#: includes/translations.php:202
 msgid "Subscriber"
 msgstr "Abonnee"
 
-#: includes/translations.php:206
+#: includes/translations.php:203
 msgid "Others"
-msgstr "Overigen"
+msgstr "Anderen"
+
+#: includes/translations.php:204
+msgid "Show Mail Bank Top Bar Menu"
+msgstr "Toon het Top Bar Menu van de Mail Bank"
+
+#: includes/translations.php:205
+msgid "Do you want to show Mail Bank menu in Top Bar?"
+msgstr "Wilt u het Mail Bank Menu weergeven in de Top Bar?"
+
+#: includes/translations.php:206
+msgid "An Administrator Role can do the following "
+msgstr "Een Beheerdersrol kan het volgende doen"
 
 #: includes/translations.php:207
-msgid "Show Mail Bank Top Bar Menu"
-msgstr "Toon Mail Bank in top menubalk"
+msgid ""
+"Choose what pages would be visible to the users having Administrator Access"
+msgstr ""
+"Kies welke pagina's zichtbaar zijn voor gebruikers met Beheerdersrechten"
 
 #: includes/translations.php:208
-msgid "Please choose a specific option from Mail Bank Top Bar Menu"
-msgstr "Kies de specifieke optie om Mail Bank in de top menubalk te tonen"
+msgid "Full Control"
+msgstr "Volledige Controle"
 
 #: includes/translations.php:209
-msgid "An Administrator Role can do the following "
-msgstr "Een administratieve rol kan het volgende"
+msgid "An Author Role can do the following "
+msgstr "Een Auteursrol kan het volgende doen"
 
 #: includes/translations.php:210
-msgid "Please choose specific page available for the Administrator Access"
-msgstr "Kies de specifieke pagina toegankelijk voor de administrator"
+msgid "Choose what pages would be visible to the users having Author Access"
+msgstr ""
+"Kies welke pagina's zichtbaar zouden zijn voor gebruikers met Auteur Toegang"
 
 #: includes/translations.php:211
-msgid "Full Control"
-msgstr "Volledige toegang"
+msgid "An Editor Role can do the following "
+msgstr "Een Editor-rol kan het volgende doen"
 
 #: includes/translations.php:212
-msgid "An Author Role can do the following "
-msgstr "Een auteursrol kan het volgende"
+msgid "Choose what pages would be visible to the users having Editor Access"
+msgstr "Kies welke pagina's zichtbaar zijn voor gebruikers met Editor Toegang"
 
 #: includes/translations.php:213
-msgid "Please choose specific page available for Author Access"
-msgstr "Kies een specifieke pagina toegankelijk voor een auteur"
+msgid "A Contributor Role can do the following "
+msgstr "Een Contributor-rol kan het volgende doen"
 
 #: includes/translations.php:214
-msgid "An Editor Role can do the following "
-msgstr "Een editor rol kan het volgende"
+msgid ""
+"Choose what pages would be visible to the users having Contributor Access"
+msgstr ""
+"Kies welke pagina's zichtbaar zouden zijn voor gebruikers met Contributor "
+"Toegang"
 
 #: includes/translations.php:215
-msgid "Please choose specific page available for Editor Access"
-msgstr "Kies een specifieke pagina toegankelijk voor een editor"
+msgid "Other Roles can do the following "
+msgstr "Andere rollen kunnen het volgende doen"
 
 #: includes/translations.php:216
-msgid "A Contributor Role can do the following "
-msgstr "Een bijdragersrol kan het volgende"
+msgid ""
+"Choose what pages would be visible to the users having Others Role Access"
+msgstr ""
+"Kies welke pagina's zichtbaar zouden zijn voor gebruikers met toegang tot "
+"andere rollen"
 
 #: includes/translations.php:217
-msgid "Please choose specific page available for Contributor Access"
-msgstr "Kies een specifieke pagina toegankelijk voor een bijdrager"
+msgid "Please tick the appropriate capabilities for security purposes "
+msgstr "Selecteer de juiste mogelijkheden voor beveiligingsdoeleinden"
 
 #: includes/translations.php:218
-msgid "Other Roles can do the following "
-msgstr "Overige rollen kunnen het volgende"
+msgid "Only users with these capabilities can access Mail Bank"
+msgstr "Alleen gebruikers met deze mogelijkheden hebben toegang tot Mail Bank"
 
 #: includes/translations.php:219
-msgid "Please choose specific page available for Others Role Access"
-msgstr "Kies een specifieke pagina toegankelijk voor overige rollen"
+msgid "A Subscriber Role can do the following"
+msgstr "Een abonnee Rol kan het volgende doen"
 
 #: includes/translations.php:220
-msgid "Please tick the appropriate capabilities for security purposes "
-msgstr "Selecteer de betreffende mogelijkheden voor beveiligingsdoeleinden"
-
-#: includes/translations.php:221
-msgid "Only users with these capabilities can access Mail Bank"
-msgstr "Andere gebruikers met deze mogelijkheden hebben toegang tot Mail Bank"
-
-#: includes/translations.php:222
-msgid "A Subscriber Role can do the following"
-msgstr "Een abonnee kan het volgende"
+msgid ""
+"Choose what pages would be visible to the users having Subscriber Access"
+msgstr ""
+"Kies welke pagina's zichtbaar zijn voor gebruikers met toegang voor abonnees"
 
 #: includes/translations.php:223
-msgid "Please choose specific page available for Subscriber Access"
-msgstr "Kies een specifieke pagina toegankelijk voor abonnees"
+msgid "Sending Test Email to"
+msgstr "Test E-mail verzenden naar"
 
-#: includes/translations.php:226
-msgid "Thank You!"
-msgstr "Bedankt!"
+#: includes/translations.php:224
+msgid "Email Status"
+msgstr "E-mail Status"
 
 #: includes/translations.php:227
-msgid ""
-"Kindly fill in the below form, if you would like to suggest some features "
-"which are not in the Plugin"
-msgstr ""
-"Vul het onderstaande formulier in als je mogelijkheden of uitbreidingen wilt "
-"aandragen welke niet in de plugin zitten"
+msgid "Connectivity Test"
+msgstr "Connectiviteitstest"
 
 #: includes/translations.php:228
-msgid ""
-"If you also have any suggestion/complaint, you can use the same form below"
-msgstr ""
-"Als je een klacht of opmerkingen hebt, kun je ook het onderstaande formulier "
-"invullen"
+msgid "Transport"
+msgstr "Vervoer"
 
 #: includes/translations.php:229
-msgid "You can also write us on"
-msgstr "Je kunt ons een een bericht sturen"
+msgid "Socket"
+msgstr "Stopcontact"
 
 #: includes/translations.php:230
-msgid "Your Name"
-msgstr "Uw naam"
+msgid "Status"
+msgstr "Status"
 
 #: includes/translations.php:231
-msgid "Please provide your Name which will be sent along with your Feedback"
-msgstr "Voer uw naam in. Dit zal meegestuurd worden met uw terugkoppeling"
-
-#: includes/translations.php:232
-msgid "Please provide your Name"
-msgstr "Voer uw naam in"
+msgid "SMTP"
+msgstr "SMTP"
 
 #: includes/translations.php:233
-msgid "Your Email"
-msgstr "Uw email"
-
-#: includes/translations.php:234
-msgid ""
-"Please provide your Email Address which will be sent along with your Feedback"
-msgstr ""
-"Voer uw email adres in. Deze zal worden meegestuurd met uw terugkoppeling"
+msgid "Begin Test"
+msgstr "Begin Test"
 
 #: includes/translations.php:235
-msgid "Please provide your Email Address"
-msgstr "Voer uw email adres in"
-
-#: includes/translations.php:236
-msgid "Please provide your Feedback which will be sent along"
-msgstr "Voer uw bericht in"
-
-#: includes/translations.php:237
-msgid "Please provide your Feedback"
-msgstr "Uw bericht"
+msgid "SMTP Server that will be used for a Connectivity Test"
+msgstr "SMTP-server die wordt gebruikt voor een connectiviteitstest"
 
 #: includes/translations.php:238
-msgid "Send Feedback"
-msgstr "Terugkoppeling versturen"
+msgid "Additional Headers"
+msgstr "Extra Kopteksten"
 
-#: includes/translations.php:241
-msgid "Sending Test Email to"
-msgstr "Versturen van Test bericht aan"
-
-#: includes/translations.php:242
-msgid "Email Status"
-msgstr "Email status"
-
-#: includes/translations.php:245
-msgid "Important Notice!"
-msgstr "Belangrijke opmerking!"
-
-#: includes/translations.php:246
+#: includes/translations.php:239
 msgid ""
-"Congratulations! You have recently purchased Mail Bank Business Edition and "
-"now you would need to activate the license in order to unlock it!"
+"You also can insert additional headers in this optional field in order to "
+"include in your email"
 msgstr ""
-"Gefeliciteerd! U heeft recent Mail Bank zakelijke editie aangeschaft. U "
-"dient uw licentie te activeren!"
+"U kunt ook extra kopteksten in dit optionele veld invoegen om deze in uw e-"
+"mail op te nemen"
 
-#: includes/translations.php:247
+#: lib/dashboard-widget.php:167
+msgid "is configured"
+msgstr "is geconfigureerd"
+
+#: lib/dashboard-widget.php:168
+msgid "will send mail through"
+msgstr "Stuurt e-mail door"
+
+#: lib/dashboard-widget.php:168
+msgid "to"
+msgstr "naar"
+
+#: lib/dashboard-widget.php:168
+msgid "using"
+msgstr "gebruiken"
+
+#: lib/dashboard-widget.php:169
+msgid "Email Configuration"
+msgstr "E-mail Configuratie"
+
+#: lib/dashboard-widget.php:183
+msgid "Upgrade Now to Premium Editions"
+msgstr "Upgrade nu naar Premium Editions"
+
+#: views/wizard/wizard.php:52
+msgid "Hi there!"
+msgstr "Hallo daar!"
+
+#: views/wizard/wizard.php:53
 msgid ""
-"Kindly fill in the required details and click on Validate License to unlock "
-"it"
-msgstr "Vul de verplichte details in en klik op Licentie valideren"
-
-#: includes/translations.php:248
-msgid "If you face any issues activating the license, you may contact us at "
+"Don't ever miss an opportunity to opt in for Email Notifications / "
+"Announcements about exciting New Features and Update Releases."
 msgstr ""
-"Mocht u problemen ondervinden met het activeren van uw licentie, neem dan "
-"contact met ons op"
+"Mis nooit meer een mogelijkheid om u aan te melden voor E-mailmeldingen / "
+"Aankondigingen over spannende Nieuwe Functies en Update-releases."
 
-#: includes/translations.php:250
-msgid "Product Name"
-msgstr "Product naam"
-
-#: includes/translations.php:251
-msgid "Current Version"
-msgstr "Huidige versie"
-
-#: includes/translations.php:252
-msgid "Website URL"
-msgstr "Website adres"
-
-#: includes/translations.php:253
-msgid "Order ID"
-msgstr "Ordernummer"
-
-#: includes/translations.php:254
-msgid "API KEY"
-msgstr "API Sleutel"
-
-#: includes/translations.php:255
-msgid "Validate License"
-msgstr "Licentie valideren"
-
-#: includes/translations.php:257
-msgid "This field shows your Installed Product"
-msgstr "Dit veld geeft uw geïnstalleerde product weer"
-
-#: includes/translations.php:258
-msgid "This field shows your Installed Product Version"
-msgstr "Dit veld toont de versie van uw geïnstalleerde product"
-
-#: includes/translations.php:259
-msgid "This field shows your Website URL"
-msgstr "Dit veld toont uw website adres"
-
-#: includes/translations.php:260
+#: views/wizard/wizard.php:54
 msgid ""
-"Please provide your Order ID  which you have received after purchasing the "
-"Product. This will be used for Validating the License"
+"Contribute in helping us making our plugin compatible with most plugins and "
+"themes by allowing to share non-sensitive information about your website."
 msgstr ""
-"Voer het ordernummer in welke u ontvangen heeft na aanschaf van dit product. "
-"Dit zal gebruikt worden om uw licentie te valideren"
+"Draag bij om ons te helpen onze plug-in compatibel te maken met de meeste "
+"plug-ins en thema's door niet-gevoelige informatie over uw website te delen."
 
-#: includes/translations.php:261
+#: views/wizard/wizard.php:61
+msgid "Email Address for Notifications"
+msgstr "E-mailadres voor meldingen"
+
+#: views/wizard/wizard.php:66
+msgid "If you're not ready to Opt-In, that's ok too!"
+msgstr "Als je nog niet klaar bent om je aan te melden, is dat ook goed!"
+
+#: views/wizard/wizard.php:67
+msgid "Mail Bank will still work fine."
+msgstr "Mail Bank zal nog steeds prima werken."
+
+#: views/wizard/wizard.php:71
+msgid "What permissions are being granted?"
+msgstr "Welke machtigingen worden verleend?"
+
+#: views/wizard/wizard.php:79
+msgid "User Details"
+msgstr "Gebruikersdetails"
+
+#: views/wizard/wizard.php:80
+msgid "Name and Email Address"
+msgstr "Naam en E-mailadres"
+
+#: views/wizard/wizard.php:90
+msgid "Current Plugin Status"
+msgstr "Huidige Plugin-status"
+
+#: views/wizard/wizard.php:91
+msgid "Activation, Deactivation and Uninstall"
+msgstr "Activeren, Deactiveren en Verwijderen"
+
+#: views/wizard/wizard.php:101
+msgid "Notifications"
+msgstr "Meldingen"
+
+#: views/wizard/wizard.php:102
+msgid "Updates &amp; Announcements"
+msgstr "Updates & Mededelingen"
+
+#: views/wizard/wizard.php:112
+msgid "Website Overview"
+msgstr "Website Overzicht"
+
+#: views/wizard/wizard.php:113
+msgid "Site URL, WP Version, PHP Info, Plugins &amp; Themes Info"
+msgstr "Site-URL, WP-versie, PHP Info, Plug-ins & amp; Thema's Info"
+
+#: views/wizard/wizard.php:122
+msgid "Opt-In &amp; Continue"
+msgstr "Opt-in & Doorgaan"
+
+#: views/wizard/wizard.php:126
+msgid "Skip &amp; Continue"
+msgstr "Skip & Doorgaan"
+
+#: views/wizard/wizard.php:133
+msgid "Privacy Policy"
+msgstr "Privacybeleid"
+
+#: views/wizard/wizard.php:135
+msgid "Terms &amp; Conditions"
+msgstr "Algemene Voorwaarden"
+
+#: wp-mail-bank.php:898
+msgid "Sure! I'd love to!"
+msgstr "Zeker! dat doe ik graag!"
+
+#: wp-mail-bank.php:899
+msgid "I've already left a review"
+msgstr "Ik heb al een beoordeling achtergelaten"
+
+#: wp-mail-bank.php:900
+msgid "Maybe Later"
+msgstr "Misschien Later"
+
+#: wp-mail-bank.php:902
+msgid "Leave A Review For Mail Bank ?"
+msgstr "Laat een recensie achter voor Mail Bank?"
+
+#: wp-mail-bank.php:903
 msgid ""
-"Please provide your API Key which you have received after purchasing the "
-"Product. This will be used for Validating the License"
+"We love and care about you. Mail Bank Team is putting our maximum efforts to "
+"provide you the best functionalities.<br> We would really appreciate if you "
+"could spend a couple of seconds to give a Nice Review to the plugin for "
+"motivating us!"
 msgstr ""
-"Voer de API key in welke u ontvangen heeft na aanschaf van dit product. Het "
-"zal gebruikt worden om uw licentie te valideren"
+"We houden van en geven om je. Mail Bank Team stelt alles in het werk om u de "
+"beste functionaliteiten te bieden. We zouden het zeer op prijs stellen als u "
+"een paar seconden zou kunnen besteden aan het geven van een Mooie "
+"Beoordeling aan de plug-in voor het motiveren van ons!"
 
-#: includes/translations.php:262
-msgid "Please provide Order ID received after making the purchase"
-msgstr "Voer het ordernummer in welke u ontvangen heeft"
+#: wp-mail-bank.php:1060
+msgid "We feel guilty when anyone stop using Mail Bank."
+msgstr "We voelen ons schuldig als iemand stopt met het gebruik van Mail Bank."
 
-#: includes/translations.php:263
-msgid "Please provide API Key received after making the purchase"
-msgstr "Voer de API key in welke u ontvangen heeft"
+#: wp-mail-bank.php:1061
+msgid "If Mail Bank isn't working for you, others also may not."
+msgstr "Als Mail Bank niet voor u werkt, doen anderen dit misschien ook niet."
 
-#~ msgid "* Openssl extension not found or disabled"
-#~ msgstr "* Openssl uitbreiding niet gevonden of uitgeschakeld"
+#: wp-mail-bank.php:1062
+msgid "We would love to hear your feedback about what went wrong."
+msgstr "We horen graag uw feedback over wat er mis ging."
 
-#~ msgid "Use Username And Password"
-#~ msgstr "Gebruik de gebruikersnaam en wachtwoord"
+#: wp-mail-bank.php:1063
+msgid "We would like to help you in fixing the issue."
+msgstr "We willen u graag helpen bij het oplossen van het probleem."
 
-#~ msgid "If you would like to translate in "
-#~ msgstr "Als je wilt vertalen in"
+#: wp-mail-bank.php:1070
+msgid "The Plugin didn't work"
+msgstr "De plug-in werkte niet"
+
+#: wp-mail-bank.php:1076
+msgid "I found a better Plugin"
+msgstr "Ik heb een betere plug-in gevonden"
+
+#: wp-mail-bank.php:1082
+msgid "It's a temporary deactivation. I'm just debugging an issue."
+msgstr "Het is een tijdelijke deactivering. Ik debug gewoon een probleem."
+
+#: wp-mail-bank.php:1088
+msgid "Open a Support Ticket for me."
+msgstr "Open een Supportticket voor mij."
+
+#~ msgid "Email Log Details"
+#~ msgstr "E-mail Log Details"
+
+#~ msgid "Feedback"
+#~ msgstr "Feedback"
+
+#~ msgid "Your Feedback has been sent Successfully"
+#~ msgstr "Uw Feedback is Succesvol verzonden"
+
+#~ msgid "Please choose an Action from Dropdown!"
+#~ msgstr "Kies een Actie uit Dropdown!"
+
+#~ msgid "Please choose at least 1 record to delete!"
+#~ msgstr "Kies alstublieft minimaal 1 record om te verwijderen!"
+
+#~ msgid "Are you sure you want to delete Email Logs?"
+#~ msgstr "Weet u zeker dat u E-maillogboeken wilt verwijderen?"
+
+#~ msgid "Selected Logs have been deleted Successfully"
+#~ msgstr "Geselecteerde logboeken zijn met Succes verwijderd"
+
+#~ msgid "Are you sure you want to Resend Emails?"
+#~ msgstr "Weet je zeker dat je E-mails opnieuw wilt verzenden?"
+
+#~ msgid "Invalid Secret Key. Please rectify and try again!"
+#~ msgstr "Ongeldige Geheime Sleutel. Corrigeer en probeer het opnieuw!"
+
+#~ msgid "Licensing"
+#~ msgstr "Vergunning geven"
+
+#~ msgid "Your Email has been Resent Successfully"
+#~ msgstr "Uw E-mail is succesvol verzonden"
+
+#~ msgid "Your Emails have been Resent Successfully"
+#~ msgstr "Uw E-mails zijn met succes Opnieuw verzonden"
+
+#~ msgid "Unfortunately, Your Email has not been Sent"
+#~ msgstr "Helaas is uw e-mail niet verzonden"
+
+#~ msgid "Are you sure you want to Resend Email?"
+#~ msgstr "Weet je zeker dat je E-mail opnieuw wilt verzenden?"
+
+#~ msgid "Your License has been activated Successfully"
+#~ msgstr "Uw licentie is met Succes geactiveerd"
 
 #~ msgid ""
-#~ " & help us, we will reward you with a free Personal Edition License of "
-#~ "Mail Bank. If Interested, Kindly click "
+#~ "The following php extensions are not found on your server or are "
+#~ "currently disabled. These might create few problems in configuring Mail "
+#~ "Bank. Please contact your WebHost to setup these extensions on your server"
 #~ msgstr ""
-#~ "& help ons, we zullen je belonen met een gratis Persoonlijke editie "
-#~ "licentie van Mail Bank. Geïnteresseerd? Klik hier"
+#~ "De volgende php-extensies zijn niet gevonden op uw server of zijn "
+#~ "momenteel uitgeschakeld. Deze kunnen weinig problemen opleveren bij het "
+#~ "configureren van Mail Bank. Neem contact op met uw WebHost om deze "
+#~ "extensies op uw server in te stellen"
 
-#~ msgid "here"
-#~ msgstr "hier"
+#~ msgid "Get Mailgun API Key"
+#~ msgstr "Haal de API Key van Mailgun op"
 
-#~ msgid "Are you sure you want to close without sending Translation Request?"
-#~ msgstr ""
-#~ "Weet je zeker dat je wilt sluiten zonder het vertaal verzoek te verzenden?"
+#~ msgid "In this field, you would need to provide Mailgun API Key"
+#~ msgstr "In dit veld moet u Mailgun API Key opgeven"
 
-#~ msgid "Translation Request"
-#~ msgstr "Vertaal verzoek"
+#~ msgid "Domain Name"
+#~ msgstr "Domeinnaam"
 
-#~ msgid "Language Interested to Translate"
-#~ msgstr "Taal in welke je geinteresseerd bent om te vertalen"
+#~ msgid "In this field, you would need to provide Mailgun domain name"
+#~ msgstr "In dit veld moet u de domeinnaam Mailgun opgeven"
 
-#~ msgid "Please choose a language which you want to translate"
-#~ msgstr "Kies alsjeblieft de taal in welke je wilt vertalen"
+#~ msgid "Please provide Mailgun Domain Name"
+#~ msgstr "Geef alstublieft de Domeinnaam van Mailgun op"
 
-#~ msgid "Please provide a language"
-#~ msgstr "Kies een taal alsjeblieft"
+#~ msgid "In this field, you need to provide SendGrid API Key"
+#~ msgstr "In dit veld moet u SendGrid API Key leveren"
 
-#~ msgid "Query"
-#~ msgstr "vraag"
-
-#~ msgid "Please provide your query"
-#~ msgstr "Kies een vraag"
-
-#~ msgid "Please provide your Email"
-#~ msgstr "Voer uw email in"
-
-#~ msgid "Send Request"
-#~ msgstr "Verzoek versturen"
-
-#~ msgid "* Click "
-#~ msgstr "* Klik"
-
-#~ msgid "here "
-#~ msgstr "hier"
-
-#~ msgid " to see Premium Edition Features in detail"
-#~ msgstr "om de Premium Editie kenmerken te bekijken"
-
-#~ msgid "* For Mail Bank Demos, click "
-#~ msgstr "* Voor Mail Bank demonstraties, klik"
-
-#~ msgid "* For Mail Bank User Guide for this page, click "
-#~ msgstr "* Voor Mail Bank gebruikers handleiding, klik"
-
-#~ msgid "* Filters "
-#~ msgstr "Filters"
-
-#~ msgid "* Reply to, Cc and Bcc Fields "
-#~ msgstr "* Beantwoorden naar, Kopie adres, blind kopie adres"
-
-#~ msgid "* Deleting Email Logs "
-#~ msgstr "* Verwijderen email logs"
-
-#~ msgid "* Debugging Output"
-#~ msgstr "* Debugging uitvoer"
-
-#~ msgid "* Email Logs Details "
-#~ msgstr "* Email log details"
-
-#~ msgid "* Saving Roles & Capabilities "
-#~ msgstr "* Opslaan rollen en mogelijkheden"
-
-#~ msgid " Premium Edition Features :"
-#~ msgstr "Premium Editie kenmerken:"
-
-#~ msgid " Features available in Business and Developer Editions :"
-#~ msgstr "Kenmerken beschikbaar in de zakelijke- en ontwikkelaars edities:"
+#~ msgid "Please provide valid API key"
+#~ msgstr "Geef alstublieft  een geldige API-sleutel"
 
 #~ msgid ""
-#~ "This feature is only available in Business and Developer Editions! <br> "
-#~ "Kindly Purchase to unlock it!."
+#~ "A valid Email Address that will be used in the 'CC' field of the email. "
+#~ "Use Comma ',' for including multiple email addresses in the 'CC' field"
 #~ msgstr ""
-#~ "Dit kenmerk is alleen beschikbaar in de zakelijke en ontwikkelaars editie!"
-#~ "<br> Schaf deze aan om de kenmerken vrij te geven."
+#~ "Een geldig E-mailadres dat wordt gebruikt in het veld 'CC' van de e-mail. "
+#~ "Gebruik Komma ',' voor het opnemen van meerdere e-mailadressen in het "
+#~ "veld 'CC'"
 
-#~ msgid "* Bulk Delete "
-#~ msgstr "* Massa verwijderen"
+#~ msgid "Mailer Settings"
+#~ msgstr "Mailerinstellingen"
 
-#~ msgid "* Debugging Output "
-#~ msgstr "* Debugging uitvoer"
+#~ msgid "Choose among the variety of options for routing emails"
+#~ msgstr ""
+#~ "Kies uit de verscheidenheid aan opties voor het routeren van e-mails"
+
+#~ msgid "Mailgun API"
+#~ msgstr "Mailgun API"
+
+#~ msgid "Get SendGrid API Key"
+#~ msgstr "Krijg SendGrid API Key"
+
+#~ msgid "Use SMTP Authentication"
+#~ msgstr "Gebruik SMTP-verificatie"
+
+#~ msgid "Don't Use SMTP Authentication"
+#~ msgstr "Gebruik geen SMTP-authenticatie"
+
+#~ msgid "Email Details"
+#~ msgstr "E-mailgegevens"
+
+#~ msgid "Close"
+#~ msgstr "Sluiten"
+
+#~ msgid "Email Sent To"
+#~ msgstr "E-mail Verzenden Naar"
+
+#~ msgid "From"
+#~ msgstr "Van"
+
+#~ msgid "Back to Email Logs"
+#~ msgstr "Terug naar E-maillogboeken"
+
+#~ msgid "Automatic Plugin Updates"
+#~ msgstr "Automatische Plug-insupdates"
+
+#~ msgid ""
+#~ "Please choose a specific option whether to allow Automatic Plugin Updates"
+#~ msgstr ""
+#~ "Kies een specifieke optie om Automatische Plug-insupdates toe te staan"
+
+#~ msgid "Monitoring Email Logs"
+#~ msgstr "E-maillogboeken bewaken"
+
+#~ msgid "Thank You!"
+#~ msgstr "Bedankt!"
+
+#~ msgid ""
+#~ "Kindly fill in the below form, if you would like to suggest some features "
+#~ "which are not in the Plugin"
+#~ msgstr ""
+#~ "Vul onderstaand formulier in als u enkele functies wilt voorstellen die "
+#~ "niet in de Plug-in staan"
+
+#~ msgid ""
+#~ "If you also have any suggestion/complaint, you can use the same form below"
+#~ msgstr ""
+#~ "Als u ook een suggestie / klacht heeft, kunt u hetzelfde formulier "
+#~ "hieronder gebruiken"
+
+#~ msgid "You can also write us on"
+#~ msgstr "U kunt ons ook schrijven naar"
+
+#~ msgid "Please provide your Name which will be sent along with your Feedback"
+#~ msgstr "Geef alstublieft uw Naam op die wordt meegestuurd met uw Feedback"
+
+#~ msgid "Your Email"
+#~ msgstr "Jouw E-mail"
+
+#~ msgid ""
+#~ "Please provide your Email Address which will be sent along with your "
+#~ "Feedback"
+#~ msgstr "Geef uw E-mailadres op dat wordt meegestuurd met uw Feedback"
+
+#~ msgid "Please provide your Email Address"
+#~ msgstr "Geef alstublieft uw E-mailadres"
+
+#~ msgid "Please provide your Feedback which will be sent along"
+#~ msgstr "Geef alstublieft uw Feedback op die wordt meegestuurd"
+
+#~ msgid "Please provide your Feedback"
+#~ msgstr "Geef alstublieft uw Feedback"
+
+#~ msgid "Send Feedback"
+#~ msgstr "Verstuur Feedback"
+
+#~ msgid "Your request Email has been sent Successfully"
+#~ msgstr "Uw aanvraag E-mail is succesvol verzonden"
+
+#~ msgid "Service Available"
+#~ msgstr "Service beschikbaar"
+
+#~ msgid "Server ID"
+#~ msgstr "Server ID"
+
+#~ msgid "Important Notice!"
+#~ msgstr "Belangrijke Mededeling!"
+
+#~ msgid ""
+#~ "Congratulations! You have recently purchased Mail Bank and now you would "
+#~ "need to activate the license in order to unlock it!"
+#~ msgstr ""
+#~ "Hartelijk gefeliciteerd! Je hebt onlangs Mail Bank gekocht en nu moet je "
+#~ "de licentie activeren om hem te ontgrendelen!"
+
+#~ msgid ""
+#~ "Kindly fill in the required details and click on Validate License to "
+#~ "unlock it"
+#~ msgstr ""
+#~ "Vul de vereiste gegevens in en klik op Licentie Valideren om het te "
+#~ "ontgrendelen"
+
+#~ msgid "If you face any issues activating the license, you may contact us at"
+#~ msgstr ""
+#~ "Als u problemen ondervindt bij het activeren van de licentie, kunt u "
+#~ "contact met ons opnemen via"
+
+#~ msgid "Product Name"
+#~ msgstr "Productnaam"
+
+#~ msgid "Current Version"
+#~ msgstr "Huidige versie"
+
+#~ msgid "Website URL"
+#~ msgstr "Website URL"
+
+#~ msgid "Order ID"
+#~ msgstr "Order ID"
+
+#~ msgid "API KEY"
+#~ msgstr "API KEY"
+
+#~ msgid "Validate License"
+#~ msgstr "Licentie Valideren"
+
+#~ msgid "This field shows your Installed Product"
+#~ msgstr "Dit veld toont uw Geïnstalleerde Product"
+
+#~ msgid "This field shows your Installed Product Version"
+#~ msgstr "Dit veld toont uw Geïnstalleerde Productversie"
+
+#~ msgid "This field shows your Website URL"
+#~ msgstr "Dit veld toont uw Website-URL"
+
+#~ msgid ""
+#~ "Please provide your Order ID  which you have received after purchasing "
+#~ "the Product."
+#~ msgstr ""
+#~ "Geef uw Bestellings-ID op die u hebt ontvangen na aankoop van het "
+#~ "product. Dit wordt gebruikt voor het Valideren van de Licentie"
+
+#~ msgid ""
+#~ "Please provide your API Key which you have received after purchasing the "
+#~ "Product."
+#~ msgstr ""
+#~ "Geef uw API-sleutel op die u heeft ontvangen na aankoop van het product. "
+#~ "Dit wordt gebruikt voor het valideren van de licentie"
+
+#~ msgid "Please provide Order ID received after making the purchase"
+#~ msgstr ""
+#~ "Geef de Bestellings-ID op die je hebt ontvangen na het maken van de "
+#~ "aankoop"
+
+#~ msgid "Please provide API Key received after making the purchase"
+#~ msgstr ""
+#~ "Geef de API-sleutel op die u heeft ontvangen na het maken van de aankoop"
+
+#~ msgid "If Mail Bank is not working for you, others also may not."
+#~ msgstr ""
+#~ "Als Mail Bank niet voor u werkt, dan doen anderen dit misschien ook niet."
+
+#~ msgid "Use OAuth (Client Id and Secret Key required)"
+#~ msgstr "Gebruik OAuth (klant-ID en Geheime Sleutel vereist)"
+
+#~ msgid "Test Email Address"
+#~ msgstr "Test E-mailadres"

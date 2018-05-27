@@ -14,6 +14,7 @@ class WPForms_Process {
 	 * Holds errors.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @var array
 	 */
 	public $errors;
@@ -22,6 +23,7 @@ class WPForms_Process {
 	 * Holds formatted fields.
 	 *
 	 * @since 1.0.0
+	 *
 	 * @var array
 	 */
 	public $fields;
@@ -30,9 +32,28 @@ class WPForms_Process {
 	 * Holds the ID of a successful entry.
 	 *
 	 * @since 1.2.3
+	 *
 	 * @var int
 	 */
 	public $entry_id = 0;
+
+	/**
+	 * Holds form data.
+	 *
+	 * @since 1.4.5
+	 *
+	 * @var array
+	 */
+	public $form_data;
+
+	/**
+	 * If a valid return has was processed.
+	 *
+	 * @since 1.4.5
+	 *
+	 * @var bool
+	 */
+	public $valid_hash = false;
 
 	/**
 	 * Primary class constructor.
@@ -77,7 +98,7 @@ class WPForms_Process {
 
 		// Validate form is real and active (published).
 		if ( ! $form || 'publish' !== $form->post_status ) {
-			$this->errors[ $form_id ]['header'] = __( 'Invalid form.', 'wpforms' );
+			$this->errors[ $form_id ]['header'] = esc_html__( 'Invalid form.', 'wpforms' );
 			return;
 		}
 
@@ -114,10 +135,10 @@ class WPForms_Process {
 				$data  = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $_POST['g-recaptcha-response'] );
 				$data  = json_decode( wp_remote_retrieve_body( $data ) );
 				if ( empty( $data->success ) ) {
-					$this->errors[ $form_id ]['recaptcha'] = __( 'Incorrect reCAPTCHA, please try again.', 'wpforms' );
+					$this->errors[ $form_id ]['recaptcha'] = esc_html__( 'Incorrect reCAPTCHA, please try again.', 'wpforms' );
 				}
 			} else {
-				$this->errors[ $form_id ]['recaptcha'] = __( 'reCAPTCHA is required.', 'wpforms' );
+				$this->errors[ $form_id ]['recaptcha'] = esc_html__( 'reCAPTCHA is required.', 'wpforms' );
 			}
 		}
 
@@ -129,7 +150,7 @@ class WPForms_Process {
 
 		if ( ! empty( $errors[ $form_id ] ) ) {
 			if ( empty( $this->errors[ $form_id ]['header'] ) ) {
-				$errors[ $form_id ]['header'] = __( 'Form has not been submitted, please see the errors below.', 'wpforms' );
+				$errors[ $form_id ]['header'] = esc_html__( 'Form has not been submitted, please see the errors below.', 'wpforms' );
 			}
 			$this->errors = $errors;
 			return;
@@ -141,7 +162,7 @@ class WPForms_Process {
 			'1' == $form_data['settings']['honeypot'] &&
 			! empty( $entry['hp'] )
 		) {
-				$honeypot = __( 'WPForms honeypot field triggered.', 'wpforms' );
+				$honeypot = esc_html__( 'WPForms honeypot field triggered.', 'wpforms' );
 		}
 
 		$honeypot = apply_filters( 'wpforms_process_honeypot', $honeypot, $this->fields, $entry, $form_data );
@@ -179,7 +200,7 @@ class WPForms_Process {
 			// One last error check - don't proceed if there are any errors.
 			if ( ! empty( $this->errors[ $form_id ] ) ) {
 				if ( empty( $this->errors[ $form_id ]['header'] ) ) {
-					$this->errors[ $form_id ]['header'] = __( 'Form has not been submitted, please see the errors below.', 'wpforms' );
+					$this->errors[ $form_id ]['header'] = esc_html__( 'Form has not been submitted, please see the errors below.', 'wpforms' );
 				}
 				return;
 			}
@@ -198,7 +219,7 @@ class WPForms_Process {
 
 			// Logs entry depending on log levels set.
 			wpforms_log(
-				'Entry',
+				$entry_id ? "Entry {$entry_id}" : 'Entry',
 				$this->fields,
 				array(
 					'type'    => array( 'entry' ),
@@ -215,7 +236,7 @@ class WPForms_Process {
 
 			// Logs spam entry depending on log levels set.
 			wpforms_log(
-				'Spam Entry',
+				'Spam Entry ' . uniqid(),
 				array( $honeypot, $entry ),
 				array(
 					'type'    => array( 'spam' ),
@@ -238,21 +259,26 @@ class WPForms_Process {
 	public function validate_return_hash( $hash = '' ) {
 
 		$query_args = base64_decode( $hash );
-		parse_str( $query_args );
+
+		parse_str( $query_args, $output );
 
 		// Verify hash matches.
-		if ( wp_hash( $form_id . ',' . $entry_id ) !== $hash ) {
+		if ( wp_hash( $output['form_id'] . ',' . $output['entry_id'] ) !== $output['hash'] ) {
 			return false;
 		}
 
 		// Get lead and verify it is attached to the form we received with it.
-		$entry = wpforms()->entry->get( $entry_id );
+		$entry = wpforms()->entry->get( $output['entry_id'] );
 
-		if ( $form_id != $entry->form_id ) {
+		if ( $output['form_id'] != $entry->form_id ) {
 			return false;
 		}
 
-		return $form_id;
+		return array(
+			'form_id'  => absint( $output['form_id'] ),
+			'entry_id' => absint( $output['form_id'] ),
+			'fields'   => $entry->fields,
+		);
 	}
 
 	/**
@@ -263,47 +289,48 @@ class WPForms_Process {
 	 * @param array|string $form_data
 	 * @param string $hash
 	 */
-	public function entry_confirmation_redirect( $form_data = '', $hash = '' ) {
+	public function entry_confirmation_redirect( $form_data = array(), $hash = '' ) {
 
-		$url = '';
+		$url = false;
 
+		// Maybe process return hash.
 		if ( ! empty( $hash ) ) {
 
-			$form_id = $this->validate_return_hash( $hash );
+			$hash_data = $this->validate_return_hash( $hash );
 
-			if ( ! $form_id ) {
+			if ( ! $hash_data || ! is_array( $hash_data ) ) {
 				return;
 			}
 
-			// Get form
-			$form_data = wpforms()->form->get( $form_id, array(
+			$this->valid_hash = true;
+			$this->entry_id   = absint( $hash_data['entry_id'] );
+			$this->fields     = json_decode( $hash_data['fields'], true );
+			$this->form_data  = wpforms()->form->get( absint( $hash_data['form_id'] ), array(
 				'content_only' => true,
 			) );
+
+		} else {
+
+			$this->form_data = $form_data;
 		}
 
 		// Redirect if needed, to either a page or URL, after form processing.
-		if ( ! empty( $form_data['settings']['confirmation_type'] ) && 'message' !== $form_data['settings']['confirmation_type'] ) {
+		if ( ! empty( $this->form_data['settings']['confirmation_type'] ) && 'message' !== $this->form_data['settings']['confirmation_type'] ) {
 
-			if ( 'redirect' === $form_data['settings']['confirmation_type'] ) {
-				$url = apply_filters( 'wpforms_process_smart_tags', $form_data['settings']['confirmation_redirect'], $form_data, $this->fields, $this->entry_id );
+			if ( 'redirect' === $this->form_data['settings']['confirmation_type'] ) {
+				$url = apply_filters( 'wpforms_process_smart_tags', $this->form_data['settings']['confirmation_redirect'], $this->form_data, $this->fields, $this->entry_id );
 			}
 
-			if ( 'page' === $form_data['settings']['confirmation_type'] ) {
-				$url = get_permalink( (int) $form_data['settings']['confirmation_page'] );
+			if ( 'page' === $this->form_data['settings']['confirmation_type'] ) {
+				$url = get_permalink( (int) $this->form_data['settings']['confirmation_page'] );
 			}
-		}
-
-		if ( ! empty( $form_data['id'] ) ) {
-			$form_id = $form_data['id'];
-		} else {
-			return;
 		}
 
 		if ( ! empty( $url ) ) {
-			$url = apply_filters( 'wpforms_process_redirect_url', $url, $form_id, $this->fields );
+			$url = apply_filters( 'wpforms_process_redirect_url', $url, $this->form_data['id'], $this->fields );
 			wp_redirect( esc_url_raw( $url ) );
-			do_action( 'wpforms_process_redirect', $form_id );
-			do_action( "wpforms_process_redirect_{$form_id}", $form_id );
+			do_action( 'wpforms_process_redirect', $this->form_data['id'] );
+			do_action( "wpforms_process_redirect_{$this->form_data['id']}", $this->form_data['id'] );
 			exit;
 		}
 	}
@@ -316,7 +343,7 @@ class WPForms_Process {
 	 * @param array $fields
 	 * @param array $entry
 	 * @param array $form_data
-	 * @param array $entry_id
+	 * @param int $entry_id
 	 * @param string $context
 	 */
 	public function entry_email( $fields, $entry, $form_data, $entry_id, $context = '' ) {
@@ -329,7 +356,7 @@ class WPForms_Process {
 			return;
 		}
 
-		// Provide the opportunity to override via a filter
+		// Provide the opportunity to override via a filter.
 		if ( ! apply_filters( 'wpforms_entry_email', true, $fields, $entry, $form_data ) ) {
 			return;
 		}
@@ -362,12 +389,13 @@ class WPForms_Process {
 				continue;
 			}
 
-			$email  = array();
+			$email = array();
 
 			// Setup email properties.
+			/* translators: %s - form name. */
+			$email['subject']        = ! empty( $notification['subject'] ) ? $notification['subject'] : sprintf( esc_html__( 'New %s Entry', 'wpforms' ), $form_data['settings']['form_title'] );
 			$email['address']        = explode( ',', apply_filters( 'wpforms_process_smart_tags', $notification['email'], $form_data, $fields, $this->entry_id ) );
 			$email['address']        = array_map( 'sanitize_email', $email['address'] );
-			$email['subject']        = ! empty( $notification['subject'] ) ? $notification['subject'] : sprintf( _x( 'New %s Entry', 'Form name', 'wpforms ' ), $form_data['settings']['form_title'] );
 			$email['sender_address'] = ! empty( $notification['sender_address'] ) ? $notification['sender_address'] : get_option( 'admin_email' );
 			$email['sender_name']    = ! empty( $notification['sender_name'] ) ? $notification['sender_name'] : get_bloginfo( 'name' );
 			$email['replyto']        = ! empty( $notification['replyto'] ) ? $notification['replyto'] : false;
@@ -376,12 +404,12 @@ class WPForms_Process {
 
 			// Create new email.
 			$emails = new WPForms_WP_Emails;
-			$emails->__set( 'form_data',    $form_data               );
-			$emails->__set( 'fields',       $fields                  );
-			$emails->__set( 'entry_id',     $this->entry_id          );
-			$emails->__set( 'from_name',    $email['sender_name']    );
+			$emails->__set( 'form_data', $form_data );
+			$emails->__set( 'fields', $fields );
+			$emails->__set( 'entry_id', $this->entry_id );
+			$emails->__set( 'from_name', $email['sender_name'] );
 			$emails->__set( 'from_address', $email['sender_address'] );
-			$emails->__set( 'reply_to',     $email['replyto']        );
+			$emails->__set( 'reply_to', $email['replyto'] );
 
 			// Maybe include CC.
 			if ( ! empty( $notification['carboncopy'] ) && wpforms_setting( 'email-carbon-copy', false ) ) {

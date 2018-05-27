@@ -39,6 +39,7 @@ if ( ! class_exists( 'WC_Connect_Options' ) ) {
 				'tos_accepted',
 				'store_guid',
 				'debug_logging_enabled',
+				'debug_display_enabled',
 				'payment_methods',
 				'account_settings',
 				'paper_size',
@@ -48,6 +49,7 @@ if ( ! class_exists( 'WC_Connect_Options' ) ) {
 				'should_display_nux_after_jp_cxn_banner',
 				'needs_tax_environment_setup',
 				'stripe_state',
+				'banner_ppec',
 			);
 		}
 
