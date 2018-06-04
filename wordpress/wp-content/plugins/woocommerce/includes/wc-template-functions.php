@@ -1341,17 +1341,17 @@ if ( ! function_exists( 'woocommerce_pagination' ) ) {
 		if ( ! wc_get_loop_prop( 'is_paginated' ) || ! woocommerce_products_will_display() ) {
 			return;
 		}
+
 		$args = array(
 			'total'   => wc_get_loop_prop( 'total_pages' ),
 			'current' => wc_get_loop_prop( 'current_page' ),
+			'base'    => esc_url_raw( add_query_arg( 'product-page', '%#%', false ) ),
+			'format'  => '?product-page=%#%',
 		);
 
-		if ( wc_get_loop_prop( 'is_shortcode' ) ) {
-			$args['base']   = esc_url_raw( add_query_arg( 'product-page', '%#%', false ) );
-			$args['format'] = '?product-page = %#%';
-		} else {
-			$args['base']   = esc_url_raw( str_replace( 999999999, '%#%', remove_query_arg( 'add-to-cart', get_pagenum_link( 999999999, false ) ) ) );
+		if ( ! wc_get_loop_prop( 'is_shortcode' ) ) {
 			$args['format'] = '';
+			$args['base']   = esc_url_raw( str_replace( 999999999, '%#%', remove_query_arg( 'add-to-cart', get_pagenum_link( 999999999, false ) ) ) );
 		}
 
 		wc_get_template( 'loop/pagination.php', $args );
@@ -2766,6 +2766,12 @@ if ( ! function_exists( 'wc_dropdown_variation_attribute_options' ) ) {
 			'class'            => '',
 			'show_option_none' => __( 'Choose an option', 'woocommerce' ),
 		) );
+
+		// Get selected value.
+		if ( false === $args['selected'] && $args['attribute'] && $args['product'] instanceof WC_Product ) {
+			$selected_key     = 'attribute_' . sanitize_title( $args['attribute'] );
+			$args['selected'] = isset( $_REQUEST[ $selected_key ] ) ? wc_clean( urldecode( wp_unslash( $_REQUEST[ $selected_key ] ) ) ) : $args['product']->get_variation_default_attribute( $args['attribute'] ); // WPCS: input var ok, CSRF ok, sanitization ok.
+		}
 
 		$options               = $args['options'];
 		$product               = $args['product'];

@@ -239,11 +239,6 @@ class Bar {
 			 */
 			do_action( 'mctb_subscribed', $mailchimp_list_id, $email_address, $data );
 
-			// track sign-up attempt
-            $tracker = new Tracker( 365 * DAY_IN_SECONDS );
-			$tracker->track( $mailchimp_list_id );
-			$tracker->save();
-
 			// log sign-up attempt
 			if( $log ) {
 				$log->info( sprintf( 'Top Bar > Successfully subscribed %s', $email_address ) );
@@ -424,6 +419,7 @@ class Bar {
 					<input type="text"  name="email_confirm" placeholder="Confirm your email" value="" autocomplete="off" tabindex="-1" class="mctb-email-confirm" />
 					<?php do_action( 'mctb_before_submit_button' ); ?>
 					<input type="submit" value="<?php echo esc_attr( $this->options->get('text_button') ); ?>" class="mctb-button" />
+					<?php do_action( 'mctb_after_submit_button' ); ?>
 					<input type="hidden" name="_mctb" value="1" />
 					<input type="hidden" name="_mctb_no_js" value="1" />
 					<input type="hidden" name="_mctb_timestamp" value="<?php echo time(); ?>" />

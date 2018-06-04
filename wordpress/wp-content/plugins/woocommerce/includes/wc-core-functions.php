@@ -38,6 +38,7 @@ add_filter( 'woocommerce_coupon_code', 'sanitize_text_field' );
 add_filter( 'woocommerce_coupon_code', 'wc_strtolower' );
 add_filter( 'woocommerce_stock_amount', 'intval' ); // Stock amounts are integers by default.
 add_filter( 'woocommerce_shipping_rate_label', 'sanitize_text_field' ); // Shipping rate label.
+add_filter( 'woocommerce_attribute_label', 'wp_kses_post', 100 );
 
 /**
  * Short Description (excerpt).
@@ -1928,6 +1929,10 @@ add_filter( 'extra_plugin_headers', 'wc_enable_wc_plugin_headers' );
  * @return bool
  */
 function wc_prevent_dangerous_auto_updates( $should_update, $plugin ) {
+	if ( ! isset( $plugin->plugin, $plugin->new_version ) ) {
+		return $should_update;
+	}
+
 	if ( 'woocommerce/woocommerce.php' !== $plugin->plugin ) {
 		return $should_update;
 	}
@@ -2101,4 +2106,32 @@ function wc_selected( $value, $options ) {
 	}
 
 	return selected( $value, $options, false );
+}
+
+/**
+ * Retrieves the MySQL server version. Based on $wpdb.
+ *
+ * @since 3.4.1
+ * @return array Vesion information.
+ */
+function wc_get_server_database_version() {
+	global $wpdb;
+
+	if ( empty( $wpdb->is_mysql ) ) {
+		return array(
+			'string' => '',
+			'number' => '',
+		);
+	}
+
+	if ( $wpdb->use_mysqli ) {
+		$server_info = mysqli_get_server_info( $wpdb->dbh ); // @codingStandardsIgnoreLine.
+	} else {
+		$server_info = mysql_get_server_info( $wpdb->dbh ); // @codingStandardsIgnoreLine.
+	}
+
+	return array(
+		'string' => $server_info,
+		'number' => preg_replace( '/([^\d.]+).*/', '', $server_info ),
+	);
 }
