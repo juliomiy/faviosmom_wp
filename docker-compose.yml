@@ -1,0 +1,16 @@
+version: '3'
+services:
+  cms:
+    image: "juliomiy/faviosmom_wp"
+    ports:
+     - "80:80"
+     - "443:443"
+    volumes:
+     - ./wordpress:/var/www/html
+  database:
+    image: "mysql:latest"
+    container_name: docker_mysql
+    volumes: 
+      - /Users/jmiyares/development/docker/mysql-datadir:/var/lib/mysql
+    ports: 
+      - 3306:3306

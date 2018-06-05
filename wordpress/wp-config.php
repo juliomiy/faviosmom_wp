@@ -56,7 +56,7 @@ define('SECURE_AUTH_SALT', 'n0b75xD/^ W|~Sjyku~LVEvIpS|@`~d9]L{Y[1<;$IA[AwSl($&}
 define('LOGGED_IN_SALT',   'S]-BqhO!(,3C;RO)g4D(xC3VJBeSvA)s(E|$K%%Z98]Ifl(f.S= 2Z`biu.-;y*.');
 define('NONCE_SALT',       'Ub]nn6<},6+S]dp)p+z}#&Z8pEwMfg*q7NJ@{+hNe0RBx7iSr]>$EiIjh#LxJ4@u');
 
-#define('FORCE_SSL_ADMIN', true);
+define('FORCE_SSL_ADMIN', true);
 /**#@-*/
 
 /**
